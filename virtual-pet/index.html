@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codex 玩偶状态台</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Codex Doll</p>
+          <h1>我的 Codex 玩偶</h1>
+        </div>
+        <label class="name-field">
+          <span>名字</span>
+          <input id="petName" maxlength="10" autocomplete="off" />
+        </label>
+      </header>
+
+      <main class="pet-layout">
+        <section class="stage-panel" aria-label="玩偶舞台">
+          <div class="garden-canopy" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="stage">
+            <button
+              class="pet-avatar"
+              id="petAvatar"
+              type="button"
+              data-mode="idle"
+              aria-label="点按 Codex 玩偶"
+            ></button>
+            <div class="pet-shadow" aria-hidden="true"></div>
+          </div>
+
+          <div class="pet-talk" id="petTalk" role="status" aria-live="polite"></div>
+          <div class="size-readout">
+            玩偶显示尺寸：<strong id="petSize">16.0 cm x 16.0 cm</strong>
+          </div>
+        </section>
+
+        <section class="control-panel" aria-label="系统状态面板">
+          <div class="stats" aria-label="状态数值">
+            <div class="stat-row">
+              <span>专注</span>
+              <div class="meter"><i id="focusBar"></i></div>
+              <b id="focusText">86</b>
+            </div>
+            <div class="stat-row">
+              <span>心情</span>
+              <div class="meter"><i id="moodBar"></i></div>
+              <b id="moodText">88</b>
+            </div>
+            <div class="stat-row">
+              <span>能量</span>
+              <div class="meter"><i id="energyBar"></i></div>
+              <b id="energyText">78</b>
+            </div>
+            <div class="stat-row">
+              <span>进度</span>
+              <div class="meter"><i id="progressBar"></i></div>
+              <b id="progressText">0</b>
+            </div>
+          </div>
+
+          <div class="actions" aria-label="系统状态切换">
+            <button type="button" data-action="idle">
+              <span class="tool-icon idle" aria-hidden="true"></span>
+              待命
+            </button>
+            <button type="button" data-action="thinking">
+              <span class="tool-icon thinking" aria-hidden="true"></span>
+              思考
+            </button>
+            <button type="button" data-action="working">
+              <span class="tool-icon working" aria-hidden="true"></span>
+              工作中
+            </button>
+            <button type="button" data-action="done">
+              <span class="tool-icon done" aria-hidden="true"></span>
+              完成
+            </button>
+          </div>
+
+          <div class="mode-panel" aria-label="当前状态">
+            <p>系统状态</p>
+            <div class="mode-switch" id="modeSwitch">
+              <button type="button" data-mode="idle" aria-pressed="true">待命</button>
+              <button type="button" data-mode="thinking" aria-pressed="false">思考</button>
+              <button type="button" data-mode="working" aria-pressed="false">工作中</button>
+              <button type="button" data-mode="done" aria-pressed="false">完成</button>
+            </div>
+          </div>
+
+          <div class="pet-slot" aria-label="设置里的宠物位置">
+            <p>宠物位置</p>
+            <button type="button" class="slot-card is-selected" id="petSlot">
+              <span class="slot-thumb" aria-hidden="true"></span>
+              <span>
+                <strong id="activePetName">Codex</strong>
+                <small>已放入，可直接使用</small>
+              </span>
+            </button>
+          </div>
+
+          <ol class="memory-log" id="memoryLog" aria-label="状态记录"></ol>
+        </section>
+      </main>
+    </div>
+
+    <script src="pet-settings.js"></script>
+    <script src="pet.js"></script>
+  </body>
+</html>

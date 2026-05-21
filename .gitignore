@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local environments and secrets
+.env
+.env.*
+.venv/
+venv/
+
+# Generated artifacts and local render outputs
+output/
+scratch/
+docx_render_check/
+.codex_video_deps/
+.codex_video_frames/
+.skill-build/
+
+# Logs and transient files
+*.log
+*.err
+*.tmp
+*.bak
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
