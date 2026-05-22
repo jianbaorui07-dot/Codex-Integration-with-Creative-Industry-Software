@@ -1,6 +1,6 @@
 # Codex 软件接入实验仓库
 
-这个仓库用来整理 **Codex 接入本地创作软件** 的方法。目标很简单：让 Codex 写脚本、跑检查、调用本机软件；让 ComfyUI、Blender、CAD、Photoshop 继续负责图像、三维、制图和修图。
+这个仓库用来整理 **Codex 接入本地创作软件** 的方法。目标很简单：让 Codex 写脚本、跑检查、调用本机软件；让 ComfyUI、Blender、CAD、Photoshop、Illustrator 继续负责图像、三维、制图、修图和矢量设计。
 
 公开仓库只放说明、协议、示例脚本和安全检查。不放个人路径、账号、模型、素材、生成图、客户图纸、授权信息和本机缓存。
 
@@ -12,24 +12,26 @@
 | 2 | Codex 接入 ComfyUI | `docs/02-codex-comfyui.md` | 已有 API 探针和文生图 workflow 示例 |
 | 3 | Codex 接入 Photoshop | `docs/03-codex-photoshop.md` | 已有 COM 探针和主体抠图实验脚本 |
 | 4 | Codex 接入 Blender | `docs/04-codex-blender.md` | 已有状态检查入口，待补生成脚本 |
+| 5 | Codex 接入 Illustrator | `docs/05-codex-illustrator.md` | 已有 COM 探针和矢量测试画板导出脚本 |
 
 ## 怎么读这个仓库
 
 1. 先看本页，了解仓库范围。
 2. 再看 `docs/中文介绍.md`，了解总协议。
-3. 按需要打开上面的 4 个单项中文介绍。
+3. 按需要打开上面的 5 个单项中文介绍。
 4. 真要运行时，再看 `examples/` 和对应脚本。
 
 ## 主要文件
 
 | 路径 | 用途 |
 | --- | --- |
-| `docs/中文介绍.md` | 总协议：四条本地软件桥怎么组织 |
+| `docs/中文介绍.md` | 总协议：五条本地软件桥怎么组织 |
 | `docs/codex-drawing-tool-integrations.md` | 绘画、图像、设计、三维、制图工具路线图 |
 | `docs/中文用途索引.md` | 全仓库中文索引 |
-| `examples/bridge_status.py` | 检查 ComfyUI / Blender / CAD / Photoshop 状态 |
+| `examples/bridge_status.py` | 检查 ComfyUI / Blender / CAD / Photoshop / Illustrator 状态 |
 | `examples/comfy_bridge/` | ComfyUI API 示例 |
 | `examples/photoshop_bridge/` | Photoshop COM 和抠图实验示例 |
+| `examples/illustrator_bridge/` | Illustrator COM 和矢量测试画板示例 |
 | `cad-mcp-autocad/` | AutoCAD MCP 子项目 |
 | `scripts/` | CAD 自动绘图示例 |
 
@@ -60,9 +62,10 @@ npm.cmd run bridge:status:json
 | Blender MCP 目录 | `BLENDER_MCP_DIR` |
 | AutoCAD 可执行文件 | `AUTOCAD_EXE` |
 | Photoshop 可执行文件 | `PHOTOSHOP_EXE` |
+| Illustrator 可执行文件 | `ILLUSTRATOR_EXE` |
 | 下载收件箱 | `STARBRIDGE_DOWNLOAD_INBOX` |
 
-## 四个接入方向
+## 五个接入方向
 
 ### CAD
 
@@ -95,6 +98,16 @@ powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\com_p
 powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\extract_subject_to_png.ps1 -InputPath "<source-image>" -OutputPath "$env:TEMP\subject.png"
 ```
 
+### Illustrator
+
+先手动打开已授权的 Illustrator，再运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\illustrator_bridge\scripts\com_probe.ps1 -OutputPath "$env:TEMP\codex_illustrator_probe.png"
+```
+
+脚本会创建一个测试画板、绘制基础矢量对象并导出 PNG。真实安装路径只放在本机 `ILLUSTRATOR_EXE` 环境变量里。
+
 ### Blender
 
 先在本机配置 `BLENDER_EXE`，然后运行：
@@ -112,6 +125,7 @@ python examples\bridge_status.py --probe-executables
 - Blender 私有 `.blend`、贴图、资产库、渲染缓存。
 - CAD 客户图纸、商业 DWG、授权文件。
 - Photoshop 安装路径、Creative Cloud 缓存、PSD、商业字体、笔刷、购买素材、源图和导出结果。
+- Illustrator 安装路径、Creative Cloud 缓存、AI 私有工程、商业字体、笔刷、购买素材、源图和导出结果。
 - `output/`、`scratch/`、临时文件、日志和缓存。
 
 ## 下一步
@@ -120,3 +134,4 @@ python examples\bridge_status.py --probe-executables
 - 给 ComfyUI 增加 `img2img`、inpaint、upscale 示例。
 - 给 CAD 增加更清楚的 JSON 参数格式。
 - 给 Photoshop 增加 UXP 面板和本地 MCP 工具封装。
+- 给 Illustrator 增加当前文档只读探针和 SVG/PDF 导出示例。

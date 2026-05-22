@@ -2,7 +2,7 @@
 
 更新时间：2026-05-22
 
-这份文档把“Codex 接入任何绘画工具”的项目先收束成可执行路线。这里的绘画工具不只指传统画板，也包括图像生成、修图、设计稿、三维建模和工程制图工具。原则是：先稳定本机已经实践过的 ComfyUI、Blender、CAD、Photoshop 四条桥，再评估 Penpot/Figma、Krita 等扩展工具。
+这份文档把“Codex 接入任何绘画工具”的项目先收束成可执行路线。这里的绘画工具不只指传统画板，也包括图像生成、修图、设计稿、三维建模和工程制图工具。原则是：先稳定本机已经实践过的 ComfyUI、Blender、CAD、Photoshop、Illustrator 五条桥，再评估 Penpot/Figma、Krita 等扩展工具。
 
 ## 本机现状
 
@@ -12,24 +12,27 @@
 | Codex x Blender | `BLENDER_EXE`；`BLENDER_MCP_DIR` | 通过环境变量或常见安装路径识别 Blender 和 MCP 桥 | 用状态脚本固化检测路径，再补公开安全的 Blender 示例脚本 |
 | Codex x CAD | `cad-mcp-autocad/`；`AUTOCAD_MCP_SETUP.md` | 状态检查已能找到 AutoCAD 2026 和 `pywin32/win32com` | 继续保留在 `cad-mcp-autocad/` 子项目内优化 |
 | Codex x Photoshop | `examples/photoshop_bridge/`；`docs/photoshop-codex-bridge.md` | 已验证 Windows COM + Photoshop JavaScript 能创建测试文档、导出 PNG，并能调用主体选择做抠图实验 | 继续优化 UXP 面板、本地桥状态接口和 MCP 封装；不记录个人路径和素材信息 |
+| Codex x Illustrator | `examples/illustrator_bridge/`；`ILLUSTRATOR_EXE` | 已验证 Windows COM + Illustrator JavaScript 能创建测试画板、绘制矢量对象并导出 PNG | 继续增加当前文档只读探针、SVG/PDF 导出和 MCP 封装；不记录个人路径和素材信息 |
 | 下载/整理 | `STARBRIDGE_DOWNLOAD_INBOX` | 下载目录只保存在本机环境变量里 | 如果要下载源码或安装包，先放本机收件箱，不直接塞进 Git 工作区 |
 
 ## 仓库入口
 
 | 文件或目录 | 用途 |
 | --- | --- |
-| `docs/中文介绍.md` | 星桥三联主协议：ComfyUI、Blender、CAD、Photoshop 四条桥的边界和安全规则 |
+| `docs/中文介绍.md` | 星桥三联主协议：ComfyUI、Blender、CAD、Photoshop、Illustrator 五条桥的边界和安全规则 |
 | `docs/01-codex-cad.md` | Codex 接入 CAD 中文介绍 |
 | `docs/02-codex-comfyui.md` | Codex 接入 ComfyUI 中文介绍 |
 | `docs/03-codex-photoshop.md` | Codex 接入 Photoshop 中文介绍 |
 | `docs/04-codex-blender.md` | Codex 接入 Blender 中文介绍 |
+| `docs/05-codex-illustrator.md` | Codex 接入 Illustrator 中文介绍 |
 | `docs/photoshop-codex-bridge.md` | Photoshop 本地桥接入方案、实验结论和安全边界 |
-| `examples/bridge_status.py` | 一次检查 ComfyUI、Blender、CAD、Photoshop 的本机可用性 |
+| `examples/bridge_status.py` | 一次检查 ComfyUI、Blender、CAD、Photoshop、Illustrator 的本机可用性 |
 | `examples/comfy_bridge/README.md` | ComfyUI API 示例说明 |
 | `examples/comfy_bridge/comfy_probe.py` | 只读读取 ComfyUI 状态、设备和 checkpoint |
 | `examples/comfy_bridge/run_txt2img.py` | 提交基础文生图 workflow |
 | `cad-mcp-autocad/` | AutoCAD MCP 子项目 |
 | `examples/photoshop_bridge/` | Photoshop COM 探针和主体抠图实验脚本 |
+| `examples/illustrator_bridge/` | Illustrator COM 探针和矢量测试画板脚本 |
 | `scripts/draw_*.py` | 直接用 AutoCAD COM 绘制示例图纸 |
 
 ## 外部项目候选
@@ -41,19 +44,20 @@
 | ComfyUI MCP 轻量方案 | `alecc08/comfyui-mcp`、`joenorton/comfyui-mcp-server` | 可以对比轻量 MCP API 设计，避免一次引入过重依赖 | 需要先看维护状态和依赖边界 |
 | Blender MCP | `djeada/blender-mcp-server`、`loonghao/dcc-mcp-blender` | Blender add-on + MCP server 的结构可参考，用于场景、材质、渲染、导出 | 需要 Blender 打开或 headless 运行；私有 `.blend`、贴图和资产不上传 |
 | CAD MCP | `daobataotie/CAD-MCP` | 当前本地子项目来源，适合继续按 Windows COM/AutoCAD 路线优化 | 依赖 Windows、AutoCAD、pywin32；客户 DWG 不上传 |
-| 设计稿/矢量设计 | `penpot/penpot-mcp`、Figma 官方 MCP 文档 | 适合从设计稿读取上下文、创建或修改设计元素 | Penpot/Figma 可能涉及账号、浏览器授权或团队席位，需要人工处理登录 |
+| 设计稿/矢量设计 | `examples/illustrator_bridge/`、`penpot/penpot-mcp`、Figma 官方 MCP 文档 | Illustrator COM 适合本机矢量图形自动化；Penpot/Figma 适合从设计稿读取上下文、创建或修改设计元素 | Illustrator 需要已授权本机安装；Penpot/Figma 可能涉及账号、浏览器授权或团队席位，需要人工处理登录 |
 | Photoshop 修图 | `examples/photoshop_bridge/`、Adobe UXP、`StarBoze/Photoshop-MCP-Server` | Windows COM + Photoshop JavaScript 可做最小接入；UXP 适合做面板；MCP 适合后续工具化 | 需要已授权 Photoshop；安装路径、PSD、素材路径、账号和授权信息不进 Git |
 | Krita/其他画板 | 待二次筛选 | 适合作为开源绘画软件扩展方向 | 先找稳定插件/API，再决定是否下载 |
 
 ## 当前优化顺序
 
-1. 先把本机状态检测做准：ComfyUI 根目录、ComfyUI 启动脚本、Blender 可执行文件、Blender MCP 桥、AutoCAD 路径都要能被 `examples/bridge_status.py` 识别。
+1. 先把本机状态检测做准：ComfyUI 根目录、ComfyUI 启动脚本、Blender 可执行文件、Blender MCP 桥、AutoCAD 路径、Illustrator 路径都要能被 `examples/bridge_status.py` 识别。
 2. 再增强 ComfyUI 示例：保留现有 `txt2img`，后续增加 `img2img`、upscale、inpaint、批量 prompt 和 workflow 校验。
 3. 再把 ComfyUI 调用封装成更稳定的本地工具层：先用现有 HTTP API 脚本跑通，不急着引入完整第三方 MCP 包。
 4. Blender 侧优先做公开安全示例：生成简单场景、材质、相机、渲染路径，不引用私有资产库。
 5. CAD 侧继续走子项目隔离：所有 AutoCAD MCP 修改留在 `cad-mcp-autocad/`，根目录只更新说明。
 6. Photoshop 侧先保留 COM 探针和主体抠图实验，继续评估 UXP 面板和本地 MCP 封装；所有输入图和输出图都由参数传入，不写入仓库。
-7. Penpot/Figma 等扩展工具先做评估表和最小探针；凡是需要登录、订阅、浏览器授权、验证码或账号审批的步骤，都停下来让人手动处理。
+7. Illustrator 侧先保留 COM 探针和矢量测试画板实验，继续增加只读文档状态、SVG/PDF 导出和 MCP 封装。
+8. Penpot/Figma 等扩展工具先做评估表和最小探针；凡是需要登录、订阅、浏览器授权、验证码或账号审批的步骤，都停下来让人手动处理。
 
 ## 下载和安全规则
 
@@ -76,6 +80,7 @@
 - Blender 私有 `.blend`、贴图、资产库、渲染缓存。
 - CAD 客户图纸、DWG 输出、授权文件。
 - Photoshop 安装路径、Creative Cloud 缓存、PSD 私有工程、商业素材、源图路径和导出结果。
+- Illustrator 安装路径、Creative Cloud 缓存、AI 私有工程、商业素材、源图路径和导出结果。
 
 ## 调研来源
 

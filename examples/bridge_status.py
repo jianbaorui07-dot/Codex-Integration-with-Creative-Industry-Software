@@ -346,6 +346,56 @@ def check_photoshop(probe_com: bool) -> dict:
         return status("Photoshop", "warn", details, data)
 
 
+def find_illustrator() -> Path | None:
+    env_path = os.environ.get("ILLUSTRATOR_EXE")
+    if not env_path:
+        return None
+
+    candidate = Path(env_path)
+    return candidate if candidate.exists() else None
+
+
+def check_illustrator(probe_com: bool) -> dict:
+    illustrator = find_illustrator()
+    has_win32com = importlib.util.find_spec("win32com") is not None
+    details = [
+        "Illustrator install path is intentionally not hardcoded.",
+        f"ILLUSTRATOR_EXE configured: {bool(os.environ.get('ILLUSTRATOR_EXE'))}",
+        f"ILLUSTRATOR_EXE exists: {bool(illustrator)}",
+        f"Current Python has pywin32/win32com: {has_win32com}",
+    ]
+    data: dict[str, str | bool | int | None] = {
+        "illustrator_exe_configured": bool(os.environ.get("ILLUSTRATOR_EXE")),
+        "illustrator_exe_exists": bool(illustrator),
+        "has_win32com": has_win32com,
+    }
+
+    if not probe_com:
+        details.append("COM probe skipped. Use --probe-executables to attach to an already running Illustrator.")
+        if not has_win32com:
+            return status("Illustrator", "warn", details, data)
+        return status("Illustrator", "ok" if illustrator else "warn", details, data)
+
+    if not has_win32com:
+        details.append("Install pywin32 if Python-based COM probing is needed.")
+        return status("Illustrator", "warn", details, data)
+
+    try:
+        import win32com.client  # type: ignore[import-not-found]
+
+        app = win32com.client.GetActiveObject("Illustrator.Application")
+        version = str(app.Version)
+        documents = int(app.Documents.Count)
+        details.append(f"Active Illustrator COM object: found, version {version}, documents {documents}")
+        data.update({"active_com_object": True, "version": version, "documents": documents})
+        return status("Illustrator", "ok", details, data)
+    except Exception as exc:  # noqa: BLE001 - status script should keep going.
+        details.append(f"Active Illustrator COM object not found: {exc}")
+        details.append("Open Illustrator manually, then rerun with --probe-executables.")
+        data["active_com_object"] = False
+        return status("Illustrator", "warn", details, data)
+
+
 def print_text_report(results: list[dict]) -> None:
     print("StarBridge local bridge status")
     print("=" * 30)
@@ -377,6 +427,7 @@ def main() -> None:
         check_blender(args.probe_executables, args.timeout),
         check_cad(),
         check_photoshop(args.probe_executables),
+        check_illustrator(args.probe_executables),
     ]
 
     if args.json:
