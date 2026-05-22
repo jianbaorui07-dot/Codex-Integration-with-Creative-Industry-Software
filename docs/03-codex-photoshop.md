@@ -15,6 +15,8 @@
 | --- | --- |
 | `docs/photoshop-codex-bridge.md` | Photoshop 本地桥详细方案 |
 | `examples/photoshop_bridge/README.md` | Photoshop 示例说明 |
+| `examples/photoshop_bridge/scripts/diagnose_local.ps1` | 本机诊断：安装线索、COM 注册、进程和可选 COM 探测 |
+| `examples/photoshop_bridge/scripts/document_info.ps1` | 当前文档信息：名称、尺寸、模式、图层数量 |
 | `examples/photoshop_bridge/scripts/run_local_practice.ps1` | 一键本机实操：COM 探针、测试图生成、主体抠图 |
 | `examples/photoshop_bridge/scripts/com_probe.ps1` | COM 探针，创建测试文档并导出 PNG |
 | `examples/photoshop_bridge/scripts/extract_subject_to_png.ps1` | 主体选择和透明 PNG 输出实验 |
@@ -31,10 +33,23 @@ $env:PHOTOSHOP_EXE="<path-to-Photoshop.exe>"
 
 ## 验证命令
 
+本机诊断：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\diagnose_local.ps1
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\diagnose_local.ps1 -ProbeCom
+```
+
 一键本机实操：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\run_local_practice.ps1
+```
+
+读取当前文档信息：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\document_info.ps1
 ```
 
 单独运行 COM 探针：

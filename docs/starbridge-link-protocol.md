@@ -55,7 +55,32 @@
 python examples\bridge_status.py
 ```
 
-### 4.2 一键实操命令
+### 4.2 先做环境诊断
+
+只检查 Photoshop 安装线索、COM 注册、进程状态，不强制跑图像处理：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\diagnose_local.ps1
+```
+
+连 COM 一起验证：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\diagnose_local.ps1 -ProbeCom
+```
+
+诊断结果里的关键字段：
+
+| 字段 | 中文说明 |
+| --- | --- |
+| `status` | 当前状态：`ready`、`com_registered` 或 `needs_configuration` |
+| `com_registered` | 是否注册了 `Photoshop.Application` |
+| `running_processes` | 当前是否已有 Photoshop 进程 |
+| `discovered_paths` | 在常见 Adobe 目录里找到的 Photoshop.exe |
+| `com_probe` | 加 `-ProbeCom` 时返回版本和当前文档数量 |
+| `next_step` | 下一步建议 |
+
+### 4.3 一键实操命令
 
 运行下面命令，会自动完成三件事：
 
@@ -75,7 +100,17 @@ output\photoshop_bridge_practice\
 
 这个目录属于本机生成物，已经被 `.gitignore` 的 `output/` 规则排除，不会提交到 GitHub。
 
-### 4.3 单独运行 COM 探针
+### 4.4 读取当前文档信息
+
+如果 Photoshop 已经打开，可以读取当前文档名称、尺寸、模式和图层数量：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\document_info.ps1
+```
+
+这个命令不保存图片，只读取当前 Photoshop 状态。
+
+### 4.5 单独运行 COM 探针
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\com_probe.ps1 -OutputPath "$env:TEMP\codex_photoshop_probe.png"
@@ -83,7 +118,7 @@ powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\com_p
 
 成功时会返回 JSON，包含 Photoshop 版本、测试文档名称、图层数量和 PNG 输出路径。
 
-### 4.4 单独运行主体抠图
+### 4.6 单独运行主体抠图
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\extract_subject_to_png.ps1 -InputPath "<source-image>" -OutputPath "$env:TEMP\subject.png"
@@ -96,6 +131,8 @@ powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\extra
 | 文件 | 中文用途 |
 | --- | --- |
 | `examples/photoshop_bridge/README.md` | Photoshop 本地桥中文说明 |
+| `examples/photoshop_bridge/scripts/diagnose_local.ps1` | 本机诊断：安装线索、COM 注册、进程和可选 COM 探测 |
+| `examples/photoshop_bridge/scripts/document_info.ps1` | 当前文档信息：名称、尺寸、模式、图层数量 |
 | `examples/photoshop_bridge/scripts/run_local_practice.ps1` | 一键本机实操：探针、测试图、主体抠图 |
 | `examples/photoshop_bridge/scripts/com_probe.ps1` | COM 探针：创建测试文档并导出 PNG |
 | `examples/photoshop_bridge/scripts/extract_subject_to_png.ps1` | 主体选择：输入图片，输出透明 PNG |
@@ -133,7 +170,8 @@ powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\scripts\extra
 | 优先级 | 任务 |
 | --- | --- |
 | 高 | 让 `run_local_practice.ps1` 输出更详细的中文诊断 |
-| 高 | 增加 Photoshop 当前文档信息读取脚本 |
+| 已完成 | 增加 Photoshop 当前文档信息读取脚本 |
+| 已完成 | 增加 Photoshop 本机环境诊断脚本 |
 | 中 | 把 `extract_subject`、`export_png` 封装成本机 MCP 工具 |
 | 中 | 增加二次蒙版、边缘羽化和人工确认流程 |
 | 低 | 评估 UXP 面板，把当前文档、图层、选择区暴露给本地桥 |
