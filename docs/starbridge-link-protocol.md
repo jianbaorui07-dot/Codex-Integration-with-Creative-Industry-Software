@@ -1,167 +1,178 @@
-# 星桥三联：Codex 本地创作引擎接入协议
+# 星桥三联：Codex 本地创作引擎接入方案
 
 > English name: **StarBridge Trinity Protocol**
 
-星桥三联是一套把 Codex 接入本地创作软件的工作协议。它不是把所有能力混在一起，而是把三条专业通道分清楚：ComfyUI 负责图像生成，Blender 5.0 负责三维场景，CAD 负责工程制图。Codex 作为本地技术助手，负责编写脚本、整理工作流、调用本地 API，并把可公开协作的说明与示例同步到 GitHub。
+星桥三联是一套面向本地创作工作站的接入方案。它把 Codex、GitHub/Jules、ComfyUI、Blender 5.0 和 CAD 放在同一条可追踪的工作链里，让 Codex 负责写脚本、整理流程、调用本地接口和记录结果，让专业软件继续负责各自擅长的创作任务。
 
-这套协议的核心目标很简单：让 AI 能帮你操作复杂工具，但不越过安全边界；让工程文件可以分享，但私人账号、模型资产、生成缓存和商业素材不被上传。
+这不是把所有工具混成一个黑盒，而是把能力拆成清楚的几条桥：
 
-## 一句话简介
+- **ComfyUI** 负责图像生成、修复、放大和批量提示词实验。
+- **Blender 5.0** 负责三维场景、材质、灯光、相机、动画和导出。
+- **CAD / AutoCAD** 负责精确工程制图、尺寸标注、图层和 DWG 输出。
+- **GitHub / Jules** 负责保存可公开协作的说明、示例和异步审查任务。
 
-**星桥三联**把 Codex、GitHub/Jules、ComfyUI、Blender 5.0 和 CAD 连接成一个可审计、可复用、可逐步扩展的本地 AIGC 工作台。扩展到 Photoshop、Penpot、Figma、Krita 等绘画或设计工具时，仍沿用同一原则：本地优先、工具边界清楚、可公开协作内容与私有资产分离。
+核心目标只有两个：让 AI 能协助操作复杂创作工具；同时把账号、模型、缓存、客户图纸、商业素材和本地私有资产隔离在 GitHub 之外。
 
-```text
-Codex 写脚本和协议
-GitHub 保存可公开协作的工程说明
-Jules 阅读仓库并给出异步代码建议
-ComfyUI 生成图像
-Blender 5.0 构建三维场景
-CAD 输出工程图纸
+## 快速入口
+
+| 入口 | 用途 |
+| --- | --- |
+| `examples/bridge_status.py` | 一次检查 ComfyUI、Blender、CAD 三条桥的本机状态 |
+| `examples/comfy_bridge/` | ComfyUI API 探针、文生图脚本和 workflow 示例 |
+| `cad-mcp-autocad/` | AutoCAD MCP 子项目 |
+| `AUTOCAD_MCP_SETUP.md` | AutoCAD MCP 本地配置记录 |
+| `docs/codex-drawing-tool-integrations.md` | 绘画、图像、设计、三维、制图工具的扩展路线 |
+
+本地状态检查：
+
+```powershell
+python examples\bridge_status.py
+python examples\bridge_status.py --json
+python examples\bridge_status.py --probe-executables
 ```
 
-## 三条桥
+也可以通过 npm 快捷命令运行：
 
-### 1. Codex × ComfyUI：图像生成桥
+```powershell
+npm.cmd run bridge:status:json
+```
 
-ComfyUI 是本地生成引擎。Codex 通过 `http://127.0.0.1:8188` 调用 ComfyUI API，读取模型列表、提交 workflow JSON、轮询任务历史，并把输出路径反馈给用户。
+如果 PowerShell 拦截 `npm.ps1`，优先使用 `npm.cmd`。
 
-已建立的公开安全内容：
+## 当前本机路径
 
-- API 探针脚本：检查 ComfyUI 是否在线、显卡是否可用、有哪些 checkpoint。
-- API 工作流：用于脚本提交任务。
-- 可视化工作流：可直接在 ComfyUI 画布里看到节点和连线。
-- 新下载的源码项目、安装包和调研资料先放在 `E:\00_待整理收件箱\下载`。ComfyUI 模型、缓存、临时目录和生成输出继续留在本机 AIGC 目录，避免散落到系统盘或误入 Git。
+这些路径来自当前工作站的实际实践记录，用于帮助状态脚本找到本地工具：
 
-这条桥适合做：
+| 项目 | 本机路径 |
+| --- | --- |
+| ComfyUI 启动脚本 | `D:\AIGC\Start_ComfyUI_Codex.cmd` |
+| ComfyUI 根目录 | `D:\AIGC\comfyui安装包\ComfyUI` |
+| Blender 可执行文件 | `D:\AIGC\CAD\blender.exe` |
+| Blender MCP 桥目录 | `D:\AIGC\blender-mcp` |
+| AutoCAD 可执行文件 | `D:\AIGC\cad2026\CAD2026\AutoCAD 2026\acad.exe` |
+| 新下载源码和安装包 | `E:\00_待整理收件箱\下载` |
 
-- 文生图、图生图、放大、修复、批量提示词。
-- 自动修改 prompt、seed、steps、cfg、尺寸和保存前缀。
-- 后续扩展为 MCP 工具，让 Codex 像调用本地函数一样调用 ComfyUI。
+新下载的源码项目、安装包和调研资料先放在 `E:\00_待整理收件箱\下载`。模型、生成图、渲染输出、DWG 成品和临时缓存不要放进 Git 工作区。
 
-### 2. Codex × Blender 5.0：三维场景桥
-
-Blender 5.0 是三维创作引擎。Codex 可以通过 Blender Python 或 MCP 桥接层生成场景、材质、灯光、相机、动画和导出文件。它适合把文字需求转换成可见的三维结构。
-
-这条桥的定位不是替代建模师，而是先生成一个可修改、可验证、可继续打磨的三维初稿。
-
-适合做：
-
-- 快速生成场景草图、产品展示台、空间构图。
-- 批量创建材质、灯光、相机和渲染参数。
-- 把 ComfyUI 生成的概念图转成三维参考。
-- 用脚本生成可重复执行的建模流程。
-
-安全约束：
-
-- 不上传 `.blend` 私有工程、贴图、商业素材和本地资产库，除非用户明确选择。
-- GitHub 只保存协议、示例脚本和不含私人素材的说明。
-- 大型资产、缓存和渲染输出留在本地 `D:\AIGC`。
-
-### 3. Codex × CAD：工程制图桥
-
-CAD 是精确制图引擎。Codex 通过本地 CAD MCP / COM 自动化层和 AutoCAD 交互，适合把结构化规格转换成线、圆、标注、图层和 DWG 输出。
-
-已建立的方向：
-
-- `cad-mcp-autocad/` 作为 AutoCAD MCP 子项目。
-- `AUTOCAD_MCP_SETUP.md` 记录本地配置过程。
-- Python 脚本可测试 MCP 工具、绘制矩形和文本，并保存 DWG 文件。
-
-这条桥适合做：
-
-- 根据文字规格生成机械零件草图。
-- 自动绘制连接板、孔位、轮廓和尺寸标注。
-- 批量生成标准化 CAD 图纸初稿。
-- 将艺术、产品或建筑概念转成更精确的工程表达。
-
-安全约束：
-
-- 不上传客户图纸、商业图纸、DWG 输出批量文件或本地 CAD 授权信息。
-- GitHub 只保存可复用脚本、协议和不涉密的示例。
-- 真实项目图纸留在本地或由用户明确选择后再处理。
-
-## 总体架构
+## 总体结构
 
 ```mermaid
 flowchart LR
-  User["用户手动确认与授权"] --> Codex["Codex 本地助手"]
+  User["用户确认与授权"] --> Codex["Codex 本地助手"]
   Codex --> Git["Git / GitHub"]
-  Git --> Jules["Google Jules 异步代理"]
+  Git --> Jules["Jules 异步审查"]
   Codex --> Comfy["ComfyUI API 127.0.0.1:8188"]
-  Codex --> Blender["Blender 5.0 Python / MCP"]
+  Codex --> Blender["Blender Python / MCP"]
   Codex --> CAD["AutoCAD MCP / COM"]
   Comfy --> Images["本地图像输出"]
   Blender --> Scenes["本地三维场景"]
   CAD --> Drawings["本地 DWG 图纸"]
 ```
 
-## 工作原则
+Codex 只做连接、脚本化、检查和说明沉淀；图像、三维、制图仍交给对应的专业软件完成。
 
-1. **本地优先**  
-   生成、渲染、模型加载、CAD 自动化和三维资产处理都优先在本机完成。
+## 三条核心桥
 
-2. **GitHub 只放可公开协作的内容**  
-   文档、协议、示例脚本、空工作流模板可以上传；模型、输出图、商业素材、授权文件和隐私数据不上传。
+### 1. Codex x ComfyUI：图像生成桥
 
-3. **Jules 先读后改**  
-   Jules 的第一条任务应当只读仓库，输出结构、入口、运行方法和风险，不直接改代码。
+ComfyUI 是本地生成引擎。Codex 通过 `http://127.0.0.1:8188` 调用 ComfyUI API，读取系统状态、checkpoint 列表、队列状态，提交 workflow JSON，并返回输出路径。
 
-4. **每条桥都有边界**  
-   ComfyUI 管图像，Blender 管三维，CAD 管工程图；Codex 负责连接、解释、脚本化和验证。
+已经具备：
 
-5. **所有登录和授权都由用户完成**  
-   Google、GitHub、验证码、订阅、OAuth、支付和账号风控页面都必须由用户在官方页面手动处理。
+- `examples/comfy_bridge/comfy_probe.py`：只读探针，检查 ComfyUI、显卡和 checkpoint。
+- `examples/comfy_bridge/run_txt2img.py`：提交基础文生图 workflow。
+- `examples/comfy_bridge/workflows/txt2img_basic_api.json`：API 格式 workflow。
+- `examples/comfy_bridge/workflows/txt2img_basic_visual.json`：可在 ComfyUI 画布查看的 workflow。
 
-## 安全清单
+适合继续扩展：
 
-允许上传：
+- 文生图、图生图、局部修复、高清放大。
+- 批量 prompt、seed、steps、cfg、尺寸和保存前缀实验。
+- ControlNet、IP-Adapter、LoRA、模型管理和 workflow 校验。
+- 后续封装成 MCP 工具，让 Codex 像调用本地函数一样调用 ComfyUI。
 
-- 协议文档。
-- 示例 Python 脚本。
-- 不含私人素材的 workflow JSON。
-- 不含账号信息的 README。
-- 不含真实客户数据的演示配置。
+### 2. Codex x Blender 5.0：三维场景桥
 
-禁止上传：
+Blender 5.0 是三维创作引擎。Codex 可以通过 Blender Python 或 MCP 桥接层生成场景、模型、材质、灯光、相机、动画和导出文件。
+
+这条桥的定位是快速生成可修改的三维初稿，而不是替代建模师。它更适合把文字需求、结构草图或 ComfyUI 概念图转成可检查、可迭代的三维场景。
+
+适合继续扩展：
+
+- 快速生成产品展示台、空间构图和展陈草图。
+- 批量创建材质、灯光、相机和渲染参数。
+- 用脚本沉淀可复用建模流程。
+- 输出公开安全的示例 `.py`，不引用私有贴图和资产库。
+
+### 3. Codex x CAD：工程制图桥
+
+CAD 是精确制图引擎。Codex 通过本地 CAD MCP / COM 自动化层和 AutoCAD 交互，把结构化规格转换成线、圆、孔位、标注、图层和 DWG 输出。
+
+已经具备：
+
+- `cad-mcp-autocad/`：AutoCAD MCP 子项目。
+- `AUTOCAD_MCP_SETUP.md`：本地安装、依赖和 Codex MCP 配置记录。
+- `scripts/test_autocad_mcp.py`：MCP 连接测试脚本。
+- `scripts/draw_connection_plate_from_spec.py`、`scripts/draw_reference_mechanical_part.py`：直接绘图示例。
+
+适合继续扩展：
+
+- 根据规格生成机械零件草图。
+- 自动绘制连接板、孔位、轮廓和尺寸标注。
+- 批量生成标准化 CAD 图纸初稿。
+- 将艺术、产品或建筑概念转成更精确的工程表达。
+
+## 扩展工具方向
+
+星桥三联目前以 ComfyUI、Blender、CAD 为主线。后续可以在同一安全边界下扩展到更多绘画和设计工具：
+
+| 方向 | 适合工具 | 优先级 |
+| --- | --- | --- |
+| 图像生成与工作流 | ComfyUI、Stable Diffusion、Flux 相关工具 | 高 |
+| 三维建模与渲染 | Blender、Blender MCP | 高 |
+| 工程制图 | AutoCAD、CAD-MCP | 高 |
+| 修图和批处理 | Photoshop MCP、Adobe UXP | 中 |
+| 设计稿和矢量设计 | Penpot MCP、Figma MCP | 中 |
+| 开源画板 | Krita 及其脚本或插件 API | 待评估 |
+
+凡是涉及登录、订阅、验证码、OAuth、浏览器授权、团队权限或账号审批的步骤，都必须由用户在官方页面手动完成。
+
+## 安全边界
+
+允许进入 GitHub：
+
+- 协议文档、README、运行说明。
+- 示例 Python 脚本和安全的 workflow JSON。
+- 不含私人素材、账号信息和真实客户数据的演示配置。
+- 可公开协作的任务说明和 Jules 只读任务提示。
+
+禁止进入 GitHub：
 
 - 密码、验证码、Cookie、token、OAuth 缓存。
-- Google / GitHub 登录资料。
-- ComfyUI 模型、LoRA、VAE、ControlNet。
+- 浏览器资料、支付信息、账号风控页面内容。
+- ComfyUI 模型、LoRA、VAE、ControlNet、生成图。
 - Blender 私有 `.blend`、贴图、资产库和渲染缓存。
-- CAD 商业图纸、客户 DWG、授权文件和真实项目输出。
-- 批量生成图片、日志、临时文件、浏览器数据。
+- CAD 客户图纸、商业 DWG、授权文件和真实项目输出。
+- Photoshop PSD 私有工程和商业素材。
 
-## GitHub 当前公开内容
+## 工作原则
 
-- `docs/starbridge-link-protocol.md`  
-  星桥三联协议主文档。
+1. **本地优先**
+   生成、渲染、模型加载、CAD 自动化和三维资产处理优先在本机完成。
 
-- `docs/codex-drawing-tool-integrations.md`
-  Codex 接入绘画、图像、设计、三维和工程制图工具的路线图。
+2. **工具分工清楚**
+   ComfyUI 管图像，Blender 管三维，CAD 管工程图，Codex 负责连接、解释、脚本化和验证。
 
-- `examples/comfy_bridge/README.md`  
-  ComfyUI 桥接示例说明。
+3. **GitHub 只保存可公开内容**
+   仓库保存协议、脚本和示例，不保存模型、输出、缓存、授权文件和私有素材。
 
-- `examples/bridge_status.py`
+4. **Jules 先读后改**
+   Jules 第一条任务应只读仓库，输出结构、入口、运行方法、依赖、风险和后续任务，不直接改文件。
 
-  星桥三联本地状态检查脚本：一次检查 ComfyUI、Blender 和 CAD 桥接准备情况，不读取凭据和私人素材。
+5. **人工处理账号和授权**
+   任何登录、订阅、验证码、OAuth、支付、账号审核都不交给自动化流程。
 
-- `examples/comfy_bridge/comfy_probe.py`  
-  只读探针：读取 ComfyUI 状态、显卡和 checkpoint。
-
-- `examples/comfy_bridge/run_txt2img.py`  
-  文生图提交脚本：通过 ComfyUI API 提交任务并返回输出路径。
-
-- `examples/comfy_bridge/workflows/txt2img_basic_api.json`  
-  API 版文生图工作流。
-
-- `examples/comfy_bridge/workflows/txt2img_basic_visual.json`  
-  ComfyUI 画布可视化版工作流。
-
-- `AUTOCAD_MCP_SETUP.md`  
-  CAD MCP 本地配置说明。
-
-## 第一条 Jules 任务建议
+## Jules 只读任务建议
 
 ```text
 只读项目梳理任务。请检查这个仓库，但不要修改、创建、删除任何文件，不要提交 commit，不要创建 PR。
@@ -171,14 +182,13 @@ flowchart LR
 
 ## 下一步路线
 
-- 已增加统一的 `examples/bridge_status.py`，可一次检查 ComfyUI、Blender 和 CAD 三条桥是否在线或可配置。
-- 已补齐本机常用路径检测：ComfyUI 启动脚本、ComfyUI 根目录、Blender 可执行文件、Blender MCP 桥和 AutoCAD 可执行文件。
-- 为 ComfyUI 增加 `img2img`、放大、修复和批量提示词示例。
-- 为 Blender 5.0 增加一个公开安全的场景生成脚本示例。
-- 为 CAD 增加一个公开安全的标准零件绘图脚本示例。
-- 为 Photoshop、Penpot/Figma、Krita 等绘画或设计工具建立候选接入评估表，先记录来源、许可、依赖、账号要求和本机安全边界，再决定是否下载或安装。
-- 后续将三条桥逐步包装成 MCP 工具，让 Codex 可以稳定调用、记录结果并提示风险。
+- 完善 `examples/bridge_status.py`，持续识别 ComfyUI、Blender、CAD 的本机路径和在线状态。
+- 为 ComfyUI 增加 `img2img`、upscale、inpaint、批量 prompt 和 workflow 校验示例。
+- 为 Blender 增加公开安全的场景生成脚本，不引用私有资产。
+- 为 CAD 增加标准零件绘图脚本和更清晰的参数化输入格式。
+- 为 Photoshop、Penpot/Figma、Krita 建立候选接入评估表，先记录来源、许可、依赖、账号要求和安全边界，再决定是否下载或安装。
+- 逐步把稳定脚本包装成 MCP 工具，让 Codex 能稳定调用、记录结果并提示风险。
 
-## 结语
+## 结论
 
-星桥三联不是一个单点工具，而是一种工作方式：把想法交给 Codex 拆解，把协作交给 GitHub 和 Jules，把生成交给 ComfyUI，把空间交给 Blender，把精度交给 CAD。每一条桥都保持清晰边界，既让创作变快，也让工程保持可控。
+星桥三联是一套本地创作工作台的组织方式：Codex 负责把需求拆成脚本和流程，GitHub 保存可公开协作的工程说明，Jules 做异步只读审查，ComfyUI 生成图像，Blender 构建三维，CAD 输出精确图纸。每条桥保持清楚边界，既提升创作效率，也让本地资产和账号安全保持可控。

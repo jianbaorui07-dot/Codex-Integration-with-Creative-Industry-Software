@@ -1,17 +1,17 @@
-# Dependencies
+# 依赖目录
 node_modules/
 
-# Python caches
+# Python 缓存
 __pycache__/
 *.py[cod]
 
-# Local environments and secrets
+# 本地环境和密钥
 .env
 .env.*
 .venv/
 venv/
 
-# Generated artifacts and local render outputs
+# 生成物、缓存和本地渲染输出
 output/
 scratch/
 docx_render_check/
@@ -19,13 +19,31 @@ docx_render_check/
 .codex_video_frames/
 .skill-build/
 
-# Logs and transient files
+# 不属于 GitHub 发布范围的本地 demo、报告脚本和研究素材
+src/
+virtual-pet/
+overtime-analysis-deck/
+_codex_reference_contact_sheet.jpg
+codex_doll_four_modes.png
+build_aigc_research_report.py
+enhance_ai_reports.py
+mao-volume5-refined-style.md
+reference_style_notes.md
+scripts/append_art_capability_explainers.py
+scripts/append_art_tech_300_projects.py
+scripts/create_ai_art_workflow_doc.py
+scripts/create_art_plugin_recommendations_doc.py
+scripts/enhance_github_report_cn.py
+scripts/expand_ai_art_workflow_doc.py
+scripts/generate_github_hot_report.py
+
+# 日志和临时文件
 *.log
 *.err
 *.tmp
 *.bak
 
-# OS/editor noise
+# 系统和编辑器噪音
 .DS_Store
 Thumbs.db
 .idea/
