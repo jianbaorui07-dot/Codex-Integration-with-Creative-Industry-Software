@@ -8,11 +8,16 @@ __pycache__/
 # 本地环境和密钥
 .env
 .env.*
+!.env.example
 .venv/
 venv/
 
 # 生成物、缓存和本地渲染输出
 output/
+outputs/
+reports/
+**/outputs/
+**/reports/
 scratch/
 docx_render_check/
 .codex_video_deps/
@@ -42,6 +47,20 @@ scripts/generate_github_hot_report.py
 *.err
 *.tmp
 *.bak
+.pytest_cache/
+
+# 大型模型、工程源文件和真实输出
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.psd
+*.dwg
+*.ai
+*.aep
+*.mp4
+*.mov
+!*.example.json
 
 # 系统和编辑器噪音
 .DS_Store

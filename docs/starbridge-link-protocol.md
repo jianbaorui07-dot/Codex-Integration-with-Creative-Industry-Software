@@ -60,7 +60,7 @@
 
 | 软件桥 | 项目整体已有内容 | 本机实例检查项 | 本机没有时怎么补 |
 | --- | --- | --- | --- |
-| ComfyUI 图像生成桥 | `examples/comfy_bridge/`、文生图 workflow、API 探针 | `COMFY_BASE_URL`、`COMFY_ROOT`、`COMFY_LAUNCHER`，以及 `127.0.0.1:8188` 是否可连接 | 先启动 ComfyUI；如目录不在默认位置，用环境变量配置，不提交模型和输出图 |
+| ComfyUI 图像生成桥 | `examples/comfy_bridge/`、文生图 workflow、API 探针 | `STARBRIDGE_COMFYUI_URL`、`COMFY_ROOT`、`COMFY_LAUNCHER`，以及 `127.0.0.1:8188` 是否可连接 | 先启动 ComfyUI；如目录不在默认位置，用环境变量配置，不提交模型和输出图 |
 | Blender 三维场景桥 | `docs/04-codex-blender.md` 和后续场景脚本路线 | `BLENDER_EXE`、`BLENDER_MCP_DIR` | 安装或打开 Blender；配置本机路径环境变量，不提交 `.blend`、贴图和资产库 |
 | CAD / AutoCAD 工程制图桥 | `cad-mcp-autocad/`、`AUTOCAD_MCP_SETUP.md`、`scripts/` | `AUTOCAD_EXE`、`pywin32/win32com`、AutoCAD MCP 子项目 | 安装/打开 AutoCAD；配置 `AUTOCAD_EXE`；客户 DWG 和真实图纸只留本机 |
 | Photoshop 修图桥 | `examples/photoshop_bridge/`、诊断、COM 探针、主体抠图实验 | `PHOTOSHOP_EXE`、`Photoshop.Application` COM、运行中的 Photoshop | 手动打开已授权 Photoshop；需要时配置 `PHOTOSHOP_EXE`；输入/输出路径只用参数传入 |

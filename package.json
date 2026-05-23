@@ -2,11 +2,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "bridge:status": "python examples/bridge_status.py",
-    "bridge:status:json": "python examples/bridge_status.py --json",
+    "bridge:status": "python scripts/collect_bridge_status.py --markdown",
+    "bridge:status:json": "python scripts/collect_bridge_status.py --json",
     "bridge:status:probe": "python examples/bridge_status.py --probe-executables",
     "comfy:probe": "python examples/comfy_bridge/comfy_probe.py",
-    "photoshop:probe": "powershell -ExecutionPolicy Bypass -File examples/photoshop_bridge/scripts/com_probe.ps1",
+    "photoshop:probe": "powershell -ExecutionPolicy Bypass -File examples/photoshop_bridge/probe.ps1",
+    "security:check": "python scripts/security_check.py",
     "test": "python -m unittest discover -s tests"
   }
 }

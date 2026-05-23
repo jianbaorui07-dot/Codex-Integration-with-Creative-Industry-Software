@@ -1,0 +1,22 @@
+{
+  "bridge_id": "cad_autocad",
+  "ok": false,
+  "detected": {
+    "platform": "Windows",
+    "is_windows": true,
+    "starbridge_cad_mode_configured": false,
+    "autocad_exe_configured": false,
+    "autocad_exe_exists": false,
+    "acad_on_path": false,
+    "win32com_available": false,
+    "com_registered": false
+  },
+  "errors": [
+    {
+      "code": "autocad_not_detected",
+      "message": "AutoCAD executable or COM registration was not detected."
+    }
+  ],
+  "warnings": [],
+  "safe_to_commit": true
+}

@@ -1,0 +1,20 @@
+{
+  "bridge_id": "photoshop",
+  "display_name": "Photoshop 修图桥",
+  "maturity": "prototype",
+  "platforms": ["Windows"],
+  "local_dependency": ["Adobe Photoshop desktop", "PowerShell", "Photoshop.Application COM"],
+  "required_env": ["PHOTOSHOP_EXE"],
+  "probe_supported": true,
+  "write_supported": false,
+  "safe_report_supported": true,
+  "last_verified": null,
+  "known_risks": [
+    "PSD、源图、导出图、商业字体、商业笔刷和 Creative Cloud 缓存不能提交。",
+    "probe 不能打开用户真实 PSD，也不能保存真实图片。"
+  ],
+  "next_steps": [
+    "继续把安全 probe 与会生成本地产物的实操脚本分离。",
+    "后续 MCP 工具先实现只读 document_info，再考虑导出动作。"
+  ]
+}

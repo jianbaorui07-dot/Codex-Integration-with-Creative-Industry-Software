@@ -11,7 +11,7 @@ import urllib.request
 from pathlib import Path
 
 
-DEFAULT_BASE_URL = os.environ.get("COMFY_BASE_URL", "http://127.0.0.1:8188")
+DEFAULT_BASE_URL = os.environ.get("STARBRIDGE_COMFYUI_URL") or os.environ.get("COMFY_BASE_URL", "http://127.0.0.1:8188")
 BRIDGE_ROOT = Path(__file__).resolve().parent
 WORKFLOW_PATH = BRIDGE_ROOT / "workflows" / "txt2img_basic_api.json"
 DEFAULT_COMFY_OUTPUT = Path(os.environ.get("COMFY_OUTPUT_DIR", str(Path.cwd() / "output" / "comfyui")))

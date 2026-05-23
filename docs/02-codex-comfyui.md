@@ -24,7 +24,7 @@
 用环境变量记录本机路径，不写进 Git：
 
 ```powershell
-$env:COMFY_BASE_URL="http://127.0.0.1:8188"
+$env:STARBRIDGE_COMFYUI_URL="http://127.0.0.1:8188"
 $env:COMFY_ROOT="<path-to-ComfyUI>"
 $env:COMFY_LAUNCHER="<path-to-launcher.cmd>"
 $env:COMFY_OUTPUT_DIR="<path-to-ComfyUI-output>"

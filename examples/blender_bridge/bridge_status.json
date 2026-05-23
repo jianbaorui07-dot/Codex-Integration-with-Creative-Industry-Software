@@ -1,0 +1,20 @@
+{
+  "bridge_id": "blender",
+  "display_name": "Blender 三维场景桥",
+  "maturity": "planned",
+  "platforms": ["Windows", "Linux", "macOS"],
+  "local_dependency": ["Blender desktop or blender CLI"],
+  "required_env": ["STARBRIDGE_BLENDER_EXE", "BLENDER_EXE"],
+  "probe_supported": true,
+  "write_supported": false,
+  "safe_report_supported": true,
+  "last_verified": null,
+  "known_risks": [
+    "私有 .blend、贴图、资产库和渲染缓存不能提交。",
+    "planned 阶段不能声称已经完成本机自动建模。"
+  ],
+  "next_steps": [
+    "先保持只读 probe。",
+    "后续只用程序生成几何体做公开安全示例。"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "bridge_id": "photoshop",
+  "ok": false,
+  "detected": {
+    "platform": "Windows",
+    "is_windows": true,
+    "prog_id": "Photoshop.Application",
+    "com_type_available": false,
+    "photoshop_exe_configured": false,
+    "photoshop_exe_exists": false
+  },
+  "errors": [
+    {
+      "code": "com_type_missing",
+      "message": "Photoshop.Application COM type is not available on this system."
+    }
+  ],
+  "warnings": [],
+  "safe_to_commit": true
+}

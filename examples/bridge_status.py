@@ -13,6 +13,7 @@ from pathlib import Path
 
 
 DEFAULT_COMFY_URL = "http://127.0.0.1:8188"
+BASIC_COMFY_NODES = ["CheckpointLoaderSimple", "CLIPTextEncode", "KSampler", "VAEDecode", "SaveImage"]
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DOWNLOAD_INBOX = os.environ.get("STARBRIDGE_DOWNLOAD_INBOX")
 STATUS_LABELS = {
@@ -119,18 +120,12 @@ def check_comfy(base_url: str, timeout: int) -> dict:
     ]
 
     try:
-        queue = get_json(base_url, "/queue", timeout)
-        details.append(f"正在运行任务：{len(queue.get('queue_running', []))}")
-        details.append(f"等待队列任务：{len(queue.get('queue_pending', []))}")
+        object_info = get_json(base_url, "/object_info", timeout)
+        detected_nodes = [node for node in BASIC_COMFY_NODES if node in object_info]
+        details.append(f"基础节点可读数量：{len(detected_nodes)}/{len(BASIC_COMFY_NODES)}")
     except Exception as exc:  # noqa: BLE001 - status script should keep going.
-        details.append(f"队列检查失败：{exc}")
-
-    try:
-        loader = get_json(base_url, "/object_info/CheckpointLoaderSimple", timeout)
-        checkpoints = loader["CheckpointLoaderSimple"]["input"]["required"]["ckpt_name"][0]
-        details.append(f"可用 checkpoint 数量：{len(checkpoints)}")
-    except Exception as exc:  # noqa: BLE001 - status script should keep going.
-        details.append(f"checkpoint 检查失败：{exc}")
+        detected_nodes = []
+        details.append(f"基础节点检查失败：{exc}")
 
     if comfy_root:
         details.append(f"本机 ComfyUI 根目录：{comfy_root}")
@@ -145,6 +140,7 @@ def check_comfy(base_url: str, timeout: int) -> dict:
             "base_url": base_url,
             "local_root": str(comfy_root) if comfy_root else None,
             "launcher": str(comfy_launcher) if comfy_launcher else None,
+            "basic_nodes_checked": detected_nodes,
         },
         "ComfyUI 图像生成桥",
     )
@@ -475,7 +471,10 @@ def main() -> None:
         add_help=False,
     )
     parser.add_argument("-h", "--help", action="help", help="显示帮助并退出。")
-    parser.add_argument("--comfy-url", default=os.environ.get("COMFY_BASE_URL", DEFAULT_COMFY_URL))
+    parser.add_argument(
+        "--comfy-url",
+        default=os.environ.get("STARBRIDGE_COMFYUI_URL") or os.environ.get("COMFY_BASE_URL", DEFAULT_COMFY_URL),
+    )
     parser.add_argument("--timeout", type=int, default=8)
     parser.add_argument(
         "--probe-executables",

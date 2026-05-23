@@ -81,6 +81,7 @@ npm.cmd run bridge:status:json
 
 | 软件或目录 | 环境变量 |
 | --- | --- |
+| ComfyUI API 地址 | `STARBRIDGE_COMFYUI_URL` |
 | ComfyUI 启动脚本 | `COMFY_LAUNCHER` 或 `COMFY_START_SCRIPT` |
 | ComfyUI 根目录 | `COMFY_ROOT` 或 `COMFYUI_PATH` |
 | ComfyUI 输出目录 | `COMFY_OUTPUT_DIR` |

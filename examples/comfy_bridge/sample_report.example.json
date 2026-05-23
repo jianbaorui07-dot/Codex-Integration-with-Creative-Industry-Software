@@ -1,0 +1,18 @@
+{
+  "bridge_id": "comfyui",
+  "ok": false,
+  "detected": {
+    "base_url": "http://127.0.0.1:8188",
+    "system_stats": false,
+    "object_info": false,
+    "basic_nodes_checked": []
+  },
+  "errors": [
+    {
+      "code": "service_unreachable",
+      "message": "ComfyUI service is not reachable at the configured URL."
+    }
+  ],
+  "warnings": [],
+  "safe_to_commit": true
+}

@@ -1,0 +1,20 @@
+{
+  "bridge_id": "illustrator",
+  "ok": false,
+  "detected": {
+    "platform": "Windows",
+    "is_windows": true,
+    "prog_id": "Illustrator.Application",
+    "com_type_available": false,
+    "illustrator_exe_configured": false,
+    "illustrator_exe_exists": false
+  },
+  "errors": [
+    {
+      "code": "com_type_missing",
+      "message": "Illustrator.Application COM type is not available on this system."
+    }
+  ],
+  "warnings": [],
+  "safe_to_commit": true
+}

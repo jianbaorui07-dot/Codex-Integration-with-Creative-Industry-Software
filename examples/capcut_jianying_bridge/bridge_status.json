@@ -1,0 +1,20 @@
+{
+  "bridge_id": "capcut_jianying",
+  "display_name": "剪映 / CapCut 草稿桥",
+  "maturity": "research",
+  "platforms": ["Windows", "macOS"],
+  "local_dependency": ["剪映专业版 or CapCut desktop", "local draft folder"],
+  "required_env": ["JIANYING_EXE", "CAPCUT_EXE", "JIANYING_DRAFTS_DIR", "CAPCUT_DRAFTS_DIR"],
+  "probe_supported": true,
+  "write_supported": false,
+  "safe_report_supported": true,
+  "last_verified": null,
+  "known_risks": [
+    "草稿、素材、字幕原稿、导出视频、账号和会员状态不能提交。",
+    "research 阶段不能声称已经能自动控制剪映或 CapCut 桌面版。"
+  ],
+  "next_steps": [
+    "只做草稿目录结构和许可边界调研。",
+    "确认安全后再考虑只读草稿目录 probe。"
+  ]
+}

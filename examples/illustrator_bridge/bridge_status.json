@@ -1,0 +1,20 @@
+{
+  "bridge_id": "illustrator",
+  "display_name": "Illustrator / AI 矢量文件桥",
+  "maturity": "planned",
+  "platforms": ["Windows"],
+  "local_dependency": ["Adobe Illustrator desktop", "PowerShell", "Illustrator.Application COM"],
+  "required_env": ["ILLUSTRATOR_EXE"],
+  "probe_supported": true,
+  "write_supported": false,
+  "safe_report_supported": true,
+  "last_verified": null,
+  "known_risks": [
+    "客户 .ai、源图、导出 SVG/PDF/PNG、商业字体和 Creative Cloud 缓存不能提交。",
+    "planned 阶段不能声称已经完成 Image Trace 或批量导出。"
+  ],
+  "next_steps": [
+    "先实现只读 document_info。",
+    "再评估参数化 Image Trace 和导出脚本。"
+  ]
+}

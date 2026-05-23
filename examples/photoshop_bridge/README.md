@@ -2,6 +2,22 @@
 
 这个目录只保存可公开的 Photoshop 接入示例。脚本不包含个人路径、素材路径、账号信息或授权信息；运行时请通过参数传入输入和输出路径。
 
+## 区域零：统一安全 probe
+
+安全 probe 只检查 Windows、`PHOTOSHOP_EXE` 和 `Photoshop.Application` COM 类型，不打开 PSD，不保存图片：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File examples\photoshop_bridge\probe.ps1
+```
+
+probe report 默认写入：
+
+```text
+examples\photoshop_bridge\reports\photoshop_probe_report.json
+```
+
+`reports/` 已被 `.gitignore` 忽略。仓库只提交 `sample_report.example.json`。
+
 ## 区域一：前置条件
 
 - Windows。
@@ -75,6 +91,7 @@ output\photoshop_bridge_report\
 
 | 检查项 | 合格标准 |
 | --- | --- |
+| 安全 probe | `probe.ps1` 返回统一 JSON report |
 | 环境诊断 | `diagnose_local.ps1 -ProbeCom` 返回 `ready` |
 | 一键实操 | `run_local_practice.ps1` 返回 `ok: true` |
 | 报告留档 | `write_practice_report.py --run-practice` 生成 Markdown 和 JSON |

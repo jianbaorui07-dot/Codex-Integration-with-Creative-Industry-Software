@@ -1,0 +1,20 @@
+{
+  "bridge_id": "cad_autocad",
+  "display_name": "CAD / AutoCAD 工程制图桥",
+  "maturity": "prototype",
+  "platforms": ["Windows"],
+  "local_dependency": ["AutoCAD desktop", "AutoCAD.Application COM", "pywin32"],
+  "required_env": ["STARBRIDGE_CAD_MODE", "AUTOCAD_EXE"],
+  "probe_supported": true,
+  "write_supported": false,
+  "safe_report_supported": true,
+  "last_verified": null,
+  "known_risks": [
+    "客户 DWG、商业图纸、授权文件和真实项目输出不能提交。",
+    "probe 不能打开真实 DWG，也不能写入真实 CAD 文件。"
+  ],
+  "next_steps": [
+    "继续把只读 probe 与 AutoCAD 绘图示例分离。",
+    "后续参数化绘图必须使用公开演示数据。"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "bridge_id": "blender",
+  "ok": false,
+  "detected": {
+    "platform": "Windows",
+    "blender_env_configured": false,
+    "blender_env_exists": false,
+    "blender_on_path": false
+  },
+  "errors": [
+    {
+      "code": "blender_not_detected",
+      "message": "Blender executable was not detected."
+    }
+  ],
+  "warnings": [],
+  "safe_to_commit": true
+}

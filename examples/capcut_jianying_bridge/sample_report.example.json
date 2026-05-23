@@ -1,0 +1,28 @@
+{
+  "bridge_id": "capcut_jianying",
+  "ok": false,
+  "detected": {
+    "platform": "Windows",
+    "jianying_exe_configured": false,
+    "jianying_exe_exists": false,
+    "capcut_exe_configured": false,
+    "capcut_exe_exists": false,
+    "jianying_drafts_dir_configured": false,
+    "jianying_drafts_dir_exists": false,
+    "capcut_drafts_dir_configured": false,
+    "capcut_drafts_dir_exists": false
+  },
+  "errors": [
+    {
+      "code": "draft_bridge_not_configured",
+      "message": "No Jianying or CapCut executable and draft directory are configured."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "research_only",
+      "message": "This bridge is research-only and does not automate the desktop app."
+    }
+  ],
+  "safe_to_commit": true
+}
