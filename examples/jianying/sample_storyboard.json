@@ -1,0 +1,20 @@
+﻿{
+  "scenes": [
+    {
+      "scene_id": "intro",
+      "duration": 2.5,
+      "subtitle": "StarBridge connects local creative tools.",
+      "voiceover": "Codex prepares the plan, local software does the real work.",
+      "visual_note": "Clean product intro with placeholder image.",
+      "image": "PLACEHOLDER_IMAGE_001.png"
+    },
+    {
+      "scene_id": "workflow",
+      "duration": 3.5,
+      "subtitle": "No real draft is written in this demo.",
+      "voiceover": "The bridge generates a safe draft plan only.",
+      "visual_note": "Timeline blocks and captions.",
+      "image": "PLACEHOLDER_IMAGE_002.png"
+    }
+  ]
+}

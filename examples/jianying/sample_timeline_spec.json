@@ -1,0 +1,36 @@
+﻿{
+  "clips": [
+    {
+      "clip_id": "scene_001",
+      "asset": "PLACEHOLDER_IMAGE_001.png",
+      "start": 0,
+      "duration": 3,
+      "visual_note": "Opening product shot"
+    }
+  ],
+  "texts": [
+    {
+      "scene_id": "scene_001",
+      "start": 0,
+      "duration": 3,
+      "text": "StarBridge demo title"
+    }
+  ],
+  "audio": [
+    {
+      "scene_id": "scene_001",
+      "asset": "PLACEHOLDER_AUDIO_001.wav",
+      "start": 0,
+      "duration": 3,
+      "voiceover": "Safe local draft plan demo"
+    }
+  ],
+  "subtitles": [
+    {
+      "scene_id": "scene_001",
+      "start": 0,
+      "duration": 3,
+      "text": "This is a draft plan only."
+    }
+  ]
+}
