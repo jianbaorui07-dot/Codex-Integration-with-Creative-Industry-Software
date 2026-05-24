@@ -49,3 +49,11 @@ P3：
 
 - 任意脚本执行。
 - 自动登录、账号、云端发布、付费能力或绕过授权相关功能。
+## integration 分支当前状态
+
+`integration/starbridge-comfyui-jianying` 已把核心 MVP 与 ComfyUI/Jianying 原型合并到一个验证分支。
+
+- `comfyui`：已接入 server status；默认 dry-run，不真实 queue。
+- `jianying_capcut`：已接入 server status；只生成 draft_plan，不写真实草稿。
+- release-readiness：后续单独合并，用于 CI、PR 模板和发布审计。
+- CAD / DXF：后续单独分支处理，不在本轮 integration 中合并。

@@ -18,3 +18,11 @@ python examples\jianying\storyboard_to_draft_plan.py
 - ComfyUI 榛樿 dry-run锛屼笉鐪熷疄 queue銆?- 鐪熷疄 queue 蹇呴』鏄惧紡寮€鍚幆澧冨彉閲忓拰璋冪敤鍙傛暟銆?- 鍓槧 bridge 鍙敓鎴?draft_plan锛屼笉鍐欑湡瀹炶崏绋裤€?- 绀轰緥绱犳潗鍏ㄩ儴鏄?`PLACEHOLDER_*` 鍚嶇О銆?- 涓嶆彁浜ゆā鍨嬨€佺敓鎴愬浘銆佽棰戙€佽崏绋跨洰褰曟垨瀹㈡埛绱犳潗銆?
 ## 璺ㄥ垎鏀緷璧?
 - 绗竴鍙版牳蹇冨垎鏀渶瑕佹妸 bridge 娉ㄥ唽杩?`starbridge_mcp.server`銆?- 绗簩鍙板師鍨嬪垎鏀户缁墦纾?ComfyUI 鍜屽壀鏄?/ CapCut bridge銆?- 绗笁鍙?release-readiness 鍒嗘敮闇€瑕佹妸鏂板娴嬭瘯鍜屽畨鍏ㄨ剼鏈撼鍏?CI 鍙戝竷妫€鏌ャ€?
+## integration 分支状态
+
+`integration/starbridge-comfyui-jianying` 已完成核心 StarBridge MVP 与 ComfyUI/Jianying 原型合并。
+
+- `python -m starbridge_mcp.server --json` 会包含 ComfyUI 和剪映 / CapCut 状态。
+- ComfyUI 仍默认 dry-run，不真实调用 queue。
+- 剪映 / CapCut 仍只生成 draft_plan，不写真实草稿目录。
+- 下一步才合并 release-readiness 分支；CAD / DXF bridge 仍单独处理。

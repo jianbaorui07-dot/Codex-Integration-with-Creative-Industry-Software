@@ -201,3 +201,15 @@ exit code 0
 npm.cmd test
 通过
 ```
+## 第四轮 integration 状态记录
+
+integration 分支 `integration/starbridge-comfyui-jianying` 已合并核心分支 `codex/tiger-bridge-mvp-experiment` 和 ComfyUI / 剪映原型分支 `continue/comfyui-jianying-bridge`。
+
+本轮只做核心 + ComfyUI/Jianying 集成，不合并 release-readiness，不处理 CAD / DXF MVP。
+
+- ComfyUI bridge 已通过最小适配接入 `starbridge_mcp.server`。
+- 剪映 / CapCut bridge 已通过最小适配接入 `starbridge_mcp.server`。
+- ComfyUI 仍默认 dry-run，不真实执行 queue。
+- 剪映 / CapCut 仍只生成 draft_plan，不写真实草稿目录。
+- 下一步才合并 release-readiness 分支。
+- CAD / DXF bridge 仍是后续单独分支。

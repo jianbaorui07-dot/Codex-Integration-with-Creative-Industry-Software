@@ -28,6 +28,7 @@ BRIDGE_NAME_MAP = {
 BRIDGE_ALIASES = {
     "cad_autocad": "autocad",
     "capcut_jianying": "jianying_capcut",
+    "jianying": "jianying_capcut",
 }
 
 BRIDGE_PROFILES: dict[str, dict[str, Any]] = {
@@ -140,6 +141,49 @@ def normalize_legacy_status(result: dict[str, Any]) -> dict[str, Any]:
     return sanitized
 
 
+def _bridge_failure_result(bridge: str, action: str, error: Exception) -> dict[str, Any]:
+    result = make_result(
+        ok=False,
+        bridge=bridge,
+        action=action,
+        message=f"{bridge} bridge status failed.",
+        details={"error": str(error.__class__.__name__), "error_message": str(error)},
+        warnings=[f"{bridge} bridge raised an exception and was converted to a structured failure."],
+        next_steps=["Check the optional bridge module and local environment, then rerun the status command."],
+    )
+    sanitized = sanitize(result)
+    validate_result(sanitized)
+    return sanitized
+
+
+def load_optional_bridge_status(
+    bridge: str,
+    *,
+    legacy_status: dict[str, Any],
+    comfy_url: str,
+    timeout: int,
+) -> dict[str, Any]:
+    try:
+        if bridge == "comfyui":
+            from starbridge_mcp.bridges import comfyui
+
+            result = comfyui.status(base_url=comfy_url, timeout=float(timeout))
+        elif bridge == "jianying_capcut":
+            from starbridge_mcp.bridges import jianying
+
+            result = jianying.status()
+        else:
+            return legacy_status
+    except Exception as exc:  # pragma: no cover - defensive integration boundary
+        result = _bridge_failure_result(bridge, "status", exc)
+
+    result.setdefault("details", {})
+    result["details"]["legacy_status_probe"] = legacy_status
+    sanitized = sanitize(result)
+    validate_result(sanitized)
+    return sanitized
+
+
 def collect_status(*, comfy_url: str, timeout: int, probe_executables: bool) -> list[dict[str, Any]]:
     from examples import bridge_status as legacy
 
@@ -151,7 +195,16 @@ def collect_status(*, comfy_url: str, timeout: int, probe_executables: bool) -> 
         legacy.check_illustrator(probe_executables),
         legacy.check_jianying_capcut(),
     ]
-    return [normalize_legacy_status(item) for item in legacy_results]
+    normalized = [normalize_legacy_status(item) for item in legacy_results]
+    return [
+        load_optional_bridge_status(
+            item["bridge"],
+            legacy_status=item,
+            comfy_url=comfy_url,
+            timeout=timeout,
+        )
+        for item in normalized
+    ]
 
 
 def build_response(args: argparse.Namespace) -> dict[str, Any]:
@@ -191,6 +244,7 @@ def main() -> None:
             "photoshop",
             "illustrator",
             "jianying_capcut",
+            "jianying",
             "capcut_jianying",
         ],
     )

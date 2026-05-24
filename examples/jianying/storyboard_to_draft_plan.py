@@ -13,12 +13,16 @@ from starbridge_mcp.bridges import jianying
 
 
 def main() -> None:
-    storyboard = json.loads((Path(__file__).parent / "sample_storyboard.json").read_text(encoding="utf-8"))
+    storyboard = json.loads((Path(__file__).parent / "sample_storyboard.json").read_text(encoding="utf-8-sig"))
     timeline_result = jianying.import_storyboard_to_timeline(storyboard)
     if not timeline_result["ok"]:
         print(json.dumps(timeline_result, ensure_ascii=False, indent=2))
         return
     result = jianying.create_draft_plan(timeline_result["details"]["timeline_spec"])
+    if result["ok"]:
+        export_path = Path(__file__).parent / "output" / "storyboard_draft_plan.example.json"
+        export_result = jianying.export_draft_plan(result["details"]["draft_plan"], export_path)
+        result["details"]["export"] = export_result
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

@@ -24,3 +24,11 @@ python examples\comfyui\dry_run_queue.py
 ## 鍚庣画宸ヤ綔
 
 - 绗竴鍙版牳蹇冨垎鏀渶瑕佹妸 ComfyUI bridge 娉ㄥ唽杩?`starbridge_mcp.server`銆?- 绗笁鍙?release-readiness 鍒嗘敮闇€瑕佹妸鏂板娴嬭瘯绾冲叆 CI 鍙戝竷妫€鏌ャ€?- 绗簩鍙板師鍨嬪垎鏀户缁墿灞?workflow 鎵ц銆侀敊璇В閲婂拰缁撴灉鎶ュ憡锛屼絾涓嶈兘鎻愪氦妯″瀷鎴栫敓鎴愬浘銆?
+## integration 分支状态
+
+`integration/starbridge-comfyui-jianying` 已把 ComfyUI bridge 最小注册进 `starbridge_mcp.server`。
+
+- 当前仍默认 dry-run，不真实执行 ComfyUI queue。
+- 真实 queue 仍必须同时满足环境变量和调用参数双重安全门。
+- 下一步才合并 release-readiness 分支，把新增测试纳入 CI 发布检查。
+- CAD / DXF bridge 仍是后续单独分支。

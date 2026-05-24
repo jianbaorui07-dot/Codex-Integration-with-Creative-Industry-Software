@@ -13,7 +13,7 @@ from starbridge_mcp.bridges import comfyui
 
 
 def main() -> None:
-    workflow = json.loads((Path(__file__).parent / "sample_workflow_minimal.json").read_text(encoding="utf-8"))
+    workflow = json.loads((Path(__file__).parent / "sample_workflow_minimal.json").read_text(encoding="utf-8-sig"))
     result = comfyui.summarize_workflow(workflow)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

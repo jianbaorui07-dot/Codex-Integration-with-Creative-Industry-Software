@@ -77,3 +77,12 @@
 - 需要登录、授权、验证码、订阅或 OAuth 时停止，让用户手动处理。
 - 写入类动作必须要求用户显式传入输入路径和输出路径。
 - 第一台电脑只维护 StarBridge 核心 status/probe、schema、sanitizer 和合并准备；不要扩展 ComfyUI 或剪映 / CapCut bridge，避免和第二台电脑冲突。
+## integration 分支提示词补充
+
+```text
+请在 integration/starbridge-comfyui-jianying 分支检查 StarBridge 集成状态。
+只验证核心 server、ComfyUI bridge 和剪映 / CapCut bridge。
+ComfyUI 必须保持 dry-run，不能真实 queue。
+剪映 / CapCut 只能生成 draft_plan，不能写真实草稿目录。
+不要恢复 release-readiness stash，不要处理 CAD / DXF 分支。
+```

@@ -45,3 +45,11 @@ python examples\jianying\storyboard_to_draft_plan.py
 
 瀹夊叏杈圭晫锛?
 - 浣跨敤鍗犱綅鍥剧墖鍜屽崰浣嶉煶棰戙€?- 涓嶆彁浜ょ湡瀹炵礌鏉愩€?
+## integration 分支状态
+
+`integration/starbridge-comfyui-jianying` 已合并核心 StarBridge MVP 和 ComfyUI/Jianying 原型，并完成 `server.py` 最小注册。
+
+- ComfyUI 仍默认 dry-run，不真实调用 queue。
+- 剪映 / CapCut 仍只生成 draft_plan，不写真实草稿目录。
+- release-readiness 分支后续单独合并。
+- CAD / DXF bridge 后续单独处理。

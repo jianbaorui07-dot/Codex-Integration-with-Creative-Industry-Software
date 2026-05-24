@@ -21,3 +21,11 @@ python examples\jianying\storyboard_to_draft_plan.py
 ## 鍚庣画宸ヤ綔
 
 - 绗竴鍙版牳蹇冨垎鏀渶瑕佹妸鍓槧 / CapCut bridge 娉ㄥ唽杩?`starbridge_mcp.server`銆?- 绗簩鍙板師鍨嬪垎鏀彲浠ョ户缁爺绌?draft_plan 鍒扮湡瀹炶崏绋跨殑浜哄伐纭娴佺▼銆?- 绗笁鍙?release-readiness 鍒嗘敮闇€瑕佹妸鏂板娴嬭瘯绾冲叆 CI 鍙戝竷妫€鏌ャ€?
+## integration 分支状态
+
+`integration/starbridge-comfyui-jianying` 已把剪映 / CapCut bridge 最小注册进 `starbridge_mcp.server`。
+
+- 当前只生成 draft_plan，不写真实剪映草稿目录。
+- `export_draft_plan()` 只允许写入 `examples/jianying/output/`。
+- 下一步才合并 release-readiness 分支，把新增测试纳入 CI 发布检查。
+- CAD / DXF bridge 仍是后续单独分支。
