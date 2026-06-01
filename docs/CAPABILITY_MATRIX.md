@@ -1,49 +1,25 @@
-# StarBridge 能力矩阵
+# StarBridge v0.1.0-alpha 能力矩阵
 
-状态约定：
+本矩阵只记录当前仓库可以公开发布和测试的能力边界。`stable` 表示有离线测试或 CI 安全验证；`experimental` 表示已有探针或 sandbox demo，但依赖本机软件或还不能承诺生产闭环；`planned` 表示路线图能力，不能写成已经完成。
 
-- `stable`：当前仓库有可运行代码和测试覆盖，缺少真实软件时返回 structured unavailable / skipped / soft-exit。
-- `experimental`：已有 probe、demo 或 sandbox 入口，但不承诺生产闭环；写入必须 dry-run 或显式确认。
-- `planned`：路线图能力，不能写成已完成。
-- `not implemented`：明确不支持或还没有实现。
+`not implemented` 表示不支持的能力，例如自动登录、绕过授权、读取客户工程文件、提交模型或无确认写入真实桌面软件。
 
-| Bridge | MCP Tool | CLI Script | Reads | Writes | Dry-run | Needs Real Software | Current Status | Safety Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| StarBridge core | `starbridge.status`, `starbridge.tools`, `starbridge.probe` | `python -m starbridge_mcp.server --json`; `npm.cmd run starbridge:tools:safe` | bridge metadata, env summary, static tool registry | no | n/a | no | stable | 输出经过 sanitizer；不打开用户文件。 |
-| ComfyUI | `comfyui.system_probe`, `comfyui.workflow_validate` | `python examples\comfy_bridge\comfy_probe.py`; `python examples\comfy_bridge\validate_workflow.py --json`; `python examples\comfy_bridge\run_txt2img.py ...` | local API status, object info, workflow JSON | txt2img job submit only through explicit CLI | workflow validate is read-only; job lifecycle is experimental | probe/job submit needs local ComfyUI; workflow validate does not | stable for probe/validate; experimental for txt2img/img2img/upscale lifecycle | 不提交模型、LoRA、VAE、ControlNet、生成图或本机输出目录。ComfyUI offline 返回 structured unavailable。 |
-| CAD / AutoCAD probe | `cad_autocad.environment_probe` | `python examples\cad_bridge\probe.py --json`; `python scripts\test_autocad_mcp.py` | executable, COM, pywin32, MCP project hints | no | n/a | real AutoCAD only needed for full desktop automation | stable probe; real AutoCAD automation remains environment-dependent | 不打开客户 DWG/DXF，不写真实项目输出。 |
-| AutoCAD / DXF headless | `autocad_dxf.status`, `autocad_dxf.validate_cad_plan`, `autocad_dxf.create_dxf_plan`, `autocad_dxf.summarize_plan`, `autocad_dxf.write_dxf` | `python examples\cad\generate_dxf_plan.py`; MCP `tools/call` | JSON CAD plan, layers, entity summary, bbox | DXF and manifest under `examples/cad/output` only | default yes | no AutoCAD; real write needs optional `ezdxf` | stable alpha closed-loop | `confirm_write=true` required for real write; output path cannot escape controlled directory; missing `ezdxf` returns structured unavailable. |
-| Photoshop | `photoshop.session_info`, `photoshop.document_info`, `photoshop.create_demo_document`, `photoshop.export_demo_preview`, `photoshop.run_demo` | `npm.cmd run photoshop:demo:plan`; `npm.cmd run photoshop:demo`; `npm.cmd run photoshop:info` | session/document metadata through COM when available | sandbox PSD/preview demo only | default yes | yes, authorized local Photoshop | stable for dry-run metadata shape; experimental for writes | 不打开私有 PSD；输入/输出必须参数化；真实输出只允许 `examples/output/photoshop`。 |
-| Illustrator | `illustrator.document_info`, `illustrator.create_demo_artboard`, `illustrator.export_demo_assets`, `illustrator.run_demo` | `npm.cmd run illustrator:demo:plan`; `npm.cmd run illustrator:demo`; `npm.cmd run illustrator:info` | active document metadata through COM when available | sandbox AI/SVG/PDF/PNG demo only | default yes | yes, authorized local Illustrator | experimental | Image Trace/export 不能声称生产可用；真实输出只允许 `examples/output/illustrator`。 |
-| Blender | `blender.environment_probe` | `python examples\blender_bridge\probe.py --json` | executable and optional MCP directory hints | no public write loop yet | n/a | real Blender only needed for future scene scripts | stable probe; scene generation planned | 不打开私有 `.blend`，不执行任意 Python，不下载外部资产。 |
-| CapCut / 剪映 | `jianying_capcut.draft_probe` | `python examples\capcut_jianying_bridge\probe.py --json` | executable and draft directory env hints | no current draft write | n/a | real app only needed for future draft validation | research / planned | 不读取 `draft_content.json`，不导出视频，不触碰账号、会员或缓存。 |
+| Bridge | Stable | Experimental | Planned | Writes files | CI safe | Needs local app | Safety notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| StarBridge core | `starbridge.status`、`starbridge.tools`、MCP stdio `tools/list` / `tools/call` | 无 | 更多客户端适配 | No | Yes | No | read-only；所有返回走 sanitizer；不打开用户文件。 |
+| ComfyUI | `comfyui.workflow_validate`；公开 workflow JSON 离线校验 | `comfyui.system_probe` 需要本机服务在线时才返回 ok；txt2img CLI 仍是本机实验入口 | img2img、inpaint、upscale、job manifest | No for validate/probe；生成脚本只写本机输出且不提交 | Yes for workflow validate；probe 离线时返回 `ok=false` / warning | Only for live probe or generation | 不提交模型、LoRA、VAE、ControlNet、生成图片或本机 ComfyUI 输出。 |
+| AutoCAD / DXF headless | `autocad_dxf.validate_cad_plan`、`autocad_dxf.summarize_plan`、DXF dry-run、guarded `write_dxf` | 真实 DXF 写入依赖可选 `ezdxf` | 更完整 CAD entity schema | Only `examples/cad/output` and only with `confirm_write=true` | Yes | No | 不需要 AutoCAD；默认 `dry_run=true`；路径不能逃出 `examples/cad/output`。 |
+| CAD / AutoCAD desktop probe | `cad_autocad.environment_probe` | 真实 AutoCAD COM/MCP 控制 | 受控桌面 CAD demo | No | Yes, as unavailable/warning when app is absent | Yes for real automation | CI 不依赖 AutoCAD；不能打开客户 DWG/DXF 或写真实项目输出。 |
+| Photoshop | read-only status shape / `photoshop.session_info` safe probing | 真实 COM、`document_info`、sandbox PSD create/export demo | subject extract MCP tool | Only `examples/output/photoshop` and only with `confirm_write=true` or `confirm_export=true` | No for real COM; dry-run schema is CI safe | Yes | 真实 COM 操作是 experimental；不打开私有 PSD；不提交 PSD、源图、导出图、安装路径或商业素材。 |
+| Illustrator | read-only status shape | 真实 COM、`document_info`、sandbox artboard/export demo | preflight、trace image to vector | Only `examples/output/illustrator` and only with `confirm_write=true` or `confirm_export=true` | No for real COM; dry-run schema is CI safe | Yes | 真实 Illustrator 操作是 experimental；不读取客户 `.ai`、源图路径或导出目录。 |
+| Blender | `blender.environment_probe` | 无公开写入闭环 | safe scene script、render manifest | No | Yes, as unavailable/warning when app is absent | Only for future scene scripts | 不打开私有 `.blend`，不执行任意用户 Python，不下载外部资产。 |
+| CapCut / Jianying | `jianying_capcut.draft_probe` 只检查环境变量和目录配置形状 | 无 | safe draft skeleton / manifest research | No | Yes, as unavailable/warning when app is absent | Only for future local validation | 只做 draft directory probe；不读取 `draft_content.json`、草稿内容、账号、缓存或导出视频。 |
 
-## 当前功能清单
+## 明确边界
 
-stable：
-
-- MCP stdio server 和 `tools/list` / `tools/call` 基础协议。
-- Tool registry，包含 safe-only 过滤。
-- 总状态检查、bridge metadata 检查、preflight 和 security check。
-- ComfyUI offline-safe probe 与 workflow JSON validate。
-- AutoCAD/DXF plan validate、summary、dry-run、guarded write、manifest/report。
-
-experimental：
-
-- Photoshop sandbox demo 写入和导出。
-- Illustrator sandbox demo 写入和导出。
-- ComfyUI txt2img job submit 和后续 img2img/upscale lifecycle。
-- Blender scene script。
-- CapCut / 剪映 draft write。
-
-planned：
-
-- 完整多软件生产闭环。
-- 真实桌面软件 E2E evidence。
-- 跨软件 asset handoff 和 release-grade manifest。
-
-not implemented：
-
-- 自动登录、验证码、OAuth 授权、订阅支付。
-- 默认读取客户文件、模型文件、账号缓存或真实工程输出。
-- 无确认写入 Photoshop / Illustrator / Blender / CapCut / AutoCAD。
+- `starbridge.status` 是 stable、CI safe、read-only。
+- `comfyui.workflow_validate` 是 stable、CI safe、read-only。
+- `autocad_dxf.validate_cad_plan`、`autocad_dxf.summarize_plan` 和 DXF dry-run 是 stable、CI safe。
+- Photoshop 和 Illustrator 的真实 COM 操作是 experimental、requires local app、not CI safe。
+- Adobe demo 的真实输出只能写到 `examples/output/photoshop` 或 `examples/output/illustrator`，并且必须被 `.gitignore` 忽略。
+- CapCut / Jianying 只做 draft directory probe，不读取草稿内容。

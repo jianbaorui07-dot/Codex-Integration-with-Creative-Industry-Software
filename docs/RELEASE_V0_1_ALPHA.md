@@ -1,93 +1,85 @@
-# v0.1-alpha 发布说明
+# v0.1.0-alpha 发布候选说明
 
-`v0.1-alpha` 只承诺当前仓库里真实可运行、可测试、可审计的工程原型能力。它不是完整创意软件自动化平台，也不声明 Photoshop / Illustrator / Blender / CapCut 已经生产可用。
+`v0.1.0-alpha` 是一个 Windows-first / local-first 的安全桥接候选版。它的目标是让 Codex / Cursor / Claude Code 等 AI coding agents 通过 MCP stdio 发现和调用本机创意软件相关的安全探针、workflow 校验、DXF dry-run plan 和受保护 sandbox demo。它不是破解工具，不绕过授权，不上传私有资产，不替代 Photoshop、Illustrator、AutoCAD、ComfyUI、Blender 或 CapCut。
 
-## 承诺范围
+## What is included
 
-stable：
+- MCP stdio server：支持 `initialize`、`tools/list`、`tools/call`，返回结构化 JSON。
+- Tool registry：区分 stable、experimental、planned，并暴露 risk metadata。
+- `starbridge.status`：统一状态检查，read-only，CI safe。
+- `comfyui.workflow_validate`：离线校验公开 ComfyUI workflow JSON，read-only，CI safe。
+- AutoCAD / DXF headless：CAD plan validate、summarize、dry-run，以及显式确认后的 sandbox DXF 写入。
+- 安全层：路径脱敏、敏感文本 redaction、安全检查、preflight、`.gitignore` 输出保护。
+- Photoshop / Illustrator sandbox demo 入口：默认 dry-run；真实写入或导出必须显式确认并限制到 `examples/output/...`。
+- CapCut / Jianying draft probe：只检查可执行文件和草稿目录配置形状，不读取草稿内容。
 
-- MCP stdio server 可以启动并响应 `initialize`、`tools/list`、`tools/call`。
-- `starbridge.tools` 能列出 stable / experimental / planned 工具，`safe_only` 能过滤 guarded write。
-- `bridge:status:safe` 和 preflight 能在缺少真实软件时返回结构化状态，不直接崩溃。
-- ComfyUI workflow validate 可离线校验公开 workflow JSON；ComfyUI offline probe 返回 structured unavailable。
-- AutoCAD/DXF 支持 JSON CAD plan validate、summary、dry-run、显式 `confirm_write` 后写入 `examples/cad/output`，并生成 manifest/report。
-- sanitizer/redactor 会处理路径、HOME/USERPROFILE、用户名、token、api key、cookie、password、secret 等敏感文本。
+## What is not included
 
-experimental：
+- 不包含模型、LoRA、VAE、ControlNet、生成图片、PSD、AI、DWG、DXF 真实输出、视频、token、cookie、账号或客户素材。
+- 不承诺 Photoshop / Illustrator / AutoCAD / CapCut 在 CI 中可用。
+- 不做自动登录、验证码、OAuth 授权、订阅绕过或许可绕过。
+- 不读取私有 PSD、AI、DWG、DXF、`.blend`、剪映草稿内容或商业工程文件。
+- 不把本机路径、安装路径、桌面目录、文档目录或 AppData 写入公开仓库。
 
-- Photoshop COM/document info 和 sandbox PSD/preview demo。
-- Illustrator COM/document info 和 sandbox artboard/export demo。
-- ComfyUI txt2img job lifecycle；img2img/upscale 仍属于后续扩展。
-- Blender scene script 和 CapCut / 剪映 draft write。
+## CI checklist
 
-planned：
-
-- 多软件生产闭环。
-- 真实桌面软件 E2E 验证截图和 release evidence。
-- 跨软件素材交接、版本化 job manifest、可恢复任务队列。
-
-not implemented：
-
-- 自动登录、订阅、支付、验证码、OAuth 绕过。
-- 默认读取客户图纸、PSD、AI、BLEND、视频草稿、模型或生成图。
-- 无确认写入真实桌面软件或用户目录。
-
-## 安装
-
-推荐 Python 3.10+。最小安装不需要重型依赖：
+这些命令必须在 CI 或本地候选检查中通过：
 
 ```powershell
-python -m pip install -e .
-python -m pip install -e ".[dev]"
+python -m compileall .
+python -m unittest discover -s tests
+python scripts/security_check.py
+python scripts/collect_bridge_status.py --json
+python examples/bridge_status.py --json --redact-paths --soft-exit
+python -m starbridge_mcp.server tools --json --safe-only
 ```
 
-可选 extras：
+CI runner 固定为 `windows-2022`，避免 `windows-latest` 漂移。缺少本机软件时，探针必须返回 `ok=false`、`warning` 或 soft-exit JSON，不能抛裸 traceback 导致 CI 失败。
+
+## Security checklist
+
+- 写入能力默认 `dry_run=true`。
+- `dry_run=false` 时必须显式提供 `confirm_write=true` 或 `confirm_export=true`。
+- DXF 输出只能在 `examples/cad/output`。
+- Photoshop 输出只能在 `examples/output/photoshop`。
+- Illustrator 输出只能在 `examples/output/illustrator`。
+- 所有 MCP 结果必须 sanitize，不能泄露 `C:\Users`、`Desktop`、`Documents`、`AppData`、`/Users`、`/home` 等路径。
+- `examples/output/` 和 `examples/cad/output/` 中的真实输出必须被 `.gitignore` 忽略。
+
+## Local smoke test checklist
 
 ```powershell
-python -m pip install -e ".[cad]"
-python -m pip install -e ".[comfy]"
-python -m pip install -e ".[adobe]"
+python examples\bridge_status.py
+python examples\bridge_status.py --json
+python examples\bridge_status.py --json --redact-paths --soft-exit
+python examples\bridge_status.py --probe-executables
+python examples\comfy_bridge\comfy_probe.py
+python scripts\test_autocad_mcp.py
+npm.cmd run starbridge:tools:safe
+npm.cmd run photoshop:demo:plan
+npm.cmd run illustrator:demo:plan
 ```
 
-`cad` extra 里的 `ezdxf` 只用于真实 DXF 写入；没有它时 validate / dry-run 仍可运行，write 会返回 structured unavailable。
+Photoshop、Illustrator、AutoCAD 和 CapCut 的真实桌面能力只在本机已安装、已授权、用户明确运行时验证。没有本机环境时，只记录 unavailable / skipped，不伪造成功证据。
 
-## 验证
+## Known limitations
+
+- ComfyUI live probe 需要本机 ComfyUI 已启动；CI 只要求 workflow validate 和 soft failure。
+- AutoCAD desktop automation 需要 Windows、AutoCAD、COM/pywin32 和授权；CI 不依赖这些条件。
+- Photoshop / Illustrator COM demo 需要本机授权 Adobe desktop；真实写入不是 release 级生产能力。
+- CapCut / Jianying 仍停留在 draft directory probe，不读取或写入草稿。
+- Blender 目前只做环境探针；safe scene script 仍是 planned。
+
+## Safe demo commands
 
 ```powershell
-python -m pytest
-npm.cmd test
-npm.cmd run preflight
 npm.cmd run bridge:status:safe
 npm.cmd run starbridge:tools:safe
-python scripts\security_check.py
-python scripts\starbridge_preflight.py --markdown
-python scripts\starbridge_preflight.py --write-report --soft-exit
-```
-
-## AutoCAD/DXF demo
-
-默认 dry-run，不写文件：
-
-```powershell
-python examples\cad\generate_dxf_plan.py
-```
-
-通过 MCP 调用真实写入时必须满足三点：
-
-- `dry_run=false`
-- `confirm_write=true`
-- `output_path` 位于 `examples/cad/output`
-
-写入成功后只生成测试 DXF 和 `.manifest.json`，manifest 包含 layers、entity count、bbox、安全状态和脱敏后的输出名。
-
-## MCP tools list
-
-```powershell
-npm.cmd run starbridge:tools:safe
-python -m starbridge_mcp.server tools --json --safe-only
+npm.cmd run comfy:workflow:validate
+npm.cmd run cad:dxf:dry-run
+npm.cmd run photoshop:demo:plan
+npm.cmd run illustrator:demo:plan
 python -m starbridge_mcp.mcp_server
 ```
 
-## 发布边界
-
-本 release 不提交任何私有素材、模型、图片、客户图纸、真实路径、账号缓存或真实导出结果。Adobe / Blender / CapCut 写入类能力必须继续标注为 experimental，并默认限制在 sandbox/demo。
+这些命令用于验证 v0.1.0-alpha 的安全边界和结构化输出，不代表已经能控制真实商业工程文件。
