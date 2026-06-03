@@ -68,11 +68,15 @@
 - `LEARNING_NOTES.md`：面向创作学习的中文总结。
 - `PRACTICE_ROADMAP.md`：按阶段练习 Blender 绘制图的路线。
 - `experiments/`：逐个打开案例后的实验记录。
+- `experiments/all-blend-cases.md`：25 个 `.blend` 的逐案例学习索引。
+- `experiments/cases/`：每个 `.blend` 一份结构化学习笔记。
 - `data/asset_summary_redacted.json`：素材库脱敏统计。
 - `data/asset_inventory_redacted.csv`：逐文件脱敏索引。
 - `data/blend_scene_profiles_redacted.json`：`.blend` 场景结构 profile。
 - `scripts/analyze_blender_learning_assets.py`：生成脱敏资产索引。
 - `scripts/blender_scene_profile.py`：用 Blender 后台生成场景剖析。
+- `scripts/generate_blender_case_notes.py`：从 scene profile 生成逐案例学习笔记。
+- `.codex/skills/blender-drawing-learning/SKILL.md`：把这套流程炼化成 Codex skill。
 
 ## 复现命令
 
