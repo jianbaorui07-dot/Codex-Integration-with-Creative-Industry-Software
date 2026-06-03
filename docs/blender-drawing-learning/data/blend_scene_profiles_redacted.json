@@ -1,0 +1,5480 @@
+{
+  "source_redaction": "Local absolute paths and raw assets are intentionally omitted.",
+  "blend_file_count_attempted": 25,
+  "profile_count": 25,
+  "error_count": 0,
+  "profiles": [
+    {
+      "relative_label": "5-Hdr环境/HDR-108个/HDR-108个/渐变世界环境.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        0,
+        240
+      ],
+      "object_count": 5,
+      "object_type_counts": {
+        "EMPTY": 2,
+        "LIGHT": 3
+      },
+      "mesh_count": 0,
+      "material_count": 5,
+      "light_count": 3,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {},
+      "modifier_counts": {},
+      "lights": [
+        {
+          "name": "Point Light 1 (R) ",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "Point Light 2 (G) ",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "name": "Point Light 3 (B) ",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "LBS Library",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 15,
+            "ShaderNodeTexImage": 3,
+            "ShaderNodeGroup": 53
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "LBS Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 4,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "LBS Material (Ground)",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 3
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Solidify Outline",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeBsdfTransparent": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "World Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputWorld": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeLightPath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-二次元模型/blender模型/Guy with Mask Tattoo/兼容blender2.79 guy_with_mask_tattoo.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        90
+      ],
+      "object_count": 139,
+      "object_type_counts": {
+        "MESH": 129,
+        "CURVE": 2,
+        "CAMERA": 1,
+        "EMPTY": 1,
+        "LIGHT": 4,
+        "ARMATURE": 2
+      },
+      "mesh_count": 129,
+      "material_count": 52,
+      "light_count": 4,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "1": 25,
+        "2": 1,
+        "0": 103
+      },
+      "modifier_counts": {
+        "MIRROR": 8,
+        "ARMATURE": 20,
+        "EDGE_SPLIT": 5,
+        "MULTIRES": 9,
+        "SUBSURF": 14
+      },
+      "lights": [
+        {
+          "name": "Lamp",
+          "type": "SPOT",
+          "energy": 100.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp.001",
+          "type": "SUN",
+          "energy": 0.05,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp.002",
+          "type": "SUN",
+          "energy": 0.025,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp.003",
+          "type": "SPOT",
+          "energy": 100.0,
+          "color": [
+            0.6546,
+            0.6992,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 35.0,
+          "sensor_width": 32.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "arm",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 2,
+            "NodeUndefined": 27,
+            "ShaderNodeGroup": 3,
+            "ShaderNodeNormal": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeMix": 8
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "arm_diff",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "arm_skin_color",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "arm_skin_spec_tatoo",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "basemesh",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeUndefined": 3,
+            "ShaderNodeMix": 1,
+            "ShaderNodeValToRGB": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "basemesh.001",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "card",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "diff.001",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "earrings",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeUndefined": 3,
+            "ShaderNodeMix": 1,
+            "ShaderNodeValToRGB": 1,
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "eyes",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeUndefined": 3,
+            "ShaderNodeMix": 1,
+            "ShaderNodeValToRGB": 1,
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "glove_color",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "glove_spec",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 1,
+            "NodeUndefined": 7,
+            "ShaderNodeMix": 4,
+            "ShaderNodeNormal": 1,
+            "ShaderNodeValToRGB": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair_color",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair_diff",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "head",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeUndefined": 8,
+            "ShaderNodeMix": 3,
+            "ShaderNodeGroup": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "head)diff",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "head_color",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "head_spec",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "HP-belt",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeUndefined": 3,
+            "ShaderNodeMix": 1,
+            "ShaderNodeValToRGB": 1,
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-二次元模型/blender模型/kama/kama_v1.0.blend",
+      "scene_name": "Scene",
+      "render_engine": "CYCLES",
+      "resolution": [
+        1080,
+        1920
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 341,
+      "object_type_counts": {
+        "MESH": 334,
+        "CAMERA": 3,
+        "LIGHT": 3,
+        "ARMATURE": 1
+      },
+      "mesh_count": 334,
+      "material_count": 21,
+      "light_count": 3,
+      "camera_count": 3,
+      "mesh_material_slot_counts": {
+        "1": 331,
+        "2": 2,
+        "0": 1
+      },
+      "modifier_counts": {
+        "ARMATURE": 22,
+        "SUBSURF": 285,
+        "SOLIDIFY": 151,
+        "MIRROR": 5,
+        "NODES": 15,
+        "EDGE_SPLIT": 4
+      },
+      "lights": [
+        {
+          "name": "Lamp",
+          "type": "SPOT",
+          "energy": 1250.0,
+          "color": [
+            1.0,
+            0.8646,
+            0.6038
+          ]
+        },
+        {
+          "name": "Lamp.001",
+          "type": "AREA",
+          "energy": 78.5398,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp.002",
+          "type": "SPOT",
+          "energy": 100.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera.001",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera",
+          "lens": 75.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        },
+        {
+          "name": "Camera.002",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Bg",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeEmission": 2,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Butterfly",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Cloth",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Diamond",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfGlass": 4,
+            "ShaderNodeAddShader": 2,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeMath": 3,
+            "ShaderNodeValue": 3,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Drops",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfGlass": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeMixShader": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "EmitBlack",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "EmitWhite",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Eye Highlight",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Gold",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Ground",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeTangent": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Halo",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeMapping": 3,
+            "ShaderNodeMix": 2,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeEmission": 3,
+            "ShaderNodeMixShader": 2,
+            "ShaderNodeOutputMaterial": 3,
+            "ShaderNodeBsdfTransparent": 2,
+            "ShaderNodeTexNoise": 1,
+            "ShaderNodeUVMap": 1,
+            "ShaderNodeMath": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeValToRGB": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Lines",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Lotus",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "LotusCore",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "LotusLeaf",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Outline",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeEmission": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeMath": 2,
+            "ShaderNodeMixShader": 3,
+            "ShaderNodeBsdfDiffuse": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeBsdfTransparent": 2,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Ribbon",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeTangent": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Skin",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Volume",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeVolumePrincipled": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Render engine is CYCLES: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-二次元模型/blender模型/Marvel Wasp/兼容blender2.79 wasp_gumroad.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        1500
+      ],
+      "object_count": 23,
+      "object_type_counts": {
+        "CURVE": 1,
+        "CAMERA": 1,
+        "MESH": 14,
+        "EMPTY": 2,
+        "LIGHT": 4,
+        "ARMATURE": 1
+      },
+      "mesh_count": 14,
+      "material_count": 15,
+      "light_count": 4,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "1": 12,
+        "3": 1,
+        "4": 1
+      },
+      "modifier_counts": {
+        "MIRROR": 4,
+        "ARMATURE": 7,
+        "SUBSURF": 10,
+        "SOLIDIFY": 2,
+        "MULTIRES": 1,
+        "EDGE_SPLIT": 1
+      },
+      "lights": [
+        {
+          "name": "Hemi",
+          "type": "SUN",
+          "energy": 1.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Hemi.001",
+          "type": "POINT",
+          "energy": 100.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Hemi.002",
+          "type": "SUN",
+          "energy": 0.25,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Hemi.003",
+          "type": "SUN",
+          "energy": 0.25,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 80.0,
+          "sensor_width": 32.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "bg.001",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "black",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "cloth",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 2,
+            "ShaderNodeMix": 3,
+            "NodeUndefined": 5,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeNormal": 2,
+            "ShaderNodeValToRGB": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "cloth_diff",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "eye",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair_node",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeUndefined": 5,
+            "ShaderNodeMix": 3,
+            "ShaderNodeValToRGB": 3,
+            "ShaderNodeNormal": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair_spec",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "metal",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeGroup": 1,
+            "NodeUndefined": 4,
+            "ShaderNodeNormal": 1,
+            "ShaderNodeMix": 2,
+            "ShaderNodeRGB": 1,
+            "ShaderNodeValToRGB": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "skin_comp",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeValToRGB": 4,
+            "ShaderNodeMix": 3,
+            "NodeUndefined": 5,
+            "ShaderNodeNormal": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "skin_diff",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "skin_falloff",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "skin_spec",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "wing",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "wing_1",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-二次元模型/blender模型/Miyamoto Musashi/兼容blender2.9+miyamoto_musashi_v1.0.blend",
+      "scene_name": "Scene",
+      "render_engine": "CYCLES",
+      "resolution": [
+        1400,
+        1080
+      ],
+      "frame_range": [
+        1,
+        240
+      ],
+      "object_count": 185,
+      "object_type_counts": {
+        "CURVE": 3,
+        "MESH": 167,
+        "CAMERA": 7,
+        "EMPTY": 4,
+        "LIGHT": 3,
+        "ARMATURE": 1
+      },
+      "mesh_count": 167,
+      "material_count": 32,
+      "light_count": 3,
+      "camera_count": 7,
+      "mesh_material_slot_counts": {
+        "2": 26,
+        "1": 139,
+        "0": 2
+      },
+      "modifier_counts": {
+        "ARMATURE": 35,
+        "SUBSURF": 125,
+        "MASK": 2,
+        "SOLIDIFY": 68,
+        "NODES": 23,
+        "BEVEL": 17,
+        "EDGE_SPLIT": 2,
+        "MIRROR": 26,
+        "MULTIRES": 1,
+        "ARRAY": 4
+      },
+      "lights": [
+        {
+          "name": "Lamp",
+          "type": "SPOT",
+          "energy": 120.0,
+          "color": [
+            0.7304,
+            0.8223,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp.001",
+          "type": "AREA",
+          "energy": 19.635,
+          "color": [
+            1.0,
+            0.9897,
+            0.7874
+          ]
+        },
+        {
+          "name": "Lamp.002",
+          "type": "SUN",
+          "energy": 4.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera.002",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.003",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.004",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.005",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.006",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera",
+          "lens": 80.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        },
+        {
+          "name": "Camera.001",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Belt",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Bikini",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfSheen": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Bun Cover",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Choker",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Cushion",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Drops",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfGlass": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeMixShader": 2,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "EmitWhite",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "EyeShine",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMixShader": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Fan",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Floor",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Glass",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfGlass": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeAddShader": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeUVMap": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeCombineXYZ": 1,
+            "ShaderNodeTangent": 1,
+            "ShaderNodeGroup": 4,
+            "ShaderNodeMix": 4,
+            "ShaderNodeMath": 2,
+            "ShaderNodeValue": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeOutputMaterial": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Handle",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Holster",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Ice",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 1,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeAddShader": 1,
+            "ShaderNodeBsdfGlass": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Jacket",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Boots",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Outline",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeEmission": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeMath": 2,
+            "ShaderNodeMixShader": 3,
+            "ShaderNodeBsdfDiffuse": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeBsdfTransparent": 2,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PhotoFrame",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Silver",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Bevel modifiers exist: edges are likely softened for product-style highlights.",
+        "Render engine is CYCLES: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-二次元模型/blender模型/yangguifei/yang_guifei_v1.0.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1080,
+        1080
+      ],
+      "frame_range": [
+        1,
+        40
+      ],
+      "object_count": 288,
+      "object_type_counts": {
+        "LIGHT": 4,
+        "CURVE": 3,
+        "MESH": 267,
+        "CAMERA": 10,
+        "LIGHT_PROBE": 2,
+        "ARMATURE": 2
+      },
+      "mesh_count": 267,
+      "material_count": 23,
+      "light_count": 4,
+      "camera_count": 10,
+      "mesh_material_slot_counts": {
+        "1": 71,
+        "0": 186,
+        "2": 6,
+        "3": 4
+      },
+      "modifier_counts": {
+        "ARMATURE": 19,
+        "SUBSURF": 24,
+        "SOLIDIFY": 13,
+        "NODES": 33,
+        "MIRROR": 25,
+        "BEVEL": 1,
+        "PARTICLE_SYSTEM": 5,
+        "EDGE_SPLIT": 1,
+        "CURVE": 6
+      },
+      "lights": [
+        {
+          "name": "Area",
+          "type": "AREA",
+          "energy": 7.854,
+          "color": [
+            1.0,
+            0.2874,
+            0.2736
+          ]
+        },
+        {
+          "name": "Area.001",
+          "type": "AREA",
+          "energy": 7.854,
+          "color": [
+            0.9264,
+            0.9378,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp",
+          "type": "SPOT",
+          "energy": 50.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Lamp.001",
+          "type": "SPOT",
+          "energy": 150.0,
+          "color": [
+            1.0,
+            0.9752,
+            0.89
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 120.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        },
+        {
+          "name": "Camera.007",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.008",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.009",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.010",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.011",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.012",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        },
+        {
+          "name": "Camera.013",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Bg",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeEmission": 2,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Cloth Ball",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "EmitBlack",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "EmitWhite",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "EyeShine",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeBsdfTransparent": 2,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMixShader": 2,
+            "ShaderNodeLightPath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Floor",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeMath": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Fluff",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Halo",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeEmission": 2,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfTransparent": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Line Sparks",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeBsdfTransparent": 2,
+            "ShaderNodeUVMap": 1,
+            "ShaderNodeSeparateXYZ": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeMixShader": 2,
+            "ShaderNodeMath": 2,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeLightPath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Outline",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeEmission": 1,
+            "ShaderNodeLightPath": 2,
+            "ShaderNodeMath": 2,
+            "ShaderNodeMixShader": 4,
+            "ShaderNodeBsdfDiffuse": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeBsdfTransparent": 3,
+            "ShaderNodeOutputMaterial": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Panty",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Pipa",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Skin",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "TempFishForIndirect",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Yang Fish",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 4,
+            "ShaderNodeMix": 3,
+            "ShaderNodeMixShader": 2,
+            "ShaderNodeEmission": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfTransparent": 2,
+            "ShaderNodeValue": 3,
+            "ShaderNodeLightPath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Yang Flute",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Yang Hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeTangent": 1,
+            "ShaderNodeGroup": 4,
+            "ShaderNodeCombineXYZ": 1,
+            "ShaderNodeNewGeometry": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeUVMap": 1,
+            "ShaderNodeMix": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Yang Heels",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Yang Inside Outfit",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Bevel modifiers exist: edges are likely softened for product-style highlights.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-次时代CG女性人物3D角色/精灵剑士/ElfSwordmaster.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 16,
+      "object_type_counts": {
+        "ARMATURE": 1,
+        "CAMERA": 1,
+        "MESH": 13,
+        "LIGHT": 1
+      },
+      "mesh_count": 13,
+      "material_count": 12,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "1": 9,
+        "2": 4
+      },
+      "modifier_counts": {
+        "ARMATURE": 12
+      },
+      "lights": [
+        {
+          "name": "Light",
+          "type": "POINT",
+          "energy": 1000.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "ElfSwordmaster_Armor_Arms",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Armor_Chest",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Armor_Legs",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Body",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Eyes",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Eyes_Cornea",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Eyes_Eyesshadow",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Eyeslash",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Face",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ElfSwordmaster_Weapon",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-次时代CG女性人物3D角色/精灵骑士/ElfPaladin.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 16,
+      "object_type_counts": {
+        "ARMATURE": 1,
+        "CAMERA": 1,
+        "MESH": 13,
+        "LIGHT": 1
+      },
+      "mesh_count": 13,
+      "material_count": 12,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "1": 9,
+        "2": 4
+      },
+      "modifier_counts": {
+        "ARMATURE": 11
+      },
+      "lights": [
+        {
+          "name": "Light",
+          "type": "POINT",
+          "energy": 1000.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Armor_Arms",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Armor_Body",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Armor_Coats",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Armor_Legs",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "body",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "cornea",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeBsdfTransparent": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "eyes",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "eyeshadow",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "head",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Weapon",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "6-人物模型（不定期更新）/模型-次时代CG女性人物3D角色/部落女神/PillarWoman.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 12,
+      "object_type_counts": {
+        "ARMATURE": 1,
+        "CAMERA": 1,
+        "LIGHT": 1,
+        "MESH": 9
+      },
+      "mesh_count": 9,
+      "material_count": 12,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "2": 2,
+        "1": 7
+      },
+      "modifier_counts": {
+        "ARMATURE": 9
+      },
+      "lights": [
+        {
+          "name": "Light",
+          "type": "POINT",
+          "energy": 1000.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Body",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Clothes_Arms",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Clothes_Body",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Clothes_Head",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Clothes_Legs",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Cornea",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Eyes",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Eyeshadow",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Hair",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Head",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PillarWoman_Pubes",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeNormalMap": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "7-其它模型（不定期更新）/练习素材（按需下载））/保龄球/保龄球.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 9,
+      "object_type_counts": {
+        "MESH": 8,
+        "EMPTY": 1
+      },
+      "mesh_count": 8,
+      "material_count": 16,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "2": 8
+      },
+      "modifier_counts": {
+        "SUBSURF": 8,
+        "CAST": 8,
+        "NORMAL_EDIT": 8
+      },
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Outer",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.001",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.002",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.003",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.004",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.005",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.006",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.007",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.008",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.002",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.003",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.004",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "7-其它模型（不定期更新）/练习素材（按需下载））/咖啡机/咖啡机.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 7,
+      "object_type_counts": {
+        "MESH": 5,
+        "CURVE": 1,
+        "EMPTY": 1
+      },
+      "mesh_count": 5,
+      "material_count": 10,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 1,
+        "4": 1,
+        "2": 2,
+        "0": 1
+      },
+      "modifier_counts": {
+        "NODES": 4
+      },
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "BlackMatte",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeBsdfTransparent": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "BlackMatte.Logo",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeTexImage": 3,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeMix": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGB": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeBsdfTransparent": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "BlackShine",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "BlackShine.Logo",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeRGB": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Cable",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ClearPlastic",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Metallic",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PlugPlastic",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Water",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "7-其它模型（不定期更新）/练习素材（按需下载））/女法师/女法师.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 57,
+      "object_type_counts": {
+        "EMPTY": 38,
+        "MESH": 19
+      },
+      "mesh_count": 19,
+      "material_count": 8,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 18,
+        "0": 1
+      },
+      "modifier_counts": {},
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert1",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeSeparateColor": 2,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert3",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert4",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert5",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert6",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert7",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "7-其它模型（不定期更新）/练习素材（按需下载））/直升机文件/直升机.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 155,
+      "object_type_counts": {
+        "EMPTY": 5,
+        "MESH": 148,
+        "LIGHT": 2
+      },
+      "mesh_count": 148,
+      "material_count": 26,
+      "light_count": 2,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 139,
+        "3": 3,
+        "0": 2,
+        "2": 4
+      },
+      "modifier_counts": {
+        "SUBSURF": 62,
+        "NODES": 101,
+        "MIRROR": 11,
+        "SOLIDIFY": 4,
+        "BEVEL": 4
+      },
+      "lights": [
+        {
+          "name": "Point",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Point.001",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "black",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "blades",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexNoise": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "blades.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeTexNoise": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 3,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter door",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeMapping": 4,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter tail",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeValToRGB": 3,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeMapping": 4,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeMapping": 4,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter.003",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter.fin",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeMapping": 3,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements.002",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements.003",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "glass",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeBsdfGlass": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "grill",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeValue": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeValToRGB": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "int",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeValue": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "int metal",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material.002",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Bevel modifiers exist: edges are likely softened for product-style highlights.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/人头.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 3,
+      "object_type_counts": {
+        "CAMERA": 1,
+        "MESH": 1,
+        "LIGHT": 1
+      },
+      "mesh_count": 1,
+      "material_count": 1,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "0": 1
+      },
+      "modifier_counts": {},
+      "lights": [
+        {
+          "name": "Light",
+          "type": "POINT",
+          "energy": 1000.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/全身模型带材质.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 6,
+      "object_type_counts": {
+        "CAMERA": 1,
+        "ARMATURE": 1,
+        "LIGHT": 1,
+        "MESH": 3
+      },
+      "mesh_count": 3,
+      "material_count": 12,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "4": 1,
+        "1": 1,
+        "6": 1
+      },
+      "modifier_counts": {
+        "SUBSURF": 1,
+        "ARMATURE": 1,
+        "CORRECTIVE_SMOOTH": 1
+      },
+      "lights": [
+        {
+          "name": "Starlight Sun",
+          "type": "SUN",
+          "energy": 1.0,
+          "color": [
+            6.4402,
+            6.0213,
+            5.4917
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 35.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "dark",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "dick",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "doa",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "eye",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "fuck",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "happy",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "honoka",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "marie",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "sad",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeMix": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "trump",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "小瓷砖1970_tiles",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMath": 6,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexBrick": 1,
+            "ShaderNodeVectorMath": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/回收站.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 3,
+      "object_type_counts": {
+        "CAMERA": 1,
+        "LIGHT": 1,
+        "MESH": 1
+      },
+      "mesh_count": 1,
+      "material_count": 4,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "3": 1
+      },
+      "modifier_counts": {},
+      "lights": [
+        {
+          "name": "Light",
+          "type": "SUN",
+          "energy": 16.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "ORTHO"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "0",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "1",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeEmission": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "2",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeRGB": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/机器人.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 1,
+      "object_type_counts": {
+        "MESH": 1
+      },
+      "mesh_count": 1,
+      "material_count": 27,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "20": 1
+      },
+      "modifier_counts": {},
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "csgo\\updated\\gloves\\w_ct_fbi_glove",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "csgo\\updated\\sas\\body\\ctm_sas_body",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "csgo\\updated\\sas\\body\\ctm_sas_legs",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "csgo\\updated\\sas\\head\\ctm_sas_head",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "csgo\\updated\\sas\\head\\ctm_sas_lenses",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_angry",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_blank",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_bluescreen",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_frightened",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_glitch",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_happy",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_ko",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_love",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_meme1",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_meme2",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_sad",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_thinking",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "emote_thumbsup",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/程序化大西瓜.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 4,
+      "object_type_counts": {
+        "CAMERA": 1,
+        "MESH": 2,
+        "LIGHT": 1
+      },
+      "mesh_count": 2,
+      "material_count": 3,
+      "light_count": 1,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "1": 2
+      },
+      "modifier_counts": {
+        "BOOLEAN": 1
+      },
+      "lights": [
+        {
+          "name": "Light",
+          "type": "POINT",
+          "energy": 1000.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "材质",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 5,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeMath": 28,
+            "ShaderNodeValToRGB": 21,
+            "ShaderNodeSeparateXYZ": 2,
+            "ShaderNodeTexGradient": 16,
+            "ShaderNodeTexWave": 2,
+            "ShaderNodeVectorMath": 4,
+            "ShaderNodeMapping": 14,
+            "ShaderNodeMix": 5,
+            "NodeReroute": 13,
+            "ShaderNodeBump": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeTexVoronoi": 1,
+            "ShaderNodeInvert": 3,
+            "ShaderNodeSeparateColor": 1,
+            "ShaderNodeTexCoord": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/耳朵.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 1,
+      "object_type_counts": {
+        "MESH": 1
+      },
+      "mesh_count": 1,
+      "material_count": 3,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 1
+      },
+      "modifier_counts": {},
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "Default OBJ",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/蓝紫打光.blend",
+      "scene_name": "Scene",
+      "render_engine": "CYCLES",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 6,
+      "object_type_counts": {
+        "LIGHT": 3,
+        "CAMERA": 1,
+        "MESH": 2
+      },
+      "mesh_count": 2,
+      "material_count": 5,
+      "light_count": 3,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "1": 2
+      },
+      "modifier_counts": {},
+      "lights": [
+        {
+          "name": "Area",
+          "type": "AREA",
+          "energy": 94.2478,
+          "color": [
+            0.0599,
+            0.3122,
+            1.0
+          ]
+        },
+        {
+          "name": "Area.001",
+          "type": "AREA",
+          "energy": 196.3495,
+          "color": [
+            1.0,
+            0.3207,
+            0.9318
+          ]
+        },
+        {
+          "name": "Area.002",
+          "type": "AREA",
+          "energy": 235.6194,
+          "color": [
+            0.2572,
+            0.2934,
+            0.8234
+          ]
+        }
+      ],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeTexImage": 2,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 8
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "metal",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeValToRGB": 2
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "micro",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "圣杯_000",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is CYCLES: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "模型/越野车.blend",
+      "scene_name": "Scene",
+      "render_engine": "CYCLES",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 274,
+      "object_type_counts": {
+        "MESH": 266,
+        "CAMERA": 1,
+        "EMPTY": 5,
+        "CURVE": 2
+      },
+      "mesh_count": 266,
+      "material_count": 1,
+      "light_count": 0,
+      "camera_count": 1,
+      "mesh_material_slot_counts": {
+        "0": 261,
+        "1": 5
+      },
+      "modifier_counts": {
+        "NODES": 145,
+        "MIRROR": 139,
+        "BEVEL": 33,
+        "SUBSURF": 171,
+        "SOLIDIFY": 2,
+        "SHRINKWRAP": 8,
+        "SIMPLE_DEFORM": 1,
+        "LATTICE": 2,
+        "WEIGHTED_NORMAL": 1
+      },
+      "lights": [],
+      "cameras": [
+        {
+          "name": "Camera",
+          "lens": 50.0,
+          "sensor_width": 36.0,
+          "type": "PERSP"
+        }
+      ],
+      "materials_sample": [
+        {
+          "name": "材质",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Camera exists: study focal length and framing before rebuilding the scene.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Bevel modifiers exist: edges are likely softened for product-style highlights.",
+        "Render engine is CYCLES: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "练习素材（按需下载））/保龄球/保龄球.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 9,
+      "object_type_counts": {
+        "MESH": 8,
+        "EMPTY": 1
+      },
+      "mesh_count": 8,
+      "material_count": 16,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "2": 8
+      },
+      "modifier_counts": {
+        "SUBSURF": 8,
+        "CAST": 8,
+        "NORMAL_EDIT": 8
+      },
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Outer",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.001",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.002",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.003",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.004",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.005",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.006",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.007",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Outer.008",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 4,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeHueSaturation": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 4
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.002",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.003",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "plaster white irregular.004",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeDisplacement": 1,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "练习素材（按需下载））/咖啡机/咖啡机.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 7,
+      "object_type_counts": {
+        "MESH": 5,
+        "CURVE": 1,
+        "EMPTY": 1
+      },
+      "mesh_count": 5,
+      "material_count": 10,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 1,
+        "4": 1,
+        "2": 2,
+        "0": 1
+      },
+      "modifier_counts": {
+        "NODES": 4
+      },
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "BlackMatte",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeBsdfTransparent": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "BlackMatte.Logo",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeTexImage": 3,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeMix": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGB": 1,
+            "ShaderNodeMixShader": 1,
+            "ShaderNodeLightPath": 1,
+            "ShaderNodeBsdfTransparent": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "BlackShine",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "BlackShine.Logo",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeRGB": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Cable",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "ClearPlastic",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Metallic",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "PlugPlastic",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Water",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeGroup": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": true
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "练习素材（按需下载））/女法师/女法师.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 57,
+      "object_type_counts": {
+        "EMPTY": 38,
+        "MESH": 19
+      },
+      "mesh_count": 19,
+      "material_count": 8,
+      "light_count": 0,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 18,
+        "0": 1
+      },
+      "modifier_counts": {},
+      "lights": [],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert1",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexImage": 5,
+            "ShaderNodeSeparateColor": 2,
+            "ShaderNodeNormalMap": 1,
+            "ShaderNodeGroup": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert3",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert4",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert5",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert6",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "lambert7",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    },
+    {
+      "relative_label": "练习素材（按需下载））/直升机文件/直升机.blend",
+      "scene_name": "Scene",
+      "render_engine": "BLENDER_EEVEE",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "frame_range": [
+        1,
+        250
+      ],
+      "object_count": 155,
+      "object_type_counts": {
+        "EMPTY": 5,
+        "MESH": 148,
+        "LIGHT": 2
+      },
+      "mesh_count": 148,
+      "material_count": 26,
+      "light_count": 2,
+      "camera_count": 0,
+      "mesh_material_slot_counts": {
+        "1": 139,
+        "3": 3,
+        "0": 2,
+        "2": 4
+      },
+      "modifier_counts": {
+        "SUBSURF": 62,
+        "NODES": 101,
+        "MIRROR": 11,
+        "SOLIDIFY": 4,
+        "BEVEL": 4
+      },
+      "lights": [
+        {
+          "name": "Point",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "Point.001",
+          "type": "POINT",
+          "energy": 0.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "cameras": [],
+      "materials_sample": [
+        {
+          "name": "black",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "blades",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexNoise": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "blades.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeTexNoise": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 3,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter door",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeMapping": 4,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter tail",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeValToRGB": 3,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeMapping": 4,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeMapping": 4,
+            "ShaderNodeTexGradient": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter.003",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "color helicopter.fin",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeMapping": 3,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Dots Stroke",
+          "uses_nodes": true,
+          "node_types": {
+            "NodeFrame": 1,
+            "ShaderNodeOutputMaterial": 2,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeBsdfDiffuse": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 2,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements.002",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "elements.003",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexNoise": 3,
+            "ShaderNodeBump": 1,
+            "ShaderNodeMapping": 2,
+            "ShaderNodeLayerWeight": 1,
+            "ShaderNodeRGBCurve": 1,
+            "ShaderNodeValToRGB": 2,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMath": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "glass",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeMapping": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeValToRGB": 1,
+            "ShaderNodeBsdfGlass": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": true
+        },
+        {
+          "name": "grill",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeValue": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeValToRGB": 1
+          },
+          "blend_method": "BLEND",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "int",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1,
+            "ShaderNodeValue": 1,
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeMix": 1,
+            "ShaderNodeBump": 1,
+            "ShaderNodeTexImage": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "int metal",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeBsdfPrincipled": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material.001",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1,
+            "ShaderNodeTexImage": 1,
+            "ShaderNodeTexCoord": 1,
+            "ShaderNodeMapping": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        },
+        {
+          "name": "Material.002",
+          "uses_nodes": true,
+          "node_types": {
+            "ShaderNodeBsdfPrincipled": 1,
+            "ShaderNodeOutputMaterial": 1
+          },
+          "blend_method": "HASHED",
+          "use_screen_refraction": false
+        }
+      ],
+      "world": {
+        "has_world": true,
+        "uses_nodes": true
+      },
+      "drawing_learning_notes": [
+        "Lights exist: study key/fill/rim balance and light color before changing materials.",
+        "Node materials exist: inspect shader graphs for color, roughness, normal, emission, and transparency decisions.",
+        "Subdivision modifiers exist: compare base mesh simplicity with final smoothed silhouette.",
+        "Bevel modifiers exist: edges are likely softened for product-style highlights.",
+        "Render engine is BLENDER_EEVEE: keep lighting and material expectations aligned with that engine."
+      ]
+    }
+  ],
+  "errors": []
+}

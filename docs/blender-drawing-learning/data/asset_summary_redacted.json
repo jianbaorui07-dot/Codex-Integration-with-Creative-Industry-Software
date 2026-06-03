@@ -1,0 +1,48 @@
+{
+  "source_redaction": "Local absolute paths and raw assets are intentionally omitted.",
+  "file_count": 778,
+  "folder_count": 78,
+  "total_gb": 50.653,
+  "by_extension": {
+    ".zip": 480,
+    ".jpg": 118,
+    ".exr": 92,
+    ".blend": 25,
+    ".7z": 16,
+    ".hdr": 12,
+    ".rar": 10,
+    ".png": 10,
+    ".blend1": 4,
+    ".tif": 2,
+    ".txt": 2,
+    ".bin": 2,
+    ".gltf": 2,
+    ".fbx": 2,
+    ".obj": 1
+  },
+  "by_top_folder": {
+    "8-游戏人物（不定期更新）": 336,
+    "6-人物模型（不定期更新）": 167,
+    "模型": 131,
+    "5-Hdr环境": 109,
+    "7-其它模型（不定期更新）": 16,
+    "练习素材（按需下载））": 14,
+    "4-材质贴图（按需下载）": 5
+  },
+  "by_category": {
+    "archived_asset_pack": 500,
+    "material_texture": 132,
+    "lighting_environment": 108,
+    "modeling_case": 34,
+    "license_or_note": 2,
+    "other": 2
+  },
+  "size_gb_by_category": {
+    "archived_asset_pack": 46.536,
+    "license_or_note": 0.0,
+    "lighting_environment": 1.65,
+    "material_texture": 1.342,
+    "modeling_case": 1.118,
+    "other": 0.006
+  }
+}
