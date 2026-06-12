@@ -48,6 +48,7 @@ class PackageScriptsTest(unittest.TestCase):
                 "comfy:workflow:validate",
                 "comfy:txt2img",
                 "photoshop:probe",
+                "photoshop:node-proxy",
                 "photoshop:diagnose",
                 "photoshop:info",
                 "photoshop:demo:plan",
