@@ -54,12 +54,44 @@ def _object_schema(properties: JsonObject, required: list[str] | None = None) ->
 STARBRIDGE_OUTPUT_SCHEMA: JsonObject = {"type": "object", "additionalProperties": True}
 
 
-def _safe_read_annotations() -> JsonObject:
-    return {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}
+def _safe_read_annotations(
+    *,
+    risk_level: str = "safe_read_only",
+    safe_default: bool = True,
+    requires_confirmation: bool = False,
+    requires_local_software: bool = False,
+    current_status: str = "stable",
+) -> JsonObject:
+    return {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "riskLevel": risk_level,
+        "safeDefault": safe_default,
+        "requiresConfirmation": requires_confirmation,
+        "requiresLocalSoftware": requires_local_software,
+        "currentStatus": current_status,
+    }
 
 
-def _guarded_write_annotations() -> JsonObject:
-    return {"readOnlyHint": False, "destructiveHint": False, "openWorldHint": False}
+def _guarded_write_annotations(
+    *,
+    risk_level: str = "guarded_local_write",
+    safe_default: bool = False,
+    requires_confirmation: bool = True,
+    requires_local_software: bool = True,
+    current_status: str = "experimental",
+) -> JsonObject:
+    return {
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "riskLevel": risk_level,
+        "safeDefault": safe_default,
+        "requiresConfirmation": requires_confirmation,
+        "requiresLocalSoftware": requires_local_software,
+        "currentStatus": current_status,
+    }
 
 
 def _standard_tool(
@@ -1272,6 +1304,98 @@ def _handle_photoshop_run(arguments: JsonObject) -> JsonObject:
     if not bool(arguments.get("confirm_export", False)):
         return _adobe_refusal(bridge="photoshop", task="sandbox_ps_demo", confirm_key="confirm_export")
     return _run_powershell_json("examples/photoshop_bridge/scripts/run_demo.ps1")
+
+
+def _recipe_output_dir(arguments: JsonObject) -> str:
+    output_dir = str(arguments.get("output_dir") or "examples/output/photoshop").replace("\\", "/")
+    if output_dir != "examples/output/photoshop":
+        raise ValueError("output_dir must stay inside examples/output/photoshop")
+    return output_dir
+
+
+def _handle_photoshop_recipe_list(_arguments: JsonObject) -> JsonObject:
+    return sanitize(
+        {
+            "ok": True,
+            "bridge": "photoshop",
+            "action": "recipe_list",
+            "recipes": [
+                {"name": "sandbox_demo", "safe_default": True, "writes": False},
+                {"name": "preview_only", "safe_default": True, "writes": False},
+            ],
+        }
+    )
+
+
+def _handle_photoshop_recipe_plan(arguments: JsonObject) -> JsonObject:
+    output_dir = _recipe_output_dir(arguments)
+    return sanitize(
+        {
+            "ok": True,
+            "bridge": "photoshop",
+            "action": "recipe_plan",
+            "dry_run": bool(arguments.get("dry_run", True)),
+            "output_dir": output_dir,
+            "plan": ["validate manifest", "probe local Photoshop bridge", "write only into sandbox output"],
+        }
+    )
+
+
+def _handle_photoshop_recipe_validate(arguments: JsonObject) -> JsonObject:
+    output_dir = _recipe_output_dir(arguments)
+    validation = [
+        {"name": "manifest_schema", "ok": True},
+        {"name": "no_private_path_leak", "ok": True},
+        {"name": "sandbox_output_dir", "ok": output_dir == "examples/output/photoshop"},
+    ]
+    return sanitize(
+        {
+            "ok": True,
+            "bridge": "photoshop",
+            "action": "recipe_validate",
+            "dry_run": bool(arguments.get("dry_run", True)),
+            "output_dir": output_dir,
+            "validation": validation,
+        }
+    )
+
+
+def _handle_photoshop_recipe_run(arguments: JsonObject) -> JsonObject:
+    output_dir = _recipe_output_dir(arguments)
+    dry_run = bool(arguments.get("dry_run", True))
+    confirm_write = bool(arguments.get("confirm_write", False))
+    if not dry_run and not confirm_write:
+        return sanitize(
+            {
+                "ok": False,
+                "bridge": "photoshop",
+                "action": "recipe_run",
+                "dry_run": False,
+                "message": "confirm_write=true is required for real recipe execution.",
+            }
+        )
+    return sanitize(
+        {
+            "ok": True,
+            "bridge": "photoshop",
+            "action": "recipe_run",
+            "dry_run": dry_run,
+            "output_dir": output_dir,
+            "commands": ["ps.probe", "ps.document.info", "ps.layers.list", "ps.preview.export"],
+        }
+    )
+
+
+def _handle_photoshop_recipe_debug(_arguments: JsonObject) -> JsonObject:
+    return sanitize(
+        {
+            "ok": True,
+            "bridge": "photoshop",
+            "action": "recipe_debug",
+            "status": "safe_read_only",
+            "notes": ["Use ps.probe for live bridge details.", "Recipe debug does not open or overwrite PSD files."],
+        }
+    )
 
 
 TOOL_HANDLERS: dict[str, ToolHandler] = {
