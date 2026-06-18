@@ -2,6 +2,13 @@
 
 这份矩阵只记录当前仓库可以公开发布和测试的能力边界。`stable` 表示有离线测试或 CI 安全验证；`experimental` 表示已有探针或 sandbox demo，但仍依赖本机软件或人工确认；`planned` 表示路线图能力，不写成已完成；`not implemented` 表示明确不支持的方向，例如登录绕过、私有素材读取或未确认的真实桌面写入。
 
+这里有两层状态词：
+
+- `bridge_status.json` 的 `maturity` 描述整条软件桥的公开成熟度，当前只使用 `stable`、`prototype`、`planned`、`research`、`deprecated`。
+- MCP tool registry 的 `current_status` 描述单个工具是否可调用，当前对外归一为 `stable`、`experimental`、`planned`。
+
+因此，一个 bridge 可以是 `prototype`，同时其中某些只读 tool 是 `stable`；这表示整条桥还未生产化，但该工具已有离线测试或安全验证。
+
 | Bridge | Capability categories | Stable | Experimental | Planned | Evidence / job lifecycle | Writes files | CI safe | Needs local app | Safety notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | StarBridge core | discovery, planning, execution, validation, evidence, cleanup | `starbridge.status`, `starbridge.tools`, `starbridge.safe_roots`, `starbridge.evidence_init`, `starbridge.evidence_validate`, `starbridge.job_status`, MCP stdio `tools/list` / `tools/call` | none | more client adapters | `EvidenceManifest` and `JobStatus` CLI are live, sanitized, and limited to `examples/output/evidence`; `safe_roots` exposes repo-relative writable boundaries | ignored JSON only | Yes | No | no desktop launch, no private file reads, all output passes sanitizer |
