@@ -5,11 +5,13 @@ dist/
 # Python 缓存
 __pycache__/
 *.py[cod]
+*.egg-info/
 
 # 本地环境和密钥
 .env
 .env.*
 !.env.example
+.codex/config.toml
 .venv/
 venv/
 
