@@ -38,7 +38,8 @@ $env:PHOTOSHOP_EXE="<path-to-Photoshop.exe>"
 
 ```powershell
 npm.cmd run photoshop:diagnose
-npm.cmd run photoshop:demo:plan
+# Use recipes e.g. remove_background, enhance_portrait etc. with action_plan for plan-then-execute
+npm.cmd run photoshop:recipe:plan -- --recipe_id remove_background --action_plan
 ```
 
 直接运行：
@@ -72,7 +73,8 @@ python examples\photoshop_bridge\write_practice_report.py --run-practice
 sandbox demo 命令：
 
 ```powershell
-npm.cmd run photoshop:demo:plan
+# Use recipes e.g. remove_background, enhance_portrait etc. with action_plan for plan-then-execute
+npm.cmd run photoshop:recipe:plan -- --recipe_id remove_background --action_plan
 npm.cmd run photoshop:demo
 npm.cmd run photoshop:manifest
 ```

@@ -1011,6 +1011,39 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 PHOTOSHOP_RECIPE_ID = "sandbox_demo_preview"
 
+CORE_RECIPES = {
+    "remove_background": {
+        "goal": "Remove background using select subject, feather mask, apply layer mask. All in sandbox.",
+        "steps": ["select subject", "feather selection", "create mask layer", "apply mask", "refine edges", "export preview"],
+        "tools": ["ps.selection.subject", "ps.layer.mask", "ps.preview.export", "starbridge.evidence"],
+        "safety": "dry_run default; confirm for real mask application on copy.",
+    },
+    "enhance_portrait": {
+        "goal": "Enhance portrait with frequency separation or smoothing, tone, skin retouch.",
+        "steps": ["duplicate layer", "frequency separation", "smooth high freq", "tone low freq", "merge", "preview"],
+        "tools": ["ps.document.info", "ps.layer.duplicate", "ps.batchplay", "ps.preview.export"],
+        "safety": "sandbox only; non-destructive where possible.",
+    },
+    "frequency_separation": {
+        "goal": "Set up frequency separation for retouching on active raster layer.",
+        "steps": ["duplicate for high/low", "apply gaussian blur to low", "high = original - low", "group layers"],
+        "tools": ["ps.layer.ops", "ps.batchplay.execute"],
+        "safety": "plan first, dry_run for preview.",
+    },
+    "color_grade": {
+        "goal": "Apply non-destructive color grade with adjustment layers (curves, hsl, gradient).",
+        "steps": ["add curves adj", "add hsl adj", "add gradient map", "clip to subject", "preview"],
+        "tools": ["ps.adjustment.layers", "ps.preview.export"],
+        "safety": "adjustment layers on copy.",
+    },
+    "prepare_for_web": {
+        "goal": "Prepare for web: convert sRGB, resize, sharpen, export optimized variants.",
+        "steps": ["convert profile", "resize for web", "unsharp mask", "export jpeg/png", "export variants"],
+        "tools": ["ps.document.profile", "ps.export", "ps.preview"],
+        "safety": "exports to sandbox.",
+    },
+}
+
 
 def _recipe_output_dir(arguments: JsonObject) -> str:
     return _sandbox_output_dir(arguments, "photoshop")
@@ -1033,7 +1066,29 @@ def _recipe_validations(output_dir: str) -> list[JsonObject]:
     ]
 
 
-def _recipe_definition(output_dir: str) -> JsonObject:
+def _recipe_definition(output_dir: str, recipe_id: str = None) -> JsonObject:
+    recipe_id = recipe_id or PHOTOSHOP_RECIPE_ID
+    if recipe_id in CORE_RECIPES:
+        recipe = CORE_RECIPES[recipe_id]
+        return {
+            "recipe_id": recipe_id,
+            "goal": recipe["goal"],
+            "allowed_inputs": ["recipe_id", "dry_run", "confirm_write", "output_dir"],
+            "allowed_outputs": [f"{output_dir}/result_{recipe_id}.psd", f"{output_dir}/preview_{recipe_id}.png"],
+            "steps": recipe["steps"],
+            "tools": recipe["tools"],
+            "validations": [item["name"] for item in _recipe_validations(output_dir)],
+            "retry_policy": [
+                "start with dry_run and recipe_validate",
+                "review manifest before confirm_write",
+            ],
+            "evidence_requirements": [
+                "redacted EvidenceManifest",
+                "sandbox outputs only",
+            ],
+            "safety_boundary": recipe.get("safety", "dry_run default; sandbox only; confirm for real."),
+        }
+    # fallback to demo
     return {
         "recipe_id": PHOTOSHOP_RECIPE_ID,
         "goal": "Create a sandbox Photoshop demo document, export previews, and record evidence without exposing private PSD paths.",
@@ -1070,22 +1125,33 @@ def _recipe_definition(output_dir: str) -> JsonObject:
 
 
 def _handle_photoshop_recipe_list(_arguments: JsonObject) -> JsonObject:
-    recipe = _recipe_definition("examples/output/photoshop")
+    recipes = []
+    for rid in [PHOTOSHOP_RECIPE_ID] + list(CORE_RECIPES.keys()):
+        recipes.append(_recipe_definition("examples/output/photoshop", rid))
     return sanitize(
-        {"ok": True, "bridge": "photoshop", "action": "recipe_list", "recipes": [recipe]}
+        {"ok": True, "bridge": "photoshop", "action": "recipe_list", "recipes": recipes}
     )
 
 
 def _handle_photoshop_recipe_plan(arguments: JsonObject) -> JsonObject:
     recipe_id = str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID)
     output_dir = _recipe_output_dir(arguments)
+    plan_def = _recipe_definition(output_dir, recipe_id) | {"recipe_id": recipe_id}
+    # Action Plan mode support: if "action_plan" requested, return executable steps
+    if arguments.get("action_plan"):
+        plan_def["action_plan"] = {
+            "mode": "plan_then_execute",
+            "steps": plan_def["steps"],
+            "tools_sequence": plan_def["tools"],
+            "repair": "validate after each major step, re-plan on failure up to 3 times",
+        }
     return sanitize(
         {
             "ok": True,
             "bridge": "photoshop",
             "action": "recipe_plan",
             "dry_run": bool(arguments.get("dry_run", True)),
-            "plan": _recipe_definition(output_dir) | {"recipe_id": recipe_id},
+            "plan": plan_def,
             "quality_gates": [item["name"] for item in _recipe_validations(output_dir)],
         }
     )
@@ -1093,12 +1159,14 @@ def _handle_photoshop_recipe_plan(arguments: JsonObject) -> JsonObject:
 
 def _handle_photoshop_recipe_validate(arguments: JsonObject) -> JsonObject:
     output_dir = _recipe_output_dir(arguments)
+    recipe_id = str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID)
     return sanitize(
         {
             "ok": True,
             "bridge": "photoshop",
             "action": "recipe_validate",
             "dry_run": bool(arguments.get("dry_run", True)),
+            "recipe_id": recipe_id,
             "validation": _recipe_validations(output_dir),
         }
     )
@@ -1106,21 +1174,22 @@ def _handle_photoshop_recipe_validate(arguments: JsonObject) -> JsonObject:
 
 def _handle_photoshop_recipe_run(arguments: JsonObject) -> JsonObject:
     output_dir = _recipe_output_dir(arguments)
+    recipe_id = str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID)
     dry_run = bool(arguments.get("dry_run", True))
     if dry_run:
+        commands = ["npm.cmd run photoshop:demo:plan"]
+        if recipe_id in CORE_RECIPES:
+            commands += ["# execute recipe steps via BatchPlay or UXP in sandbox"]
+        commands += ["npm.cmd run photoshop:manifest"]
         return sanitize(
             {
                 "ok": True,
                 "bridge": "photoshop",
                 "action": "recipe_run",
                 "dry_run": True,
-                "recipe_id": str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID),
+                "recipe_id": recipe_id,
                 "output_dir": output_dir,
-                "commands": [
-                    "npm.cmd run photoshop:demo:plan",
-                    "npm.cmd run photoshop:demo",
-                    "npm.cmd run photoshop:manifest",
-                ],
+                "commands": commands,
                 "quality_gates": [item["name"] for item in _recipe_validations(output_dir)],
             }
         )
@@ -1143,30 +1212,36 @@ def _handle_photoshop_recipe_run(arguments: JsonObject) -> JsonObject:
             "dry_run": False,
             "confirm_write": True,
             "output_dir": output_dir,
+            "recipe_id": recipe_id,
             "next_steps": [
-                "Run npm.cmd run photoshop:demo on the authorized Windows machine if you want to execute the live sandbox flow."
+                "Run authorized local script for the recipe (e.g. BatchPlay sequence for " + recipe_id + ")",
+                "Capture evidence manifest after run.",
             ],
         }
     )
 
 
 def _handle_photoshop_recipe_debug(arguments: JsonObject) -> JsonObject:
+    recipe_id = str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID)
+    extra = CORE_RECIPES.get(recipe_id, {})
     return sanitize(
         {
             "ok": True,
             "bridge": "photoshop",
             "action": "recipe_debug",
-            "recipe_id": str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID),
+            "recipe_id": recipe_id,
+            "action_plan_mode": "plan multiple steps in one LLM call, execute seq with repair",
             "retry_policy": [
                 "start with recipe_plan and recipe_validate",
                 "keep output_dir inside examples/output/photoshop",
                 "only enable confirm_write after reviewing the EvidenceManifest path and output file list",
-            ],
+            ] + extra.get("steps", []),
             "common_failures": [
                 "Photoshop COM unavailable",
                 "sandbox output path escaped the allowed root",
                 "real execution was requested without confirm_write=true",
             ],
+            "example_action_plan": "Use recipe_plan with action_plan=true to get sequenced tool calls.",
         }
     )
 
@@ -1508,21 +1583,25 @@ def _recipe_output_dir(arguments: JsonObject) -> str:
 
 
 def _handle_photoshop_recipe_list(_arguments: JsonObject) -> JsonObject:
+    recipes = []
+    for rid in [PHOTOSHOP_RECIPE_ID] + list(CORE_RECIPES.keys()):
+        recipes.append({"name": rid, "safe_default": True, "writes": False})
     return sanitize(
         {
             "ok": True,
             "bridge": "photoshop",
             "action": "recipe_list",
-            "recipes": [
-                {"name": "sandbox_demo", "safe_default": True, "writes": False},
-                {"name": "preview_only", "safe_default": True, "writes": False},
-            ],
+            "recipes": recipes,
         }
     )
 
 
 def _handle_photoshop_recipe_plan(arguments: JsonObject) -> JsonObject:
     output_dir = _recipe_output_dir(arguments)
+    recipe_id = str(arguments.get("recipe_id") or PHOTOSHOP_RECIPE_ID)
+    plan_def = _recipe_definition(output_dir, recipe_id) | {"recipe_id": recipe_id}
+    if arguments.get("action_plan"):
+        plan_def["action_plan"] = {"mode": "plan_then_execute", "steps": plan_def.get("steps", [])}
     return sanitize(
         {
             "ok": True,
@@ -1530,11 +1609,7 @@ def _handle_photoshop_recipe_plan(arguments: JsonObject) -> JsonObject:
             "action": "recipe_plan",
             "dry_run": bool(arguments.get("dry_run", True)),
             "output_dir": output_dir,
-            "plan": [
-                "validate manifest",
-                "probe local Photoshop bridge",
-                "write only into sandbox output",
-            ],
+            "plan": plan_def,
         }
     )
 
