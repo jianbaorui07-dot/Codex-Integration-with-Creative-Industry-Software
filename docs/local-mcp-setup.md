@@ -67,14 +67,22 @@ MCP stdio 配置：
 {
   "mcpServers": {
     "starbridge": {
+      "type": "stdio",
       "command": "python",
-      "args": ["-m", "starbridge_mcp.mcp_server"]
+      "args": ["-m", "starbridge_mcp.mcp_server"],
+      "env": {
+        "STARBRIDGE_PHOTOSHOP_SAFE_ONLY": "1",
+        "STARBRIDGE_PHOTOSHOP_DEFAULT_DRY_RUN": "1",
+        "STARBRIDGE_PHOTOSHOP_ALLOW_DESTRUCTIVE": "0"
+      }
     }
   }
 }
 ```
 
-如果客户端需要从指定仓库目录启动，可使用绝对 `cwd` 或在客户端配置里指定工作目录；不要把本机用户名、安装路径或素材目录写进公开文档。
+Claude Code 可直接使用仓库根目录的 `.mcp.json`。Codex 使用 `.codex/config.example.toml` 作为模板，把真实配置复制到 `.codex/config.toml` 或合并到 `~/.codex/config.toml`；真实配置不要提交。
+
+如果客户端需要从指定仓库目录启动，可使用绝对 `cwd` 或在客户端配置里指定工作目录；不要把本机用户名、安装路径或素材目录写进公开文档。ChatGPT Apps / Connectors 需要远程 HTTPS MCP server，不直接使用这个本地 stdio 配置。
 
 当前 MCP server 暴露的首批工具：
 
