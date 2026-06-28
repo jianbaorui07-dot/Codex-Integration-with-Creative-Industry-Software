@@ -1,0 +1,36 @@
+{
+  "job_root": "C:\\cad_jobs\\fidelity-smoke-2",
+  "source_final_production_dxf": "C:\\cad_jobs\\fidelity-smoke-2\\final_production\\final_production_draft.dxf",
+  "comparison_dir": "C:\\cad_jobs\\fidelity-smoke-2\\comparison",
+  "images": [
+    {
+      "index": 1,
+      "source": "C:\\Users\\84391\\.codex\\attachments\\34482a88-a5dc-4359-b76c-c4c27cfe059c\\image-1.png",
+      "reference_image": "C:\\cad_jobs\\fidelity-smoke-2\\comparison\\image-1_reference.png",
+      "cad_render_image": "C:\\cad_jobs\\fidelity-smoke-2\\comparison\\image-1_cad_render.png",
+      "overlay_image": "C:\\cad_jobs\\fidelity-smoke-2\\comparison\\image-1_overlay.png",
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "width": 1562,
+      "height": 1007,
+      "metrics": {
+        "reference_foreground_pixels": 78313,
+        "cad_foreground_pixels": 6633,
+        "overlap_pixels": 3351,
+        "union_pixels": 81595,
+        "xor_pixels": 78244,
+        "precision": 0.505201,
+        "recall": 0.04279,
+        "f1": 0.078897
+      }
+    }
+  ],
+  "summary": {
+    "image_count": 1,
+    "average_precision": 0.505201,
+    "average_recall": 0.04279,
+    "average_f1": 0.078897
+  }
+}
