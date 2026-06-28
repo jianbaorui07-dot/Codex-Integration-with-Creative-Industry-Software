@@ -25,8 +25,8 @@ import math
 import os
 import sys
 
-import bpy
 import bmesh
+import bpy
 from mathutils import Vector
 
 
@@ -268,14 +268,14 @@ def export(out_dir: str, objs) -> None:
 
     scene.render.filepath = preview
     bpy.ops.render.render(write_still=True)
-    print("BUILT blend=%s glb=%s preview=%s"
-          % (os.path.exists(blend), os.path.exists(glb), os.path.exists(preview)))
+    print(f"BUILT blend={os.path.exists(blend)} "
+          f"glb={os.path.exists(glb)} preview={os.path.exists(preview)}")
 
 
 def main() -> None:
     out_dir = parse_out_dir()
     info = build()
-    print("lattice members=%d verts=%d" % (info["edges"], info["verts"]))
+    print(f"lattice members={info['edges']} verts={info['verts']}")
     export(out_dir, info["objects"])
 
 
