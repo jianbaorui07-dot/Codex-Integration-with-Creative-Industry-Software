@@ -10,6 +10,8 @@ from PIL import Image, ImageOps
 
 from final_polish_export import build_final_polish_draft
 from final_production_export import build_final_production_draft
+from compare_trace_fidelity import build_trace_fidelity_report
+from geometry_promotion import PROMOTED_LAYER_DEFS, build_geometry_promotion_draft
 from formal_dimension_skeleton import SKELETON_LAYER_DEFS, build_formal_dimension_skeleton
 from formal_note_skeleton import NOTE_LAYER_DEFS, build_formal_note_skeleton
 from image_to_cad_annotation_starter import ANNOTATION_LAYER_DEFS, build_annotation_starter_dxf
@@ -123,7 +125,7 @@ def write_dxf(job_root: Path, images: list[dict]) -> Path:
     doc = ezdxf.new("R2010")
     doc.units = ezdxf.units.MM
     msp = doc.modelspace()
-    for name, color in [*LAYER_DEFS, *HELPER_LAYER_DEFS, *ANNOTATION_LAYER_DEFS, *SKELETON_LAYER_DEFS, *NOTE_LAYER_DEFS, *REDRAWN_LAYER_DEFS, *PREVIEW_LAYER_DEFS]:
+    for name, color in [*LAYER_DEFS, *HELPER_LAYER_DEFS, *ANNOTATION_LAYER_DEFS, *SKELETON_LAYER_DEFS, *NOTE_LAYER_DEFS, *REDRAWN_LAYER_DEFS, *PROMOTED_LAYER_DEFS, *PREVIEW_LAYER_DEFS]:
         if name not in doc.layers:
             doc.layers.add(name=name, color=color)
     for image, (x, y) in zip(images, POSITIONS):
@@ -177,9 +179,11 @@ def write_readme(path: Path, job_name: str, image_count: int) -> None:
                 "- Formal skeleton layers: `A-SKEL-DIM`, `A-SKEL-EXT`, `A-SKEL-ARROW`, `A-SKEL-TEXT`",
                 "- Formal note layers: `A-SKEL-NOTE`, `A-SKEL-LEADER`, `A-SKEL-NODE`",
                 "- Redrawn draft layers: `A-REDRAW-DIM`, `A-REDRAW-EXT`, `A-REDRAW-ARROW`, `A-REDRAW-DTEXT`, `A-REDRAW-NOTE`, `A-REDRAW-LEADER`",
-                "- Production preview layers: `A-DIMS`, `A-TEXT`",
+                "- Promoted geometry layers: `A-WALL`, `A-FURN`",
+                "- Production preview layers: `A-WALL`, `A-FURN`, `A-DIMS`, `A-TEXT`",
                 "- Open `trace_workspace_refs.dxf` or run `launch_trace_project.ps1`.",
                 "- Review `auto_trace\\trace_starter_vectors.dxf` for machine-extracted starter geometry.",
+                "- Review `formalized\\geometry_promotion_draft.dxf` for conservative geometry promoted toward production layers.",
                 "- Review `auto_annotations\\trace_starter_annotations.dxf` for OCR-based text and dimension candidates.",
                 "- Review `formalized\\formal_dimension_skeleton.dxf` for the formalized dimension skeleton draft.",
                 "- Review `formalized\\formal_note_skeleton.dxf` for the formalized note-and-leader skeleton draft.",
@@ -189,6 +193,7 @@ def write_readme(path: Path, job_name: str, image_count: int) -> None:
                 "- Review `delivery_draft\\delivery_draft.dxf` for the near-final delivery draft export.",
                 "- Review `final_polish\\final_polish_draft.dxf` for the cleaned final-polish draft export.",
                 "- Review `final_production\\final_production_draft.dxf` for the normalized final-production draft export.",
+                "- Review `comparison\\trace_fidelity_report.md` and `comparison\\*_overlay.png` for source-vs-generated similarity.",
                 "- Trace over `A-REF` and move final geometry onto the target layers.",
             ]
         )
@@ -200,7 +205,7 @@ def write_readme(path: Path, job_name: str, image_count: int) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--job-name", required=True)
-    parser.add_argument("--output-root", default=r"C:\cad_jobs")
+    parser.add_argument("--output-root", default=str((Path(__file__).resolve().parent.parent / "cad_jobs_local").resolve()))
     parser.add_argument("images", nargs="+")
     args = parser.parse_args()
 
@@ -243,6 +248,11 @@ def main() -> int:
         images=manifest_images,
         positions=POSITIONS,
     )
+    geometry_dxf_path, geometry_report_path = build_geometry_promotion_draft(
+        job_root=job_root,
+        vector_report_path=vector_report_path,
+        vector_dxf_path=vector_dxf_path,
+    )
     formal_skeleton_dxf_path, formal_skeleton_report_path = build_formal_dimension_skeleton(
         job_root=job_root,
         images=manifest_images,
@@ -266,6 +276,8 @@ def main() -> int:
         job_root=job_root,
         redrawn_report_path=redrawn_report_path,
         redrawn_dxf_path=redrawn_dxf_path,
+        geometry_report_path=geometry_report_path,
+        geometry_dxf_path=geometry_dxf_path,
     )
     combined_review_dxf_path, combined_review_report_path = build_combined_final_review(
         job_root=job_root,
@@ -284,6 +296,13 @@ def main() -> int:
         job_root=job_root,
         final_polish_dxf=final_polish_dxf_path,
     )
+    comparison_report_path, comparison_markdown_path = build_trace_fidelity_report(
+        job_root=job_root,
+        images=manifest_images,
+        positions=POSITIONS,
+        vector_starter_dxf=vector_dxf_path,
+        final_production_dxf=final_production_dxf_path,
+    )
     write_launch_script(job_root / "launch_trace_project.ps1", scr_path, dxf_path)
     write_readme(job_root / "README.md", job_name, len(manifest_images))
 
@@ -291,7 +310,7 @@ def main() -> int:
         "job_name": job_name,
         "job_root": str(job_root.resolve()),
         "images": manifest_images,
-        "layers": [{"name": name, "color": color} for name, color in [*LAYER_DEFS, *HELPER_LAYER_DEFS, *ANNOTATION_LAYER_DEFS, *SKELETON_LAYER_DEFS, *NOTE_LAYER_DEFS, *REDRAWN_LAYER_DEFS, *PREVIEW_LAYER_DEFS]],
+        "layers": [{"name": name, "color": color} for name, color in [*LAYER_DEFS, *HELPER_LAYER_DEFS, *ANNOTATION_LAYER_DEFS, *SKELETON_LAYER_DEFS, *NOTE_LAYER_DEFS, *REDRAWN_LAYER_DEFS, *PROMOTED_LAYER_DEFS, *PREVIEW_LAYER_DEFS]],
         "auto_trace": {
             "vector_dxf": str(vector_dxf_path.resolve()),
             "report": str(vector_report_path.resolve()),
@@ -301,6 +320,8 @@ def main() -> int:
             "report": str(annotation_report_path.resolve()),
         },
         "formalized": {
+            "geometry_promotion_dxf": str(geometry_dxf_path.resolve()),
+            "geometry_promotion_report": str(geometry_report_path.resolve()),
             "dimension_skeleton_dxf": str(formal_skeleton_dxf_path.resolve()),
             "dimension_report": str(formal_skeleton_report_path.resolve()),
             "note_skeleton_dxf": str(formal_note_dxf_path.resolve()),
@@ -327,6 +348,10 @@ def main() -> int:
         "final_production": {
             "dxf": str(final_production_dxf_path.resolve()),
             "report": str(final_production_report_path.resolve()),
+        },
+        "comparison": {
+            "report": str(comparison_report_path.resolve()),
+            "markdown": str(comparison_markdown_path.resolve()),
         },
     }
     (job_root / "reference_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")

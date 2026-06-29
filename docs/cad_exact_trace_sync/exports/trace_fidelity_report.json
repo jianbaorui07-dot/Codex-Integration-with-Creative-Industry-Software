@@ -8,7 +8,10 @@
       "index": 1,
       "source": "C:\\Users\\84391\\.codex\\attachments\\34482a88-a5dc-4359-b76c-c4c27cfe059c\\image-1.png",
       "reference_image": "C:\\cad_jobs\\fidelity-smoke-3\\comparison\\image-1_reference.png",
-      "origin": {"x": 0, "y": 0},
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
       "width": 1562,
       "height": 1007,
       "stages": {
@@ -60,9 +63,21 @@
   "summary": {
     "image_count": 1,
     "stages": {
-      "vector_starter": {"average_precision": 0.4824, "average_recall": 0.68668, "average_f1": 0.566692},
-      "final_production": {"average_precision": 0.505201, "average_recall": 0.04279, "average_f1": 0.078897},
-      "composite": {"average_precision": 0.478106, "average_recall": 0.692937, "average_f1": 0.565816}
+      "vector_starter": {
+        "average_precision": 0.4824,
+        "average_recall": 0.68668,
+        "average_f1": 0.566692
+      },
+      "final_production": {
+        "average_precision": 0.505201,
+        "average_recall": 0.04279,
+        "average_f1": 0.078897
+      },
+      "composite": {
+        "average_precision": 0.478106,
+        "average_recall": 0.692937,
+        "average_f1": 0.565816
+      }
     }
   }
 }

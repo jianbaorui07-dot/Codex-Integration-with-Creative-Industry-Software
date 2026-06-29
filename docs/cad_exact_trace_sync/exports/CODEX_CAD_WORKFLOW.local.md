@@ -17,7 +17,7 @@ Make the local Codex + AutoCAD chain reusable, so a new reference image can be t
 Run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "C:\Users\<USER_HOME>\OneDrive\鏂囨。\New project\cad_exact_trace\verify_codex_cad_integration.ps1"
+powershell -ExecutionPolicy Bypass -File "C:\Users\84391\OneDrive\文档\New project\cad_exact_trace\verify_codex_cad_integration.ps1"
 ```
 
 Outputs:
@@ -32,8 +32,8 @@ Outputs:
 Direct Python invocation:
 
 ```powershell
-& 'C:\Users\<USER_HOME>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
-  'C:\Users\<USER_HOME>\OneDrive\鏂囨。\New project\cad_exact_trace\create_trace_job_from_images.py' `
+& 'C:\Users\84391\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
+  'C:\Users\84391\OneDrive\文档\New project\cad_exact_trace\create_trace_job_from_images.py' `
   --job-name sample-job `
   'C:\path\to\image.png'
 ```
@@ -41,7 +41,7 @@ Direct Python invocation:
 One-step launcher:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "C:\Users\<USER_HOME>\OneDrive\鏂囨。\New project\cad_exact_trace\run_image_to_cad_job.ps1" `
+powershell -ExecutionPolicy Bypass -File "C:\Users\84391\OneDrive\文档\New project\cad_exact_trace\run_image_to_cad_job.ps1" `
   -JobName sample-job `
   "C:\path\to\image.png"
 ```
@@ -174,6 +174,7 @@ This is the best current machine-generated file for the last round of human CAD 
 - `final_production_draft.dxf` is a normalized production-facing export derived from the final polish draft
 - it preserves the trusted final-facing layers and applies another pass of text and dimension normalization
 - it is the best current machine-generated DXF to hand into a direct AutoCAD finalize step
+- it now also carries conservative promoted geometry on `A-WALL` and `A-FURN` when the auto-trace stage finds strong axis-aligned lines or small closed features
 
 ## AutoCAD finalize pass
 
@@ -181,13 +182,23 @@ This is the best current machine-generated file for the last round of human CAD 
 - the current finalize pass proves that Codex can attach to the active AutoCAD session, open the draft, run a simple viewport command, and save a polished DXF back out
 - this is the current bridge point between generated DXF structure and direct in-AutoCAD finishing logic
 
+## Fidelity comparison
+
+- `comparison\trace_fidelity_report.json` records how much of the final production draft overlaps the cleaned source image
+- `comparison\trace_fidelity_report.md` summarizes the current similarity scores for quick review
+- `comparison\*_overlay.png` paints source-only pixels in red and generated-CAD pixels in cyan so the misses are visually obvious
+- the report now breaks similarity into `vector_starter`, `final_production`, and `composite` stages so it is obvious whether geometry extraction or CAD reconstruction is the weaker link
+- the latest conservative geometry-promotion pass raised final-production recall significantly on the sample detail drawing, which confirms the main gap is no longer "nothing on the production layers" but "not enough of the right geometry on the production layers"
+
+This is not yet a full engineering-grade validator, but it gives Codex a measurable feedback loop instead of guessing whether the output "looks close enough".
+
 ## Direct smoke test
 
 Run:
 
 ```powershell
-& 'C:\Users\<USER_HOME>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
-  'C:\Users\<USER_HOME>\OneDrive\鏂囨。\New project\cad_exact_trace\direct_autocad_smoke.py'
+& 'C:\Users\84391\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' `
+  'C:\Users\84391\OneDrive\文档\New project\cad_exact_trace\direct_autocad_smoke.py'
 ```
 
 Expected result:
@@ -219,14 +230,15 @@ Expected result:
 19. Open `final_polish\final_polish_draft.dxf` when you want the cleanest current near-final machine export before manual signoff.
 20. Open `final_production\final_production_draft.dxf` when you want the normalized production-facing draft.
 21. Open `final_production\final_production_autocad_polished.dxf` when you want the latest AutoCAD-side finalize output.
-22. Move reviewed final geometry and annotations onto:
+22. Open `comparison\trace_fidelity_report.md` and `comparison\image-*_overlay.png` when you want a quick score and visual diff against the source image.
+23. Move reviewed final geometry and annotations onto:
    - `A-WALL`
    - `A-FURN`
    - `A-WIND`
    - `A-DOOR`
    - `A-TEXT`
    - `A-DIMS`
-23. Use Codex to iteratively refine the DXF-generation scripts or direct AutoCAD bridge calls.
+24. Use Codex to iteratively refine the DXF-generation scripts or direct AutoCAD bridge calls.
 
 ## GitHub sync
 
@@ -250,6 +262,7 @@ To reach the target of "same drawing, same details", the remaining gap is now mo
 - final manual polish rules for the delivery draft export
 - stronger geometry-aware cleanup for the final-polish export
 - stronger AutoCAD-native finalize rules beyond the current proof pass
+- better text-shape modeling inside the fidelity comparison render
 - symbol and hatch classification
 - lineweight and layer inference
 - snapping extracted geometry onto exact drafting relationships

@@ -1,7 +1,7 @@
 {
-  "job_root": "C:\\cad_jobs\\final-production-smoke",
-  "source_final_polish_dxf": "C:\\cad_jobs\\final-production-smoke\\final_polish\\final_polish_draft.dxf",
-  "dxf": "C:\\cad_jobs\\final-production-smoke\\final_production\\final_production_draft.dxf",
+  "job_root": "C:\\cad_jobs\\fidelity-smoke-3",
+  "source_final_polish_dxf": "C:\\cad_jobs\\fidelity-smoke-3\\final_polish\\final_polish_draft.dxf",
+  "dxf": "C:\\cad_jobs\\fidelity-smoke-3\\final_production\\final_production_draft.dxf",
   "copied": {
     "A-REF": 1,
     "A-DIMS": 21,

@@ -1,6 +1,6 @@
 param(
     [string]$TaskName = "CodexCadTraceGitHubSync",
-    [string]$SyncScript = "C:\codex-cad-bridge-git\scripts\sync_cad_trace_snapshot.ps1"
+    [string]$SyncScript = "C:\codex-cad-bridge-sync\scripts\sync_cad_trace_snapshot.ps1"
 )
 
 $ErrorActionPreference = "Stop"

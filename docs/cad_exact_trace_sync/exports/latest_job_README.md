@@ -1,4 +1,4 @@
-# final-production-smoke
+# fidelity-smoke-3
 
 - Reference images: `1`
 - Layers: `A-WALL`, `A-FURN`, `A-WIND`, `A-DOOR`, `A-TEXT`, `A-DIMS`, `A-REF`
@@ -19,4 +19,5 @@
 - Review `delivery_draft\delivery_draft.dxf` for the near-final delivery draft export.
 - Review `final_polish\final_polish_draft.dxf` for the cleaned final-polish draft export.
 - Review `final_production\final_production_draft.dxf` for the normalized final-production draft export.
+- Review `comparison\trace_fidelity_report.md` and `comparison\*_overlay.png` for source-vs-generated similarity.
 - Trace over `A-REF` and move final geometry onto the target layers.
