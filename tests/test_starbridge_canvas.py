@@ -46,9 +46,7 @@ class StarBridgeCanvasTest(unittest.TestCase):
         self.assertIn("insert_cowart_image", server)
 
     def test_start_script_sets_canvas_environment(self) -> None:
-        script = (REPO_ROOT / "scripts" / "start_starbridge_canvas.ps1").read_text(
-            encoding="utf-8"
-        )
+        script = (REPO_ROOT / "scripts" / "start_starbridge_canvas.ps1").read_text(encoding="utf-8")
 
         self.assertIn("STARBRIDGE_CANVAS_PROJECT_DIR", script)
         self.assertIn("STARBRIDGE_CANVAS_DIR", script)
@@ -60,13 +58,7 @@ class StarBridgeCanvasTest(unittest.TestCase):
         self.assertTrue((REPO_ROOT / "docs" / "starbridge-canvas.md").exists())
         self.assertTrue((CANVAS_ROOT / "README.md").exists())
         self.assertTrue(
-            (
-                REPO_ROOT
-                / ".codex"
-                / "skills"
-                / "starbridge-canvas-mcp"
-                / "SKILL.md"
-            ).exists()
+            (REPO_ROOT / ".codex" / "skills" / "starbridge-canvas-mcp" / "SKILL.md").exists()
         )
 
 
