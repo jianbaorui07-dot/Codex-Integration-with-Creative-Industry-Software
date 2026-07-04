@@ -33,6 +33,7 @@ class PackageScriptsTest(unittest.TestCase):
                 "starbridge:evidence:validate",
                 "starbridge:job-status",
                 "starbridge:mcp",
+                "starbridge:backend",
                 "starbridge:plan",
                 "starbridge:gui-instructions",
                 "starbridge:demo:photoshop:gui",
@@ -78,6 +79,7 @@ class PackageScriptsTest(unittest.TestCase):
                 "security:check",
                 "frontend:dev",
                 "frontend:build",
+                "app:dev",
                 "test",
                 "test:pytest",
                 "lint",
@@ -146,6 +148,7 @@ class PackageScriptsTest(unittest.TestCase):
             self.assertRegex(extras_block, rf"(?m)^{extra}\s*=")
         self.assertIn("pytest>=8", extras_block)
         self.assertIn("ezdxf>=1.3", extras_block)
+        self.assertIn('starbridge-backend = "starbridge_mcp.backend:main"', text)
 
 
 if __name__ == "__main__":
