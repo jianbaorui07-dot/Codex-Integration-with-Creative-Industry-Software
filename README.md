@@ -9,6 +9,16 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 
+## Unreal Amara Agent
+
+New example package: [examples/unreal_amara_agent](examples/unreal_amara_agent)
+
+This preserves the local `codex接入UE` evidence bundle for the Amara UE Agent Framework: Unreal Engine 5.2.1 Amara assets, offline task runner scripts, checkpoints, safety reports, performance evidence, screenshots, and the stopped Remote Control/MCP handoff plan.
+
+The product direction is a 3D-aware local agent for Unreal Engine: describe a world, then let the agent build editable terrain, buildings, spaces, interactive objects, scripts, physics, gameplay logic, and eventually characters, NPC behavior, quests, weather, and playable game loops. Current repository evidence is documented honestly as a prototype seed rather than a completed remote-control plugin.
+
+Read the overview: [docs/unreal-amara-agent-framework.md](docs/unreal-amara-agent-framework.md)
+
 ## 仓库总定位
 
 这个仓库只服务三件事：**Codex skill 入口、StarBridge MCP 工具协议、Adobe UXP / 本地代理桥**。所有公开内容都围绕这三层收敛；历史 demo、私有素材、真实工程、本机路径、账号状态和临时输出不进入 GitHub。
