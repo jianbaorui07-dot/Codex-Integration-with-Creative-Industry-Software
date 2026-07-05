@@ -21,23 +21,99 @@ Read the overview: [docs/unreal-worldforge-agent-framework.md](docs/unreal-world
 
 ## 仓库总定位
 
-这个仓库只服务三件事：**Codex skill 入口、StarBridge MCP 工具协议、Adobe UXP / 本地代理桥**。所有公开内容都围绕这三层收敛；历史 demo、私有素材、真实工程、本机路径、账号状态和临时输出不进入 GitHub。
+StarBridge 是一个面向创意行业软件的 **本地优先 AI 工作台原型**。它不是单纯的 MCP demo，也不是替代 Photoshop、Blender、CAD、ComfyUI 等专业软件的工具；它的目标是把这些桌面软件、生成式 AI 工作流和 Codex/AI agent 串成一个可审计、可确认、可扩展的软件控制台。
+
+当前公开仓库聚焦三件事：**Codex skill 入口、StarBridge MCP 工具协议、Adobe UXP / 本地代理桥**。所有公开内容都围绕这三层收敛；历史 demo、私有素材、真实工程、本机路径、账号状态和临时输出不进入 GitHub。
+
+一句话概括：
+
+> StarBridge 让 AI 先理解创意软件工作流，再生成 dry-run 计划、EvidenceManifest 和安全边界，最后才允许用户确认进入真实本地软件执行。
+
+当前状态：**v0.1-alpha**。首屏边界保持清楚：`stable` 覆盖 MCP stdio、tool registry、ComfyUI workflow validate、AutoCAD/DXF plan validate / dry-run / guarded write；`experimental` 覆盖 Photoshop / Illustrator sandbox demo 和部分本地探针；`planned` 覆盖 Blender confirmed render、CapCut draft skeleton、跨软件 asset handoff；`not implemented` 包括自动登录、读取客户私有工程、无确认写入真实桌面软件。Photoshop, Illustrator, Blender, and CapCut write flows are experimental or planned unless a reviewed local run proves otherwise.
+
+### 适合谁
+
+| 使用者 | 典型场景 | StarBridge 提供什么 |
+| --- | --- | --- |
+| 个人创作者 | 想用 AI 批量处理图像、建模、矢量图、CAD 草图 | 本地控制台、recipe 计划、软件状态检查、只读/干跑验证 |
+| 设计/广告工作室 | 需要把 Photoshop、ComfyUI、Illustrator、Blender 流程标准化 | 可复用 recipe、质量门、执行历史、审计证据 |
+| 工业设计 / CAD 团队 | 需要把自然语言或结构化规格转成可检查的 DXF/CAD plan | CAD schema 校验、DXF dry-run、安全输出边界 |
+| 开发者 / Agent 构建者 | 需要给 Codex、Claude、Cursor 等 AI 客户端接入创意软件 | MCP stdio server、tool registry、resources、prompts、safe roots |
+| 企业内网团队 | 不能把素材、模型、工程文件上传到外部平台 | 本地优先、路径脱敏、确认写入、EvidenceManifest |
+
+### 核心问题
+
+创意软件自动化最难的不是“让 AI 调一个命令”，而是下面这些边界：
+
+| 问题 | 风险 | StarBridge 当前做法 |
+| --- | --- | --- |
+| AI 直接控制桌面软件 | 误删图层、覆盖工程、跑任意脚本 | 所有写入默认 dry-run，真实写入必须显式确认 |
+| 读取私有素材和客户工程 | 泄露 PSD、AI、DWG、模型、路径和账号信息 | 公开工具只处理公开示例、摘要或用户显式传入的脱敏数据 |
+| 生成结果不可追溯 | 不知道用了什么 plan、哪些质量门、输出在哪里 | 统一 EvidenceManifest、JobStatus、recipe audit history |
+| 不同软件接口不一致 | Photoshop、ComfyUI、Blender、CAD 都是不同世界 | 用 StarBridge MCP 把状态、计划、执行、证据统一成同一套协议 |
+| demo 难以产品化 | 只能演示，不能变成工作台 | 已加入本地 HTTP backend、React 前端、recipe catalog、audit history |
 
 | 层级 | 服务对象 | 当前职责 | 边界 |
 | --- | --- | --- | --- |
 | Skill | Codex 工作流 | 把 Photoshop、Illustrator、CAD、Blender 等软件接入流程拆成可复用 skill | 只写方法、路由和安全规则，不保存私有素材 |
-| MCP | AI 客户端工具协议 | 暴露 `tools/list`、`tools/call`、safe-only registry、status/probe、dry-run 和 evidence | 默认只读或 dry-run，写入必须确认并限制到 sandbox |
+| MCP | AI 客户端工具协议 | 暴露 `tools/list`、`tools/call`、resources、prompts、safe-only registry、status/probe、recipe、dry-run 和 evidence | 默认只读或 dry-run，写入必须确认并限制到 sandbox |
+| Backend | 本地软件控制台 API | 把 MCP 能力包装成 HTTP API：health、bootstrap、catalog、audit history、recipe plan/evidence | 只复用 MCP 安全工具层，不绕过确认机制 |
+| Frontend | StarBridge Creative Workbench | 展示软件桥、Recipe Store、Audit History、Evidence 结果和安全执行链 | 不直接写文件，不直接控制桌面软件 |
 | UXP | Adobe 桌面插件 / 本地代理 | 承接 Photoshop UXP v2、Node Proxy、typed BatchPlay、DOM 读写实验 | 仍是 experimental，不开放任意脚本或私有 PSD 自动处理 |
 
-一句话原则：**Skill 管路线，MCP 管工具，UXP / Node Proxy 管 Adobe 本地插件通道，Safety layer 管脱敏和发布边界，专业软件继续负责真实生产。**
+一句话原则：**Skill 管路线，MCP 管工具，Backend/Frontend 管产品体验，UXP / Node Proxy 管 Adobe 本地插件通道，Safety layer 管脱敏和发布边界，专业软件继续负责真实生产。**
+
+### 软件化进展
+
+当前仓库已经从“协议/脚本集合”推进到一个可运行的软件原型：
+
+```powershell
+npm.cmd run app:dev
+```
+
+运行后会启动：
+
+| 模块 | 默认职责 |
+| --- | --- |
+| `starbridge_mcp.backend` | 本地 HTTP 后端，复用 MCP handler，提供 `/api/bootstrap`、`/api/catalog`、`/api/tiers`、`/api/hybrid`、`/api/audit/history` 等接口 |
+| `examples/starbridge_frontend` | React + Three.js 前端，显示软件桥能力、Recipe Store、Audit History、Free/Pro/Team、混合执行通道和 Plan/Evidence/Run 结果 |
+| `starbridge.recipe_*` | 跨软件高层工作流入口：list、plan、evidence、confirmed run request |
+| `EvidenceManifest` | 每个工作流执行前后的审计契约，记录状态、质量门、输出资产摘要和安全决策 |
+
+### 产品闭环
+
+StarBridge 当前追求的闭环是：
+
+1. **发现能力**：读取 `starbridge://capabilities`、`starbridge.tools`、`bridge_overview`。
+2. **选择软件桥**：ComfyUI、Photoshop、Illustrator、Blender、AutoCAD/DXF、CapCut/Jianying。
+3. **选择 recipe**：从 Recipe Store 中选择已审查工作流，例如 `photoshop_preview_export`、`comfyui_txt2img_lifecycle`。
+4. **生成计划**：调用 `starbridge.recipe_plan`，只返回 dry-run action plan 和质量门。
+5. **预览证据**：调用 `starbridge.recipe_evidence`，生成标准 EvidenceManifest 预览。
+6. **选择执行通道**：桌面软件默认留在 local lane，ComfyUI/GPU 类任务可进入 cloud lane 计费模型。
+7. **确认执行**：前端要求用户显式勾选确认，后端 `/api/recipes/{recipe_id}/run` 才会记录一次受控执行请求。
+8. **查看结果**：Plan、Evidence、Run 都返回结构化 JSON，并写入本地 ignored audit history；真实写入仍由各 bridge 的 `confirm_write` / `confirm_export` / `confirm_run` 守门。
+
+### 可商业化方向
+
+这个项目的先进点不只是“接入多个软件”，而是把创意自动化做成可卖的软件能力：
+
+| 方向 | 可变现形态 |
+| --- | --- |
+| StarBridge Pro | 本地桌面控制台、批处理、历史记录、可视化证据、更多确认执行工具 |
+| Free / Pro / Team | 免费版服务开发者验证，Pro 面向个人创作者，Team 面向工作室/公司审批与共享 |
+| Recipe Pack | 电商修图、AI 海报、CAD 出图、矢量重绘、Blender 产品建模等工作流包 |
+| Team / Studio | 团队共享 recipe、统一安全策略、审计日志、角色权限 |
+| Compute / Cloud | ComfyUI / GPU 任务未来可接点数、生成次数、GPU 分钟 |
+| Enterprise | 内网部署、私有素材库、私有模型、安全审计和定制桥接 |
 
 ## 项目状态：v0.1-alpha
 
 | 状态 | 当前范围 |
 | --- | --- |
-| stable | MCP stdio server、tool registry、统一 status/probe、路径脱敏、安全检查、preflight、ComfyUI workflow validate、AutoCAD/DXF plan validate / dry-run / guarded write。 |
+| stable | MCP stdio server、tool registry、resources/prompts、统一 status/probe、路径脱敏、安全检查、preflight、ComfyUI workflow validate、AutoCAD/DXF plan validate / dry-run / guarded write、recipe list/plan/evidence。 |
+| software prototype | 本地 HTTP backend、React/Three.js Creative Workbench、Recipe Store、Audit History、Free/Pro/Team 分层、local/cloud 通道、确认执行请求、同源静态托管。 |
 | experimental | Photoshop sandbox 写入/导出 demo、Illustrator sandbox trace/export demo、ComfyUI txt2img job lifecycle、桌面软件 COM/UXP 探针。 |
-| planned | Blender confirmed render、CapCut / 剪映 draft skeleton、跨软件 asset handoff、可审计 E2E release evidence。 |
+| planned | Blender confirmed render、CapCut / 剪映 draft skeleton、跨软件 asset handoff、可审计 E2E release evidence、Windows 安装器/托盘应用。 |
 | not implemented | 自动登录、账号授权绕过、读取客户私有工程、提交模型或生成图、无确认写入真实桌面软件。 |
 
 Photoshop, Illustrator, Blender, and CapCut write flows are experimental or planned unless a reviewed local run proves otherwise.
@@ -58,12 +134,15 @@ Photoshop, Illustrator, Blender, and CapCut write flows are experimental or plan
 
 ```mermaid
 flowchart LR
-  A["Codex / AI 客户端"] --> B["Codex skill"]
+  A["Codex / Claude / Cursor / AI 客户端"] --> B["Codex skills"]
   B --> C["StarBridge MCP stdio server"]
-  C --> D["安全工具注册表"]
-  D --> E["ComfyUI / CAD / Blender / CapCut"]
-  D --> F["Adobe UXP / Node Proxy"]
-  F --> G["Photoshop / Illustrator 桌面软件"]
+  C --> D["Tool registry / Resources / Prompts"]
+  D --> E["Recipe plan / EvidenceManifest / JobStatus"]
+  E --> F["Local HTTP backend"]
+  F --> G["Creative Workbench frontend"]
+  E --> H["ComfyUI / AutoCAD-DXF / Blender / CapCut"]
+  E --> I["Adobe UXP / Node Proxy / COM probes"]
+  I --> J["Photoshop / Illustrator 桌面软件"]
 ```
 
 ## Getting Started
