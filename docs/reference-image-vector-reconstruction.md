@@ -99,3 +99,5 @@ Evidence 只保存：
 - 不声称已实现参考图自动重建。
 
 后续 MCP tool 必须在 Scene Graph、VectorPatch schema、视觉验证和 sandbox 确认链完整后再接入。
+
+短华语词汇、默认值和冲突规则见 [矢量短华语指令协议](vector-command-language.md)。

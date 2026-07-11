@@ -26,6 +26,12 @@ __all__ = [
     "VectorQualityFinding",
     "evaluate_reference_vector_quality",
     "validate_reference_vector_quality_report",
+    "default_vector_task",
+    "parse_vector_command",
+    "validate_vector_task",
+    "compile_vector_scene_to_svg",
+    "validate_vector_scene",
+    "vector_scene_summary",
     # Security & safety
     "sanitize",
     "sanitize_path",
@@ -83,6 +89,16 @@ from starbridge_mcp.core.vector_quality import (
     VectorQualityFinding,
     evaluate_reference_vector_quality,
     validate_reference_vector_quality_report,
+)
+from starbridge_mcp.core.vector_intent import (
+    default_vector_task,
+    parse_vector_command,
+    validate_vector_task,
+)
+from starbridge_mcp.core.vector_scene import (
+    compile_vector_scene_to_svg,
+    validate_vector_scene,
+    vector_scene_summary,
 )
 from starbridge_mcp.core.result_schema import make_result, validate_result
 from starbridge_mcp.core.safe_roots import safe_roots_summary
