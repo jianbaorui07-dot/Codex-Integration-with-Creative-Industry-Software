@@ -45,9 +45,24 @@ class BackendApiTests(unittest.TestCase):
         self.assertEqual(200, response.status)
         data = response.body["data"]
         self.assertIn("capabilities", data)
+        self.assertIn("catalog", data)
+        self.assertIn("hybrid", data)
+        self.assertIn("history", data)
         self.assertIn("recipes", data)
         self.assertIn("resources", data)
         self.assertIn("safe_roots", data)
+        self.assertIn("tiers", data)
+
+    def test_catalog_endpoint_returns_monetizable_recipe_cards(self) -> None:
+        response = self.backend.route("GET", "/api/catalog")
+
+        self.assertEqual(200, response.status)
+        data = response.body["data"]
+        self.assertEqual("starbridge.catalog.v1", data["catalog_version"])
+        self.assertGreaterEqual(data["item_count"], 5)
+        by_recipe = {item["recipe_id"]: item for item in data["items"]}
+        self.assertEqual("Pro", by_recipe["photoshop_preview_export"]["tier"])
+        self.assertIn("price_signal", by_recipe["comfyui_txt2img_lifecycle"])
 
     def test_recipe_plan_endpoint(self) -> None:
         response = self.backend.route("GET", "/api/recipes/comfyui_txt2img_lifecycle/plan")
@@ -57,6 +72,7 @@ class BackendApiTests(unittest.TestCase):
         self.assertEqual("recipe_plan", data["action"])
         self.assertEqual("comfyui_txt2img_lifecycle", data["recipe_id"])
         self.assertIn("quality_gates", data["plan"])
+        self.assertEqual("recipe_action", response.body["event"]["kind"])
 
     def test_recipe_evidence_endpoint(self) -> None:
         response = self.backend.route("POST", "/api/recipes/blender_scene_evidence/evidence")
@@ -66,6 +82,78 @@ class BackendApiTests(unittest.TestCase):
         self.assertEqual("recipe_evidence", manifest["action"])
         self.assertIn("quality_gates", manifest)
         self.assertIn("asset_manifest", manifest)
+        self.assertEqual("evidence", response.body["event"]["action"])
+
+    def test_recipe_actions_are_recorded_in_audit_history(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            backend = StarBridgeBackend(history_path=Path(temp_dir) / "history.json")
+
+            backend.route("GET", "/api/recipes/comfyui_txt2img_lifecycle/plan")
+            backend.route("POST", "/api/recipes/comfyui_txt2img_lifecycle/evidence")
+            backend.route(
+                "POST",
+                "/api/recipes/comfyui_txt2img_lifecycle/run",
+                json.dumps({"confirm_run": True, "execution_target": "cloud"}).encode("utf-8"),
+            )
+            response = backend.route("GET", "/api/audit/history")
+
+        self.assertEqual(200, response.status)
+        data = response.body["data"]
+        self.assertEqual("starbridge.audit.v1", data["history_version"])
+        self.assertEqual(3, data["event_count"])
+        self.assertEqual("run", data["events"][0]["action"])
+        self.assertEqual("cloud", data["events"][0]["execution_target"])
+        self.assertEqual("evidence", data["events"][1]["action"])
+        self.assertEqual("plan", data["events"][2]["action"])
+
+    def test_tiers_endpoint_returns_free_pro_team_model(self) -> None:
+        response = self.backend.route("GET", "/api/tiers")
+
+        self.assertEqual(200, response.status)
+        tiers = response.body["data"]["tiers"]
+        self.assertEqual(["free", "pro", "team"], [item["id"] for item in tiers])
+
+    def test_hybrid_endpoint_returns_local_and_cloud_lanes(self) -> None:
+        response = self.backend.route("GET", "/api/hybrid")
+
+        self.assertEqual(200, response.status)
+        lanes = {item["id"]: item for item in response.body["data"]["lanes"]}
+        self.assertIn("photoshop", lanes["local_desktop"]["bridges"])
+        self.assertEqual("cloud", lanes["cloud_gpu"]["execution_target"])
+
+    def test_recipe_run_requires_confirmation(self) -> None:
+        response = self.backend.route("POST", "/api/recipes/comfyui_txt2img_lifecycle/run")
+
+        self.assertEqual(400, response.status)
+        self.assertFalse(response.body["ok"])
+        self.assertIn("confirm_run", response.body["error"])
+
+    def test_recipe_run_records_confirmed_safe_execution_request(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            backend = StarBridgeBackend(history_path=Path(temp_dir) / "history.json")
+            body = json.dumps({"confirm_run": True, "execution_target": "cloud"}).encode("utf-8")
+
+            response = backend.route("POST", "/api/recipes/comfyui_txt2img_lifecycle/run", body)
+            history = backend.route("GET", "/api/audit/history")
+
+        self.assertEqual(200, response.status)
+        data = response.body["data"]
+        self.assertEqual("recipe_run", data["action"])
+        self.assertEqual("cloud", data["execution_target"])
+        self.assertTrue(data["billing_preview"]["billable"])
+        self.assertTrue(response.body["event"]["evidence_ready"])
+        self.assertEqual("run", history.body["data"]["events"][0]["action"])
+
+    def test_audit_history_can_be_cleared(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            backend = StarBridgeBackend(history_path=Path(temp_dir) / "history.json")
+            backend.route("GET", "/api/recipes/comfyui_txt2img_lifecycle/plan")
+
+            response = backend.route("DELETE", "/api/audit/history")
+            history = backend.route("GET", "/api/audit/history")
+
+        self.assertEqual(200, response.status)
+        self.assertEqual(0, history.body["data"]["event_count"])
 
     def test_generic_tool_call_endpoint(self) -> None:
         body = json.dumps(

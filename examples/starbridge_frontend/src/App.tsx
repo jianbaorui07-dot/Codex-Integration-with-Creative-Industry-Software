@@ -51,6 +51,47 @@ type Recipe = {
   quality_gates: string[];
 };
 
+type CatalogItem = Recipe & {
+  sku: string;
+  title: string;
+  tier: string;
+  price_signal: string;
+  buyer: string;
+  install_state: string;
+};
+
+type ProductTier = {
+  id: string;
+  name: string;
+  audience: string;
+  included: string[];
+  limits: string[];
+};
+
+type HybridLane = {
+  id: string;
+  label: string;
+  bridges: string[];
+  execution_target: string;
+  billing_unit: string;
+  safety: string;
+};
+
+type AuditEvent = {
+  event_id: string;
+  created_at: string;
+  kind: string;
+  recipe_id: string;
+  bridge: string;
+  action: string;
+  ok: boolean;
+  status: string;
+  evidence_ready: boolean;
+  quality_gate_count: number;
+  execution_target?: string;
+  summary?: string;
+};
+
 type BackendPayload = {
   capabilities: {
     capability_count: number;
@@ -63,6 +104,26 @@ type BackendPayload = {
   };
   recipes: {
     recipes: Recipe[];
+  };
+  catalog: {
+    catalog_version: string;
+    item_count: number;
+    items: CatalogItem[];
+    monetization_model: string[];
+  };
+  tiers: {
+    tiers_version: string;
+    tiers: ProductTier[];
+  };
+  hybrid: {
+    architecture_version: string;
+    policy: string;
+    lanes: HybridLane[];
+  };
+  history: {
+    history_version: string;
+    event_count: number;
+    events: AuditEvent[];
   };
   safe_roots: {
     roots: Array<{ path: string; writable?: boolean; purpose?: string }>;
@@ -230,6 +291,9 @@ function App() {
   const [activeBridge, setActiveBridge] = useState('all');
   const [selectedRecipe, setSelectedRecipe] = useState<string | null>(null);
   const [toolResult, setToolResult] = useState<ToolResult>(null);
+  const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
+  const [confirmRun, setConfirmRun] = useState(false);
+  const [executionTarget, setExecutionTarget] = useState('local');
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -242,6 +306,7 @@ function App() {
       const json = await response.json();
       if (!response.ok || !json.ok) throw new Error(json.error || 'Backend bootstrap failed');
       setPayload(json.data);
+      setAuditEvents(json.data.history?.events ?? []);
       const firstRecipe = json.data.recipes.recipes[0]?.recipe_id ?? null;
       setSelectedRecipe((current) => current ?? firstRecipe);
     } catch (caught) {
@@ -261,12 +326,23 @@ function App() {
   }, [payload]);
 
   const recipes = payload?.recipes.recipes ?? [];
+  const catalogItems = payload?.catalog.items ?? [];
+  const productTiers = payload?.tiers.tiers ?? [];
+  const hybridLanes = payload?.hybrid.lanes ?? [];
   const activeOverview = payload?.capabilities.bridge_overview[activeBridge];
   const activeColor = bridgeColors[activeBridge] ?? '#87f7ff';
   const visibleRecipes = useMemo(
     () => recipes.filter((recipe) => recipeMatchesBridge(recipe, activeBridge)),
     [activeBridge, recipes],
   );
+  const visibleCatalogItems = useMemo(
+    () => catalogItems.filter((item) => recipeMatchesBridge(item, activeBridge)),
+    [activeBridge, catalogItems],
+  );
+  const activeRecipe = recipes.find((recipe) => recipe.recipe_id === selectedRecipe) ?? null;
+  const activeCatalogItem = catalogItems.find((item) => item.recipe_id === selectedRecipe) ?? null;
+  const supportedLanes = activeRecipe ? hybridLanes.filter((lane) => lane.bridges.includes(activeRecipe.bridge)) : [];
+  const activeLane = supportedLanes.find((lane) => lane.execution_target === executionTarget) ?? supportedLanes[0];
 
   useEffect(() => {
     if (!visibleRecipes.length) {
@@ -278,20 +354,46 @@ function App() {
     }
   }, [selectedRecipe, visibleRecipes]);
 
-  const runRecipeAction = async (action: 'plan' | 'evidence') => {
+  useEffect(() => {
+    if (!activeRecipe) return;
+    setExecutionTarget(activeRecipe.bridge === 'comfyui' ? 'cloud' : 'local');
+    setConfirmRun(false);
+  }, [activeRecipe?.recipe_id]);
+
+  const runRecipeAction = async (action: 'plan' | 'evidence' | 'run') => {
     if (!selectedRecipe) return;
     setBusyAction(action);
     setToolResult(null);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE}/api/recipes/${selectedRecipe}/${action}`, { method: 'POST' });
+      const request: RequestInit = { method: 'POST' };
+      if (action === 'run') {
+        request.headers = { 'Content-Type': 'application/json' };
+        request.body = JSON.stringify({ confirm_run: confirmRun, execution_target: executionTarget });
+      }
+      const response = await fetch(`${API_BASE}/api/recipes/${selectedRecipe}/${action}`, request);
       const json = await response.json();
       if (!response.ok || !json.ok) throw new Error(json.error || `${action} failed`);
       setToolResult(json.data);
+      if (json.event) {
+        setAuditEvents((current) => [json.event, ...current.filter((event) => event.event_id !== json.event.event_id)].slice(0, 30));
+      }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : `Unable to run ${action}`);
     } finally {
       setBusyAction(null);
+    }
+  };
+
+  const clearAuditHistory = async () => {
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE}/api/audit/history`, { method: 'DELETE' });
+      const json = await response.json();
+      if (!response.ok || !json.ok) throw new Error(json.error || 'Unable to clear history');
+      setAuditEvents([]);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Unable to clear history');
     }
   };
 
@@ -319,7 +421,7 @@ function App() {
           </div>
           <h1>StarBridge Creative Workbench</h1>
           <p>
-            一个面向创意软件自动化的本地控制台：先读安全边界和能力清单，再规划 recipe、预览证据，最后才进入受确认的写入工具。
+            面向 Photoshop、Blender、CAD 和 ComfyUI 的本地优先控制台：选择软件桥，选择已审查 recipe，预览计划和证据，再确认一次安全执行请求。
           </p>
         </div>
 
@@ -341,11 +443,15 @@ function App() {
               <dd>{loading ? '...' : recipes.length}</dd>
             </div>
             <div>
-              <dt>Resources</dt>
-              <dd>{loading ? '...' : (payload?.resources.resources.length ?? 0)}</dd>
+              <dt>Catalog</dt>
+              <dd>{loading ? '...' : catalogItems.length}</dd>
+            </div>
+            <div>
+              <dt>Events</dt>
+              <dd>{loading ? '...' : auditEvents.length}</dd>
             </div>
           </dl>
-          {error ? <p className="error-text">{error}</p> : <p>HTTP API 已接入 MCP 安全工具层。</p>}
+          {error ? <p className="error-text">{error}</p> : <p>HTTP API 已接入 MCP 安全工具层，执行动作会记录到本地审计历史。</p>}
         </div>
       </section>
 
@@ -426,6 +532,37 @@ function App() {
               <FileJson size={16} />
               Evidence
             </button>
+            <button
+              disabled={!selectedRecipe || !confirmRun || !activeLane || busyAction !== null}
+              onClick={() => void runRecipeAction('run')}
+              type="button"
+            >
+              <TerminalSquare size={16} />
+              Run
+            </button>
+          </div>
+          <div className="run-confirm">
+            <div>
+              <strong>{activeCatalogItem?.title ?? selectedRecipe ?? 'No recipe selected'}</strong>
+              <span>{activeCatalogItem?.price_signal ?? 'Select a reviewed recipe before execution.'}</span>
+            </div>
+            <div className="lane-picker" role="radiogroup" aria-label="Execution target">
+              {supportedLanes.map((lane) => (
+                <label key={lane.id}>
+                  <input
+                    checked={executionTarget === lane.execution_target}
+                    name="execution_target"
+                    onChange={() => setExecutionTarget(lane.execution_target)}
+                    type="radio"
+                  />
+                  <span>{lane.execution_target}</span>
+                </label>
+              ))}
+            </div>
+            <label className="confirm-box">
+              <input checked={confirmRun} onChange={(event) => setConfirmRun(event.target.checked)} type="checkbox" />
+              <span>我已检查 Plan 和 Evidence，确认记录一次受控执行请求。</span>
+            </label>
           </div>
         </div>
 
@@ -440,6 +577,91 @@ function App() {
               <span>{step}</span>
             </div>
           ))}
+        </div>
+
+        <div className="panel tiers-panel">
+          <div className="section-heading">
+            <p>Pricing Model</p>
+            <h2>Free / Pro / Team 分层</h2>
+          </div>
+          <div className="tier-grid">
+            {productTiers.map((tier) => (
+              <article className="tier-card" key={tier.id}>
+                <strong>{tier.name}</strong>
+                <p>{tier.audience}</p>
+                <span>{tier.included[0]}</span>
+                <em>{tier.limits[0]}</em>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel hybrid-panel">
+          <div className="section-heading">
+            <p>Hybrid Runtime</p>
+            <h2>本地 + 云执行通道</h2>
+          </div>
+          <p className="panel-note">{payload?.hybrid.policy ?? '正在读取混合执行策略。'}</p>
+          <div className="lane-grid">
+            {hybridLanes.map((lane) => (
+              <article className={`lane-card ${activeLane?.id === lane.id ? 'is-active' : ''}`} key={lane.id}>
+                <div>
+                  <strong>{lane.label}</strong>
+                  <span>{lane.execution_target}</span>
+                </div>
+                <p>{lane.safety}</p>
+                <em>{lane.billing_unit}</em>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel catalog-panel">
+          <div className="section-heading">
+            <p>Recipe Store</p>
+            <h2>可商品化工作流</h2>
+          </div>
+          <div className="catalog-grid">
+            {visibleCatalogItems.map((item) => (
+              <article className="catalog-card" key={item.sku}>
+                <div>
+                  <span>{item.tier}</span>
+                  <em>{item.install_state}</em>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.goal}</p>
+                <strong>{item.price_signal}</strong>
+                <small>{item.buyer}</small>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel history-panel">
+          <div className="section-heading with-action">
+            <span>
+              <p>Audit</p>
+              <h2>执行历史</h2>
+            </span>
+            <button type="button" onClick={() => void clearAuditHistory()} disabled={!auditEvents.length}>
+              Clear
+            </button>
+          </div>
+          <div className="history-list">
+            {auditEvents.map((event) => (
+              <div className="history-row" key={event.event_id}>
+                <span>{event.action}</span>
+                <strong>{event.recipe_id}</strong>
+                <em>{event.execution_target ? `${event.status} · ${event.execution_target}` : event.status}</em>
+              </div>
+            ))}
+            {!auditEvents.length && (
+              <div className="empty-state">
+                <strong>No audit events yet</strong>
+                <span>Run Plan or Evidence to create a local audit trail.</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="panel resources-panel" id="resources">

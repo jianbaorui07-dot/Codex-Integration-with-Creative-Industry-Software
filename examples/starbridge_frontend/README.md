@@ -4,6 +4,15 @@ This is the local frontend for the StarBridge software prototype. It connects to
 the StarBridge backend, reads real capability and recipe data, and presents it as
 an artistic control surface with a Three.js generative background.
 
+The main flow is:
+
+1. Choose a creative software bridge.
+2. Choose a reviewed recipe.
+3. Generate a dry-run plan.
+4. Preview evidence.
+5. Confirm the execution target.
+6. Record the result and audit event.
+
 ## Run Locally
 
 Start the backend from the repository root:
@@ -44,8 +53,14 @@ uses the current page origin automatically. No extra API URL setting is needed.
 ## Backend APIs Used
 
 - `GET /api/bootstrap`
+- `GET /api/catalog`
+- `GET /api/tiers`
+- `GET /api/hybrid`
+- `GET /api/audit/history`
+- `DELETE /api/audit/history`
 - `POST /api/recipes/{recipe_id}/plan`
 - `POST /api/recipes/{recipe_id}/evidence`
+- `POST /api/recipes/{recipe_id}/run`
 
 ## Build
 
@@ -58,3 +73,5 @@ npm run build
 - The frontend does not add new write powers.
 - It calls the backend, and the backend reuses the existing MCP safety rules.
 - Real local writes still require bridge-specific confirmation flags and safe roots.
+- The Run button records a confirmed safe execution request; bridge-specific tools
+  remain responsible for any real sandbox output.

@@ -4,10 +4,12 @@ import argparse
 import json
 import mimetypes
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
+from uuid import uuid4
 
 from starbridge_mcp.core.security import sanitize
 from starbridge_mcp.mcp_server import SERVER_INFO, handle_request
@@ -15,6 +17,96 @@ from starbridge_mcp.mcp_server import SERVER_INFO, handle_request
 JsonObject = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_STATIC_ROOT = REPO_ROOT / "examples" / "starbridge_frontend" / "dist"
+DEFAULT_HISTORY_PATH = REPO_ROOT / "examples" / "output" / "app_history" / "history.json"
+
+CATALOG_BRIDGE_TIERS: dict[str, dict[str, str]] = {
+    "photoshop": {
+        "tier": "Pro",
+        "price_signal": "Paid recipe pack",
+        "buyer": "E-commerce retouching and brand design teams",
+    },
+    "comfyui": {
+        "tier": "Compute",
+        "price_signal": "Credits or GPU minutes",
+        "buyer": "AI image generation studios",
+    },
+    "autocad_dxf": {
+        "tier": "Studio",
+        "price_signal": "Per-seat or project pack",
+        "buyer": "CAD drafting and manufacturing teams",
+    },
+    "illustrator": {
+        "tier": "Pro",
+        "price_signal": "Vector workflow pack",
+        "buyer": "Packaging and illustration teams",
+    },
+    "blender": {
+        "tier": "Studio",
+        "price_signal": "Scene automation pack",
+        "buyer": "3D product visualization teams",
+    },
+}
+
+PRODUCT_TIERS: list[JsonObject] = [
+    {
+        "id": "free",
+        "name": "Free",
+        "audience": "Developers and integration testers",
+        "included": [
+            "Local backend",
+            "safe capability discovery",
+            "dry-run recipe plan",
+            "Evidence preview",
+        ],
+        "limits": ["No cloud queue", "No shared team history", "Sandbox output only"],
+    },
+    {
+        "id": "pro",
+        "name": "Pro",
+        "audience": "Individual creators",
+        "included": [
+            "Photoshop and Illustrator recipe packs",
+            "local audit history",
+            "confirmed sandbox runs",
+        ],
+        "limits": ["Single local workstation", "Cloud compute billed separately"],
+    },
+    {
+        "id": "team",
+        "name": "Team",
+        "audience": "Studios and company teams",
+        "included": [
+            "Studio recipe packs",
+            "shared approval workflow",
+            "cloud GPU lane",
+            "admin policy",
+        ],
+        "limits": ["Requires organization policy and billing setup"],
+    },
+]
+
+HYBRID_EXECUTION: JsonObject = {
+    "architecture_version": "starbridge.hybrid.v1",
+    "policy": "Desktop software stays local; GPU generation may use a metered cloud lane after explicit confirmation.",
+    "lanes": [
+        {
+            "id": "local_desktop",
+            "label": "Local desktop lane",
+            "bridges": ["photoshop", "illustrator", "blender", "autocad_dxf", "jianying_capcut"],
+            "execution_target": "local",
+            "billing_unit": "seat",
+            "safety": "Never uploads PSD, AI, DWG, blend, video drafts, or local project files.",
+        },
+        {
+            "id": "cloud_gpu",
+            "label": "Cloud GPU lane",
+            "bridges": ["comfyui"],
+            "execution_target": "cloud",
+            "billing_unit": "credits_or_gpu_minutes",
+            "safety": "Only public prompts, reviewed workflow JSON, and redacted asset manifests may be queued.",
+        },
+    ],
+}
 
 
 @dataclass(frozen=True)
@@ -28,9 +120,10 @@ class BackendResponse:
 class StarBridgeBackend:
     """Small REST facade over the existing StarBridge MCP handlers."""
 
-    def __init__(self, static_root: Path | None = None) -> None:
+    def __init__(self, static_root: Path | None = None, history_path: Path | None = None) -> None:
         self._next_id = 1
         self.static_root = static_root or DEFAULT_STATIC_ROOT
+        self.history_path = history_path or DEFAULT_HISTORY_PATH
 
     def _request_id(self) -> int:
         value = self._next_id
@@ -120,6 +213,214 @@ class StarBridgeBackend:
             content_type = f"{content_type}; charset=utf-8"
         return BackendResponse(200, target.read_bytes(), content_type=content_type)
 
+    def _load_history(self) -> list[JsonObject]:
+        if not self.history_path.exists():
+            return []
+        try:
+            payload = json.loads(self.history_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return []
+        if not isinstance(payload, list):
+            return []
+        return [item for item in payload if isinstance(item, dict)]
+
+    def _save_history(self, events: list[JsonObject]) -> None:
+        self.history_path.parent.mkdir(parents=True, exist_ok=True)
+        self.history_path.write_text(
+            json.dumps(sanitize(events[-100:]), ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    def _record_recipe_event(
+        self, *, recipe_id: str, action: str, result: JsonObject
+    ) -> JsonObject:
+        quality_gates = (
+            result.get("plan", {}).get("quality_gates", [])
+            if isinstance(result.get("plan"), dict)
+            else result.get("manifest", {}).get("quality_gates", [])
+            if isinstance(result.get("manifest"), dict)
+            else result.get("quality_gates", [])
+            if isinstance(result.get("quality_gates"), list)
+            else []
+        )
+        event = sanitize(
+            {
+                "event_id": f"evt_{uuid4().hex[:12]}",
+                "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
+                "kind": "recipe_action",
+                "recipe_id": recipe_id,
+                "bridge": result.get("bridge"),
+                "action": action,
+                "ok": bool(result.get("ok", False)),
+                "status": "completed" if result.get("ok") else "failed",
+                "evidence_ready": action in {"evidence", "run"} or "manifest" in result,
+                "quality_gate_count": len(quality_gates),
+                "execution_target": result.get("execution_target"),
+                "summary": result.get("result_summary"),
+            }
+        )
+        events = self._load_history()
+        events.append(event)
+        self._save_history(events)
+        return event
+
+    @staticmethod
+    def _catalog_card(recipe: JsonObject) -> JsonObject:
+        bridge = str(recipe.get("bridge") or "unknown")
+        tier = CATALOG_BRIDGE_TIERS.get(
+            bridge,
+            {
+                "tier": "Core",
+                "price_signal": "Included workflow",
+                "buyer": "Creative operators",
+            },
+        )
+        gates = recipe.get("quality_gates", [])
+        return sanitize(
+            {
+                "sku": f"starbridge.recipe.{recipe.get('recipe_id')}",
+                "recipe_id": recipe.get("recipe_id"),
+                "bridge": bridge,
+                "title": str(recipe.get("recipe_id") or "recipe").replace("_", " ").title(),
+                "goal": recipe.get("goal"),
+                "tier": tier["tier"],
+                "price_signal": tier["price_signal"],
+                "buyer": tier["buyer"],
+                "safe_default": bool(recipe.get("safe_default", True)),
+                "writes": bool(recipe.get("writes", False)),
+                "quality_gates": gates if isinstance(gates, list) else [],
+                "install_state": "bundled",
+            }
+        )
+
+    def _catalog(self) -> BackendResponse:
+        response = self._tool("starbridge.recipe_list", {"bridge": "all"})
+        if response.status != 200:
+            return response
+        data = response.body.get("data", {})
+        recipes = data.get("recipes", []) if isinstance(data, dict) else []
+        cards = [self._catalog_card(recipe) for recipe in recipes if isinstance(recipe, dict)]
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "catalog_version": "starbridge.catalog.v1",
+                    "item_count": len(cards),
+                    "items": cards,
+                    "monetization_model": [
+                        "Core recipes stay bundled for discovery.",
+                        "Pro and Studio recipe packs can be licensed per user or per team.",
+                        "Compute recipes can later attach credit or GPU-minute billing.",
+                    ],
+                },
+            },
+        )
+
+    @staticmethod
+    def _tiers() -> BackendResponse:
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "tiers_version": "starbridge.tiers.v1",
+                    "tiers": PRODUCT_TIERS,
+                },
+            },
+        )
+
+    @staticmethod
+    def _hybrid() -> BackendResponse:
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": HYBRID_EXECUTION,
+            },
+        )
+
+    @staticmethod
+    def _lane_for_bridge(bridge: str, execution_target: str) -> JsonObject | None:
+        for lane in HYBRID_EXECUTION["lanes"]:
+            if execution_target == lane["execution_target"] and bridge in lane["bridges"]:
+                return lane
+        return None
+
+    def _run_recipe(self, recipe_id: str, body: JsonObject) -> BackendResponse:
+        if not bool(body.get("confirm_run", False)):
+            return BackendResponse(
+                400,
+                {
+                    "ok": False,
+                    "error": "confirm_run=true is required before a recipe run can be recorded",
+                    "required_sequence": ["plan", "evidence", "confirm_run", "run"],
+                },
+            )
+
+        plan_response = self._tool(
+            "starbridge.recipe_plan", {"recipe_id": recipe_id, "dry_run": True}
+        )
+        if plan_response.status != 200:
+            return plan_response
+        plan_data = plan_response.body.get("data", {})
+        if not isinstance(plan_data, dict) or not plan_data.get("ok"):
+            return BackendResponse(404, {"ok": False, "error": "unknown recipe_id"})
+
+        bridge = str(plan_data.get("bridge") or "unknown")
+        requested_target = str(
+            body.get("execution_target") or ("cloud" if bridge == "comfyui" else "local")
+        )
+        lane = self._lane_for_bridge(bridge, requested_target)
+        if lane is None:
+            return BackendResponse(
+                400,
+                {
+                    "ok": False,
+                    "error": f"{bridge} does not support execution_target={requested_target}",
+                    "hybrid": HYBRID_EXECUTION,
+                },
+            )
+
+        plan = plan_data.get("plan", {}) if isinstance(plan_data.get("plan"), dict) else {}
+        quality_gates = (
+            plan.get("quality_gates", []) if isinstance(plan.get("quality_gates"), list) else []
+        )
+        result = sanitize(
+            {
+                "ok": True,
+                "bridge": bridge,
+                "action": "recipe_run",
+                "recipe_id": recipe_id,
+                "status": "completed",
+                "dry_run": True,
+                "confirm_run": True,
+                "execution_target": requested_target,
+                "execution_lane": lane["id"],
+                "result_summary": "Confirmed run recorded as a safe dry-run execution request.",
+                "tool_sequence": plan.get("action_plan", {}).get("tool_sequence", []),
+                "quality_gates": quality_gates,
+                "outputs": [
+                    {
+                        "label": "execution_report",
+                        "materialized": False,
+                        "reason": "Backend does not launch desktop software from this product UI.",
+                    }
+                ],
+                "billing_preview": {
+                    "unit": lane["billing_unit"],
+                    "billable": requested_target == "cloud",
+                    "metered_quantity": 0,
+                },
+                "next_steps": [
+                    "Review the recorded event in Audit.",
+                    "Use bridge-specific confirmed tools for real sandbox output.",
+                ],
+            }
+        )
+        event = self._record_recipe_event(recipe_id=recipe_id, action="run", result=result)
+        return BackendResponse(200, {"ok": True, "data": result, "event": event})
+
     def route(self, method: str, target: str, raw_body: bytes = b"") -> BackendResponse:
         parsed = urlparse(target)
         path = parsed.path.rstrip("/") or "/"
@@ -186,12 +487,58 @@ class StarBridgeBackend:
                 "starbridge.recipe_list", {"bridge": self._one(query, "bridge", "all")}
             )
 
+        if method == "GET" and path == "/api/catalog":
+            return self._catalog()
+
+        if method == "GET" and path == "/api/tiers":
+            return self._tiers()
+
+        if method == "GET" and path == "/api/hybrid":
+            return self._hybrid()
+
+        if method == "GET" and path == "/api/audit/history":
+            events = list(reversed(self._load_history()))
+            limit = self._one(query, "limit")
+            if limit:
+                try:
+                    events = events[: max(0, int(limit))]
+                except ValueError:
+                    return BackendResponse(400, {"ok": False, "error": "limit must be an integer"})
+            return BackendResponse(
+                200,
+                {
+                    "ok": True,
+                    "data": {
+                        "history_version": "starbridge.audit.v1",
+                        "event_count": len(events),
+                        "events": events,
+                    },
+                },
+            )
+
+        if method == "DELETE" and path == "/api/audit/history":
+            self._save_history([])
+            return BackendResponse(
+                200,
+                {
+                    "ok": True,
+                    "data": {
+                        "history_version": "starbridge.audit.v1",
+                        "event_count": 0,
+                        "events": [],
+                    },
+                },
+            )
+
         if method == "GET" and path == "/api/bootstrap":
             capabilities = self._tool("starbridge.tools", {"safe_only": True})
             recipes = self._tool("starbridge.recipe_list", {"bridge": "all"})
+            catalog = self._catalog()
+            tiers = self._tiers()
+            hybrid = self._hybrid()
             safe_roots = self._tool("starbridge.safe_roots", {"bridge": "all"})
             resources = self._mcp("resources/list")
-            responses = [capabilities, recipes, safe_roots, resources]
+            responses = [capabilities, recipes, catalog, tiers, hybrid, safe_roots, resources]
             if any(response.status != 200 for response in responses):
                 return BackendResponse(
                     500,
@@ -201,6 +548,7 @@ class StarBridgeBackend:
                         "responses": [response.body for response in responses],
                     },
                 )
+            history = self._load_history()
             return BackendResponse(
                 200,
                 {
@@ -209,6 +557,14 @@ class StarBridgeBackend:
                         "server": SERVER_INFO,
                         "capabilities": capabilities.body["data"],
                         "recipes": recipes.body["data"],
+                        "catalog": catalog.body["data"],
+                        "tiers": tiers.body["data"],
+                        "hybrid": hybrid.body["data"],
+                        "history": {
+                            "history_version": "starbridge.audit.v1",
+                            "event_count": len(history),
+                            "events": list(reversed(history)),
+                        },
                         "safe_roots": safe_roots.body["data"],
                         "resources": resources.body["data"],
                     },
@@ -222,9 +578,23 @@ class StarBridgeBackend:
                 arguments = dict(body)
                 arguments["recipe_id"] = recipe_id
                 if action == "plan" and method in {"GET", "POST"}:
-                    return self._tool("starbridge.recipe_plan", arguments)
+                    response = self._tool("starbridge.recipe_plan", arguments)
+                    if response.status == 200 and isinstance(response.body.get("data"), dict):
+                        event = self._record_recipe_event(
+                            recipe_id=recipe_id, action="plan", result=response.body["data"]
+                        )
+                        response.body["event"] = event
+                    return response
                 if action == "evidence" and method in {"GET", "POST"}:
-                    return self._tool("starbridge.recipe_evidence", arguments)
+                    response = self._tool("starbridge.recipe_evidence", arguments)
+                    if response.status == 200 and isinstance(response.body.get("data"), dict):
+                        event = self._record_recipe_event(
+                            recipe_id=recipe_id, action="evidence", result=response.body["data"]
+                        )
+                        response.body["event"] = event
+                    return response
+                if action == "run" and method == "POST":
+                    return self._run_recipe(recipe_id, body)
 
         if method == "POST" and path == "/api/tools/call":
             name = body.get("name")
@@ -257,7 +627,7 @@ def _send(
     handler.send_header("Content-Type", response.content_type)
     handler.send_header("Content-Length", str(len(body)))
     handler.send_header("Access-Control-Allow-Origin", "*")
-    handler.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    handler.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
     handler.send_header("Access-Control-Allow-Headers", "Content-Type")
     for name, value in response.headers.items():
         handler.send_header(name, value)
@@ -280,6 +650,9 @@ def make_handler(backend: StarBridgeBackend) -> type[BaseHTTPRequestHandler]:
         def do_POST(self) -> None:  # noqa: N802
             length = int(self.headers.get("Content-Length") or 0)
             _send(self, backend.route("POST", self.path, self.rfile.read(length)))
+
+        def do_DELETE(self) -> None:  # noqa: N802
+            _send(self, backend.route("DELETE", self.path))
 
         def log_message(self, format: str, *args: Any) -> None:
             return
