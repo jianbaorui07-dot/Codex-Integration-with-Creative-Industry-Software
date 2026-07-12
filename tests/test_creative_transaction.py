@@ -24,7 +24,9 @@ class CreativeTransactionTests(unittest.TestCase):
         self.assertFalse(payload["rollback_plan"]["destructive_actions_allowed"])
 
     def test_invalid_transition_is_rejected(self) -> None:
-        transaction = CreativeTransaction(intent="Inspect public metadata", bridge="all", risk_level="L1")
+        transaction = CreativeTransaction(
+            intent="Inspect public metadata", bridge="all", risk_level="L1"
+        )
         with self.assertRaisesRegex(ValueError, "invalid transaction transition"):
             transaction.transition_to("running")
 

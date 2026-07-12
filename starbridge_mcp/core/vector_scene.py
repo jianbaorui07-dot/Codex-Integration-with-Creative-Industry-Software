@@ -62,10 +62,10 @@ def _resolve_paint(value: Any, palette: dict[str, str], *, name: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f"{name} must be color, palette token, or null")
     if value.startswith("@"):
-        token = value[1:]
-        if token not in palette:
-            raise ValueError(f"unknown palette token: {token}")
-        return palette[token]
+        palette_key = value[1:]
+        if palette_key not in palette:
+            raise ValueError(f"unknown palette key: {palette_key}")
+        return palette[palette_key]
     if not COLOR_PATTERN.fullmatch(value):
         raise ValueError(f"{name} must be a hex color or palette token")
     return value.upper()
@@ -92,11 +92,11 @@ def validate_vector_scene(scene: dict[str, Any]) -> list[str]:
         if not isinstance(palette, dict) or len(palette) > 64:
             failures.append("palette must be an object with at most 64 colors")
             palette = {}
-        for token, color in palette.items():
-            if not re.fullmatch(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$", str(token)):
-                failures.append(f"invalid palette token: {token}")
+        for palette_key, color in palette.items():
+            if not re.fullmatch(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$", str(palette_key)):
+                failures.append(f"invalid palette key: {palette_key}")
             if not COLOR_PATTERN.fullmatch(str(color)):
-                failures.append(f"invalid palette color: {token}")
+                failures.append(f"invalid palette color: {palette_key}")
 
         layers = scene["layers"]
         if not isinstance(layers, list) or not layers or len(layers) > 128:
@@ -213,7 +213,12 @@ def _validate_commands(commands: Any) -> None:
         if not isinstance(command, dict):
             raise TypeError("path command must be dict")
         op = command.get("op")
-        required = {"M": {"op", "x", "y"}, "L": {"op", "x", "y"}, "C": {"op", "x1", "y1", "x2", "y2", "x", "y"}, "Z": {"op"}}
+        required = {
+            "M": {"op", "x", "y"},
+            "L": {"op", "x", "y"},
+            "C": {"op", "x1", "y1", "x2", "y2", "x", "y"},
+            "Z": {"op"},
+        }
         if op not in required or set(command) != required[op]:
             raise ValueError(f"invalid path command: {op}")
         for key, value in command.items():
@@ -289,19 +294,23 @@ def _compile_object(item: dict[str, Any], palette: dict[str, str]) -> str:
     if object_type == "line":
         return f'<line id="{object_id}" x1="{_format_number(item["x1"])}" y1="{_format_number(item["y1"])}" x2="{_format_number(item["x2"])}" y2="{_format_number(item["y2"])}" {style}/>'
     if object_type == "polygon":
-        points = " ".join(f'{_format_number(point[0])},{_format_number(point[1])}' for point in item["points"])
+        points = " ".join(
+            f"{_format_number(point[0])},{_format_number(point[1])}" for point in item["points"]
+        )
         return f'<polygon id="{object_id}" points="{points}" {style}/>'
     if object_type == "path":
         path_data = []
         for command in item["commands"]:
             op = command["op"]
             if op in {"M", "L"}:
-                path_data.append(f'{op} {_format_number(command["x"])} {_format_number(command["y"])}')
+                path_data.append(
+                    f"{op} {_format_number(command['x'])} {_format_number(command['y'])}"
+                )
             elif op == "C":
                 path_data.append(
-                    f'C {_format_number(command["x1"])} {_format_number(command["y1"])} '
-                    f'{_format_number(command["x2"])} {_format_number(command["y2"])} '
-                    f'{_format_number(command["x"])} {_format_number(command["y"])}'
+                    f"C {_format_number(command['x1'])} {_format_number(command['y1'])} "
+                    f"{_format_number(command['x2'])} {_format_number(command['y2'])} "
+                    f"{_format_number(command['x'])} {_format_number(command['y'])}"
                 )
             else:
                 path_data.append("Z")
@@ -311,7 +320,7 @@ def _compile_object(item: dict[str, Any], palette: dict[str, str]) -> str:
         f'<text id="{object_id}" x="{_format_number(item["x"])}" y="{_format_number(item["y"])}" '
         f'font-family="{escape(item["font_family"], quote=True)}" '
         f'font-size="{_format_number(item["font_size"])}" text-anchor="{anchor}" {style}>'
-        f'{escape(item["text"])}</text>'
+        f"{escape(item['text'])}</text>"
     )
 
 
