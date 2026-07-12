@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starbridge.local/schemas/illustrator/realtime_command.v1.json",
+  "title": "IllustratorRealtimeCommand",
+  "type": "object",
+  "required": ["jsonrpc", "id", "method", "params"],
+  "additionalProperties": false,
+  "properties": {
+    "jsonrpc": {"const": "2.0"},
+    "id": {"type": ["string", "integer"]},
+    "method": {
+      "enum": [
+        "illustrator.get_state", "illustrator.document_info",
+        "illustrator.select_object", "illustrator.set_fill",
+        "illustrator.move_object", "illustrator.create_path",
+        "illustrator.zoom_to_selection"
+      ]
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "object_id": {"type": "string", "maxLength": 128},
+        "confirm_write": {"type": "boolean"},
+        "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "dx": {"type": "number", "minimum": -10000, "maximum": 10000},
+        "dy": {"type": "number", "minimum": -10000, "maximum": 10000},
+        "points": {
+          "type": "array", "minItems": 2, "maxItems": 512,
+          "items": {
+            "type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}],
+            "items": false
+          }
+        },
+        "closed": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

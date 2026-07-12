@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starbridge.local/schemas/illustrator/realtime_state.v1.json",
+  "title": "IllustratorRealtimeState",
+  "type": "object",
+  "required": ["type", "host", "document", "selection", "layers", "artboards"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {"const": "state"},
+    "host": {"type": "object", "additionalProperties": true},
+    "document": {"type": ["object", "null"], "additionalProperties": true},
+    "selection": {"type": "array", "maxItems": 256, "items": {"type": "object"}},
+    "layers": {"type": "array", "maxItems": 512, "items": {"type": "object"}},
+    "artboards": {"type": "array", "maxItems": 128, "items": {"type": "object"}},
+    "zoom": {"type": ["number", "null"]},
+    "tool": {"type": ["string", "null"], "maxLength": 128},
+    "at": {"type": "string"}
+  }
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>StarBridge Illustrator</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <main>
+    <h1>StarBridge</h1>
+    <p class="muted">Illustrator 实时桥（本机实验）</p>
+    <dl>
+      <dt>代理</dt><dd id="connection">连接中</dd>
+      <dt>宿主</dt><dd id="host">检测中</dd>
+      <dt>文档</dt><dd id="document">未读取</dd>
+      <dt>选择</dt><dd id="selection">0</dd>
+      <dt>最后同步</dt><dd id="synced">—</dd>
+    </dl>
+    <button id="reconnect">重新连接</button>
+    <button id="push-state">立即同步</button>
+    <pre id="message" aria-live="polite"></pre>
+    <p class="warning">写操作仅在请求包含 confirm_write=true 时执行。</p>
+  </main>
+  <script type="module" src="src/index.js"></script>
+</body>
+</html>
