@@ -103,28 +103,32 @@ def parse_vector_command(command: str) -> dict[str, Any]:
         )
 
     task = default_vector_task()
-    recognized_markers = set(TASK_ALIASES) | set(STRATEGY_ALIASES) | {
-        "分层",
-        "少节点",
-        "文字可编",
-        "文字转曲",
-        "组件复用",
-        "不用描摹",
-        "允许描摹",
-        "无渐变",
-        "保留渐变",
-        "保持原色",
-        "品牌色优先",
-        "轮廓优先",
-        "负形必准",
-        "拓扑必过",
-        "只修差异",
-        "先预览",
-        "只预览",
-        "SVG",
-        "PDF",
-        "PNG",
-    }
+    recognized_markers = (
+        set(TASK_ALIASES)
+        | set(STRATEGY_ALIASES)
+        | {
+            "分层",
+            "少节点",
+            "文字可编",
+            "文字转曲",
+            "组件复用",
+            "不用描摹",
+            "允许描摹",
+            "无渐变",
+            "保留渐变",
+            "保持原色",
+            "品牌色优先",
+            "轮廓优先",
+            "负形必准",
+            "拓扑必过",
+            "只修差异",
+            "先预览",
+            "只预览",
+            "SVG",
+            "PDF",
+            "PNG",
+        }
+    )
 
     for alias, value in TASK_ALIASES.items():
         if alias in raw:

@@ -28,7 +28,9 @@ class VectorProtocolSchemaTests(unittest.TestCase):
 
     def test_scene_schema_has_no_image_or_arbitrary_script_object(self) -> None:
         schema_text = json.dumps(self.load("vector_scene.v1.schema.json"))
-        object_types = self.load("vector_scene.v1.schema.json")["$defs"]["object"]["properties"]["type"]["enum"]
+        object_types = self.load("vector_scene.v1.schema.json")["$defs"]["object"]["properties"][
+            "type"
+        ]["enum"]
 
         self.assertNotIn("image", object_types)
         self.assertNotIn("script", object_types)

@@ -27,7 +27,6 @@ from starbridge_mcp.core.evidence import (
     repo_relative,
 )
 from starbridge_mcp.core.job_status import JobStatus
-from starbridge_mcp.core.transaction import create_recipe_transaction
 from starbridge_mcp.core.prompts import get_prompt, list_prompts
 from starbridge_mcp.core.resources import (
     SERVER_INSTRUCTIONS,
@@ -37,6 +36,7 @@ from starbridge_mcp.core.resources import (
 from starbridge_mcp.core.safe_roots import safe_roots_summary
 from starbridge_mcp.core.security import sanitize
 from starbridge_mcp.core.tool_registry import capability_summary, list_capabilities
+from starbridge_mcp.core.transaction import create_recipe_transaction
 from starbridge_mcp.server import BRIDGE_ALIASES, build_response
 
 PROTOCOL_VERSION = "2025-06-18"

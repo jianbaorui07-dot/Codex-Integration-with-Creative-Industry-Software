@@ -118,9 +118,7 @@ def evaluate_reference_vector_quality(
             "schema_version": "starbridge.reference-vector-quality.v1",
             "reference_id": reference_id,
             "candidate_id": candidate_id,
-            "dimensions": {
-                name: dimensions[name].to_dict() for name in DIMENSION_WEIGHTS
-            },
+            "dimensions": {name: dimensions[name].to_dict() for name in DIMENSION_WEIGHTS},
             "hard_gates": {name: hard_gates[name] for name in REQUIRED_HARD_GATES},
             "findings": [item.to_dict() for item in finding_items],
             "overall_score": round(overall_score, 2),

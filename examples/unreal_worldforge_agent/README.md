@@ -2,9 +2,11 @@
 
 This folder packages the local `codex接入UE` work as a repository-safe Unreal Engine evidence bundle.
 
-The project theme is: Unreal Engine is entering its Codex moment. Instead of a small parameter-tuning plugin, the goal is a 3D-aware agent that can take a creative description such as "build a technology city" and produce an editable world: terrain, buildings, interiors, interactive objects, physics, gameplay rules, dynamic environments, and eventually characters, NPC logic, quests, and weather.
+当前宗旨：**先让 Codex 稳定接入 UE，能够打开工程、制作和优化基础场景、创建基础 NPC、自动保存与测试，再逐步扩展到角色动画、交互逻辑和可玩的游戏内容。**
 
 The current checked-in bundle is the honest first stage of that direction. It preserves what was actually run and reviewed locally, while keeping unsafe/private runtime state out of Git.
+
+Start with [SYSTEM_OVERVIEW.md](SYSTEM_OVERVIEW.md) for the complete architecture and [RUN_HISTORY.md](RUN_HISTORY.md) for the phase-by-phase truth record.
 
 ## Folder Map
 
@@ -19,6 +21,7 @@ The current checked-in bundle is the honest first stage of that direction. It pr
 | `tasks_and_checkpoints/` | Plans and checkpoint JSON used by the WorldForge offline workflow. |
 | `evidence/` | Sanitized reports, performance baselines, stop reports, screenshots, and handoff docs. |
 | `legacy_pre_audit/` | Earlier UE/Codex pre-audit scripts and evidence from the same local project line. |
+| `p1y_color_stability/` | Sanitized P1Y/P2-Lite scripts, validation data, and the current honest capability boundary. |
 | `manifest.json` | Generated package inventory and exclusion policy. |
 
 ## What Is Included
@@ -33,6 +36,8 @@ The current checked-in bundle is the honest first stage of that direction. It pr
 - v0.1, v0.2, and v0.3 handoff reports.
 - Performance and safety reports.
 - Screenshots from the early UE audit.
+- P1Y color/exposure stability and complete humanoid-NPC validation summary.
+- A repeatable 65-second Python-driven PIE patrol harness and dynamic NavMesh fix.
 
 ## What Is Excluded
 
@@ -58,10 +63,13 @@ Verified or documented from the source run:
 - WF0010 R1 has a validated map, 25 generated actors, a readable camera, lights/fog, and non-black preview metrics marked `PASS`.
 - v1.1 separates recipes, state, receipts, quality policy, and command-center state so future runs can resume without treating screenshots or logs as success.
 - no Remote Control or MCP enablement in the uploaded package.
+- P1Y passed save/reopen, fixed-exposure, Blueprint compile, and three-complete-humanoid checks.
+- P2-Lite moved, stopped, and resumed all three NPCs with a dynamic NavMesh during a 65-second external patrol test.
 
 Still gated:
 
 - UE GUI patch for the `ToggleCityMood` keyboard/UI path.
 - Remote Control loopback-only command gate.
 - stdio MCP bridge.
-- large-scale dynamic generation, NPCs, skeletal characters, and full playable game logic.
+- autonomous Behavior Tree patrol; the current verified patrol is driven by a Python PIE test harness.
+- large-scale dynamic generation and full playable game logic.

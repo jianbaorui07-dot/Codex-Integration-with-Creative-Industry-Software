@@ -13,11 +13,15 @@
 
 New example package: [examples/unreal_worldforge_agent](examples/unreal_worldforge_agent)
 
-This preserves the local `codex接入UE` evidence bundle for the 造境WorldForge：虚幻引擎 3D 世界开发 Agent: Unreal Engine 5.2.1 WorldForge assets, scene-specific WF0009/WF0010 result assets, v1.1 UE Python workflow scripts, recipes, checkpoints, sanitized receipts, safety reports, performance evidence, screenshots, and the stopped Remote Control/MCP handoff plan.
+This preserves the repository-safe `codex接入UE` / WorldForge evidence bundle: Unreal Engine 5.2.1 scene assets, reusable UE Python workflows, recipes, checkpoints, sanitized receipts, safety reports, and the latest P1Y color-stability and humanoid-NPC validation summary.
 
-The product direction is a 3D-aware local agent for Unreal Engine: describe a world, then let the agent build editable terrain, buildings, spaces, interactive objects, scripts, physics, gameplay logic, and eventually characters, NPC behavior, quests, weather, and playable game loops. Current repository evidence is documented honestly as a prototype seed rather than a completed remote-control plugin.
+当前宗旨：**先让 Codex 稳定接入 UE，能够打开工程、制作和优化基础场景、创建基础 NPC、自动保存与测试，再逐步扩展到角色动画、交互逻辑和可玩的游戏内容。**
+
+The repository reports only verified capabilities. P1Y scene color/exposure stability, three complete humanoid NPCs, save/reopen, and a 65-second Python-driven PIE patrol were verified locally. Autonomous Behavior Tree patrol remains incomplete, so P2-Lite is documented as partial rather than finished.
 
 Read the overview: [docs/unreal-worldforge-agent-framework.md](docs/unreal-worldforge-agent-framework.md)
+
+Complete public system index: [examples/unreal_worldforge_agent/SYSTEM_OVERVIEW.md](examples/unreal_worldforge_agent/SYSTEM_OVERVIEW.md) · [run history](examples/unreal_worldforge_agent/RUN_HISTORY.md)
 
 ## 仓库总定位
 

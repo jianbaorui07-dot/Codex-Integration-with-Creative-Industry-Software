@@ -2,6 +2,13 @@
 
 The WorldForge package includes a compact UE content subset and the evidence needed to understand how it was produced.
 
+System entry points:
+
+- `SYSTEM_OVERVIEW.md` - architecture, execution contract and current capability boundary.
+- `RUN_HISTORY.md` - chronological truth record for all major local run phases.
+- `run_catalog.public.json` - machine-readable phase/status index.
+- `p1y_color_stability/` - latest P1Y/P2-Lite public scripts and validation summary.
+
 ## UE Content
 
 The UE assets live in `ue_project/Content/WorldForge/`.
@@ -57,6 +64,8 @@ Important later-run evidence:
 - WF0009 R1 receipts record a generated SnowTemple micro-scene plus a preview defect where the captured PNG is valid but visually black.
 - WF0010 R1 receipts record a DNA bonsai workshop scene with 25 generated actors and preview metrics that passed non-black visual checks.
 - WF0011 records are planning/universe-registry artifacts for a low-rise future-tech city. They do not claim that a finished UE map was generated.
+- P1Y records a passed fixed-exposure/color-stability and three-complete-humanoid result.
+- P2-Lite records passed dynamic navigation and Python-driven patrol metrics while preserving `PARTIAL` for the unwired autonomous Behavior Tree.
 
 ## Exclusion Policy
 
