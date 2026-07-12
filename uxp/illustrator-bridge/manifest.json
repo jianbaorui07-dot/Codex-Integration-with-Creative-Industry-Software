@@ -1,0 +1,29 @@
+{
+  "manifestVersion": 5,
+  "id": "com.starbridge.illustrator.bridge.experimental",
+  "name": "StarBridge Illustrator Bridge (Experimental)",
+  "version": "0.1.0",
+  "main": "index.html",
+  "host": {
+    "app": "ILST",
+    "minVersion": "30.0.0"
+  },
+  "requiredPermissions": {
+    "network": {
+      "domains": [
+        "ws://127.0.0.1:8972",
+        "http://127.0.0.1:8972"
+      ]
+    }
+  },
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "starbridgeIllustratorPanel",
+      "label": {"default": "StarBridge"},
+      "minimumSize": {"width": 260, "height": 220},
+      "preferredDockedSize": {"width": 300, "height": 360},
+      "preferredFloatingSize": {"width": 340, "height": 420}
+    }
+  ]
+}
