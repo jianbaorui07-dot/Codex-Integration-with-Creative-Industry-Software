@@ -17,6 +17,7 @@ from starbridge_mcp.bridges.blender_safe_scene import (
 )
 from starbridge_mcp.bridges.capcut_draft_structure import draft_structure_summary
 from starbridge_mcp.bridges.illustrator_preflight import preflight_summary
+from starbridge_mcp.core.control_planner import build_control_plan
 from starbridge_mcp.core.evidence import (
     DEFAULT_MANIFEST_FILENAME,
     ValidationResult,
@@ -191,6 +192,32 @@ TOOL_DEFINITIONS: list[JsonObject] = [
         ),
         "annotations": _safe_read_annotations(),
     },
+    _standard_tool(
+        name="starbridge.control_plan",
+        title="StarBridge Codex Control Plan",
+        description="根据自然语言目标选择创意软件桥，返回只读控制计划、质量门和确认边界。不会启动软件或读取文件。",
+        input_schema=_object_schema(
+            {
+                "goal": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500,
+                    "description": "要完成的创意软件任务；不得包含真实本机路径、token 或私有素材内容。",
+                },
+                "preferred_bridge": {
+                    "type": "string",
+                    "enum": ["auto", *BRIDGE_ENUM],
+                    "default": "auto",
+                },
+                "include_guarded_candidates": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "是否列出需要再次确认的真实操作候选；本工具仍不会执行它们。",
+                },
+            },
+            required=["goal"],
+        ),
+    ),
     {
         "name": "starbridge.safe_roots",
         "title": "StarBridge Safe Roots",
@@ -504,6 +531,26 @@ TOOL_DEFINITIONS: list[JsonObject] = [
                 },
                 "confirm_run": {"type": "boolean", "default": False},
             }
+        ),
+    ),
+    _standard_tool(
+        name="comfy.workflow_visualize",
+        title="Visualize ComfyUI Workflow",
+        description="把内联 API workflow 转为 Mermaid 和脱敏节点/连线摘要；不读取文件、prompt 或模型目录。",
+        input_schema=_object_schema(
+            {
+                "workflow": {
+                    "type": "object",
+                    "description": "内联 ComfyUI API-format workflow JSON。",
+                },
+                "direction": {
+                    "type": "string",
+                    "enum": ["LR", "TD"],
+                    "default": "LR",
+                },
+                "include_node_ids": {"type": "boolean", "default": True},
+            },
+            required=["workflow"],
         ),
     ),
     _standard_tool(
@@ -910,6 +957,14 @@ def _handle_tools(arguments: JsonObject) -> JsonObject:
     )
     return capability_summary(
         bridge=bridge, include_guarded=not bool(arguments.get("safe_only", False))
+    )
+
+
+def _handle_control_plan(arguments: JsonObject) -> JsonObject:
+    return build_control_plan(
+        goal=str(arguments.get("goal") or ""),
+        preferred_bridge=str(arguments.get("preferred_bridge") or "auto"),
+        include_guarded_candidates=bool(arguments.get("include_guarded_candidates", False)),
     )
 
 
@@ -1361,6 +1416,19 @@ def _handle_comfy_workflow_lifecycle_summary(arguments: JsonObject) -> JsonObjec
     from examples.comfy_bridge.workflow_agent import workflow_lifecycle_summary
 
     return workflow_lifecycle_summary(arguments)
+
+
+def _handle_comfy_workflow_visualize(arguments: JsonObject) -> JsonObject:
+    from examples.comfy_bridge.workflow_visualize import visualize_workflow
+
+    workflow = arguments.get("workflow")
+    if not isinstance(workflow, dict):
+        raise ValueError("workflow is required and must be an object")
+    return visualize_workflow(
+        workflow,
+        direction=str(arguments.get("direction") or "LR"),
+        include_node_ids=bool(arguments.get("include_node_ids", True)),
+    )
 
 
 def _handle_write_dxf(arguments: JsonObject) -> JsonObject:
@@ -2028,6 +2096,7 @@ TOOL_HANDLERS: dict[str, ToolHandler] = {
     "starbridge.status": _handle_status,
     "starbridge.probe": _handle_probe,
     "starbridge.tools": _handle_tools,
+    "starbridge.control_plan": _handle_control_plan,
     "starbridge.safe_roots": _handle_safe_roots,
     "starbridge.evidence_init": _handle_evidence_init,
     "starbridge.evidence_validate": _handle_evidence_validate,
@@ -2047,6 +2116,7 @@ TOOL_HANDLERS: dict[str, ToolHandler] = {
     "comfy.workflow_template_get": _handle_comfy_workflow_template_get,
     "comfy.workflow_from_template": _handle_comfy_workflow_from_template,
     "comfy.workflow_lifecycle_summary": _handle_comfy_workflow_lifecycle_summary,
+    "comfy.workflow_visualize": _handle_comfy_workflow_visualize,
     "blender.environment_probe": lambda _arguments: _handle_python_probe(
         bridge="blender",
         action="environment_probe",
