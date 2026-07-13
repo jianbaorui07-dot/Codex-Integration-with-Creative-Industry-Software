@@ -90,7 +90,10 @@ class ControlPlannerTests(unittest.TestCase):
             with self.subTest(bridge=bridge):
                 result = build_control_plan(goal="公开测试", preferred_bridge=bridge)
                 observe = next(phase for phase in result["phases"] if phase["phase"] == "observe")
-                self.assertEqual(["starbridge.operation_context"], observe["tools"])
+                expected_tools = ["starbridge.operation_context"]
+                if bridge == "comfyui":
+                    expected_tools.append("comfyui.progress_monitor")
+                self.assertEqual(expected_tools, observe["tools"])
                 self.assertEqual(
                     ["before_state", "after_state"],
                     observe["required_arguments"],

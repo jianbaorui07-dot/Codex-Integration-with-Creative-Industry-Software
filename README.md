@@ -86,6 +86,7 @@ flowchart LR
 | Codex 跨软件控制 | [控制规划器](docs/codex-software-control-planner.md) | MCP `starbridge.control_plan` |
 | 操作状态闭环 | [Operation Context Envelope](docs/operation-context-envelope.md) | MCP `starbridge.operation_context` |
 | ComfyUI 队列背压 | [只读 Queue Snapshot](docs/comfyui-queue-snapshot.md) | MCP `comfyui.queue_snapshot` |
+| ComfyUI 实时进度 | [实时进度监控](docs/comfyui-progress-monitor.md) | MCP `comfyui.progress_monitor`；默认 plan-only，live 仅直接 loopback `/ws` |
 | 同类项目差距 | [先进能力与迭代优先级](docs/competitive-gap-analysis.md) | MCP `comfy.workflow_visualize` |
 | MCP 客户端接入 | [本地 MCP 配置](docs/local-mcp-setup.md) | `python -m starbridge_mcp.server tools --json --safe-only` |
 | ComfyUI | [ComfyUI 接入](docs/02-codex-comfyui.md) | `python examples\comfy_bridge\comfy_probe.py` |

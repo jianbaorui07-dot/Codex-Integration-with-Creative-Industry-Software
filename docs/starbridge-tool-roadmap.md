@@ -34,6 +34,8 @@
 | `starbridge.probe` | all | 单桥只读探针 |
 | `starbridge.tools` | all | 能力注册表 |
 | `comfyui.system_probe` | ComfyUI | 只读 `/system_stats` 和 `/object_info`，不提交 prompt |
+| `comfyui.queue_snapshot` | ComfyUI | 默认 plan-only；live 只读 loopback `/queue` 并返回脱敏 backpressure |
+| `comfyui.progress_monitor` | ComfyUI | 默认 plan-only；live 有界监听直接 loopback `/ws`，不返回原始事件、预览图或输出 |
 | `comfyui.workflow_validate` | ComfyUI | 只读 workflow JSON 校验 |
 | `blender.environment_probe` | Blender | 不打开 `.blend`，不运行 Python |
 | `cad_autocad.environment_probe` | AutoCAD / CAD | 不打开 DWG/DXF，不控制 CAD |

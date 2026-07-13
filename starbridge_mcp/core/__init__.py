@@ -27,6 +27,8 @@ __all__ = [
     "build_queue_snapshot",
     "normalize_queue_payload",
     "queue_snapshot_contract",
+    "build_progress_monitor",
+    "progress_monitor_contract",
     "VectorDimensionResult",
     "VectorQualityFinding",
     "evaluate_reference_vector_quality",
@@ -87,6 +89,10 @@ from starbridge_mcp.core.job_status import JobStatus
 from starbridge_mcp.core.operation_context import (
     build_operation_context,
     operation_context_contract,
+)
+from starbridge_mcp.core.progress_monitor import (
+    build_progress_monitor,
+    progress_monitor_contract,
 )
 from starbridge_mcp.core.queue_snapshot import (
     build_queue_snapshot,
