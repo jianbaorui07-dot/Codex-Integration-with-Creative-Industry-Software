@@ -37,6 +37,7 @@ from starbridge_mcp.core.resources import (
 from starbridge_mcp.core.safe_roots import safe_roots_summary
 from starbridge_mcp.core.security import sanitize
 from starbridge_mcp.core.tool_registry import capability_summary, list_capabilities
+from starbridge_mcp.core.transaction import create_recipe_transaction
 from starbridge_mcp.server import BRIDGE_ALIASES, build_response
 
 PROTOCOL_VERSION = "2025-06-18"
@@ -1181,9 +1182,20 @@ def _handle_starbridge_recipe_plan(arguments: JsonObject) -> JsonObject:
                 "available_recipes": sorted(STARBRIDGE_RECIPES),
             }
         )
+    dry_run = bool(arguments.get("dry_run", True))
+    transaction = create_recipe_transaction(
+        recipe_id=recipe_id,
+        bridge=str(recipe["bridge"]),
+        intent=str(recipe["goal"]),
+        steps=list(recipe["steps"]),
+        quality_gates=list(recipe["quality_gates"]),
+        expected_outputs=list(recipe["evidence"]),
+        dry_run=dry_run,
+    )
     plan = {
         **_recipe_public_summary(recipe_id, recipe),
-        "dry_run": bool(arguments.get("dry_run", True)),
+        "dry_run": dry_run,
+        "transaction": transaction.to_dict(),
         "steps": recipe["steps"],
         "evidence_requirements": recipe["evidence"],
         "safety_boundary": recipe["safety"],
