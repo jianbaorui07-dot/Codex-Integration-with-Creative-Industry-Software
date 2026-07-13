@@ -34,8 +34,12 @@
 
 1. `discover`：先检查 `starbridge.safe_roots` 和软件桥状态；
 2. `plan`：调用软件专属的只读 planner / validator；
-3. `review`：预览并校验 EvidenceManifest；
-4. `confirmed_action_candidate`：仅在显式请求时列出，仍需用户确认后另行调用。
+3. `visual_review`：仅 ComfyUI 路线使用，把内联 workflow 转为脱敏 Mermaid；
+4. `observe`：用 `starbridge.operation_context` 形成白名单 before/after 状态差异；
+5. `review`：预览并校验 EvidenceManifest；
+6. `confirmed_action_candidate`：仅在显式请求时列出，仍需用户确认后另行调用。
+
+每个 `starbridge.recipe_plan` 还会返回相同的 `operation_context` 契约。Codex 应在首个主要动作前、主要动作后和失败后调用该工具，只传入白名单指标并串联 `context_id`；这不会自动读取桌面软件。
 
 目标无法可靠归类时，工具返回 `needs_clarification=true` 和可选软件桥，不会猜测执行。
 

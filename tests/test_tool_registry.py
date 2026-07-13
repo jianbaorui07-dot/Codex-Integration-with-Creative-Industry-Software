@@ -89,6 +89,7 @@ class ToolRegistryTests(unittest.TestCase):
         self.assertIn("starbridge.evidence_init", names)
         self.assertIn("starbridge.evidence_validate", names)
         self.assertIn("starbridge.job_status", names)
+        self.assertIn("starbridge.operation_context", names)
         self.assertIn("starbridge.recipe_evidence", names)
 
     def test_photoshop_recipe_capabilities_are_registered(self) -> None:

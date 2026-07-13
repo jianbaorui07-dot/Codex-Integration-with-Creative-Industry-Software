@@ -28,6 +28,14 @@ from starbridge_mcp.core.evidence import (
     repo_relative,
 )
 from starbridge_mcp.core.job_status import JobStatus
+from starbridge_mcp.core.operation_context import (
+    build_operation_context,
+    operation_context_contract,
+)
+from starbridge_mcp.core.operation_context_schema import (
+    OPERATION_CONTEXT_INPUT_SCHEMA,
+    OPERATION_CONTEXT_OUTPUT_SCHEMA,
+)
 from starbridge_mcp.core.prompts import get_prompt, list_prompts
 from starbridge_mcp.core.resources import (
     SERVER_INSTRUCTIONS,
@@ -74,6 +82,29 @@ def _object_schema(properties: JsonObject, required: list[str] | None = None) ->
 
 
 STARBRIDGE_OUTPUT_SCHEMA: JsonObject = {"type": "object", "additionalProperties": True}
+
+CONTROL_PLAN_OUTPUT_SCHEMA: JsonObject = {
+    "type": "object",
+    "properties": {
+        "ok": {"type": "boolean"},
+        "bridge": {"type": "string"},
+        "action": {"type": "string", "const": "control_plan"},
+        "dry_run": {"type": "boolean", "const": True},
+        "needs_clarification": {"type": "boolean"},
+        "phases": {"type": "array", "items": {"type": "object"}},
+        "quality_gates": {"type": "array", "items": {"type": "string"}},
+        "safety_boundary": {"type": "object"},
+    },
+    "required": [
+        "ok",
+        "bridge",
+        "action",
+        "dry_run",
+        "needs_clarification",
+        "safety_boundary",
+    ],
+    "additionalProperties": True,
+}
 
 
 def _safe_read_annotations(
@@ -193,11 +224,11 @@ TOOL_DEFINITIONS: list[JsonObject] = [
         ),
         "annotations": _safe_read_annotations(),
     },
-    _standard_tool(
-        name="starbridge.control_plan",
-        title="StarBridge Codex Control Plan",
-        description="根据自然语言目标选择创意软件桥，返回只读控制计划、质量门和确认边界。不会启动软件或读取文件。",
-        input_schema=_object_schema(
+    {
+        "name": "starbridge.control_plan",
+        "title": "StarBridge Codex Control Plan",
+        "description": "根据自然语言目标选择创意软件桥，返回只读控制计划、质量门和确认边界。不会启动软件或读取文件。",
+        "inputSchema": _object_schema(
             {
                 "goal": {
                     "type": "string",
@@ -218,7 +249,9 @@ TOOL_DEFINITIONS: list[JsonObject] = [
             },
             required=["goal"],
         ),
-    ),
+        "outputSchema": CONTROL_PLAN_OUTPUT_SCHEMA,
+        "annotations": _safe_read_annotations(),
+    },
     {
         "name": "starbridge.safe_roots",
         "title": "StarBridge Safe Roots",
@@ -267,6 +300,17 @@ TOOL_DEFINITIONS: list[JsonObject] = [
                 "action_name": {"type": "string", "default": "evidence_review"},
             }
         ),
+        "annotations": _safe_read_annotations(),
+    },
+    {
+        "name": "starbridge.operation_context",
+        "title": "StarBridge Operation Context",
+        "description": (
+            "Build a sanitized, chainable before/after state envelope from caller-supplied "
+            "safe metrics. This tool does not inspect local software, files, or networks."
+        ),
+        "inputSchema": OPERATION_CONTEXT_INPUT_SCHEMA,
+        "outputSchema": OPERATION_CONTEXT_OUTPUT_SCHEMA,
         "annotations": _safe_read_annotations(),
     },
     {
@@ -1051,6 +1095,21 @@ def _handle_job_status(arguments: JsonObject) -> JsonObject:
     return sanitize(payload)
 
 
+def _handle_operation_context(arguments: JsonObject) -> JsonObject:
+    return build_operation_context(
+        bridge=arguments.get("bridge"),
+        action=arguments.get("action"),
+        operation_id=arguments.get("operation_id", "operation_preview"),
+        phase=arguments.get("phase", "completed"),
+        dry_run=arguments.get("dry_run", True),
+        before_state=arguments.get("before_state"),
+        after_state=arguments.get("after_state"),
+        warnings=arguments.get("warnings"),
+        evidence_refs=arguments.get("evidence_refs"),
+        parent_context_id=arguments.get("parent_context_id"),
+    )
+
+
 STARBRIDGE_RECIPES: dict[str, JsonObject] = {
     "photoshop_preview_export": {
         "bridge": "photoshop",
@@ -1198,6 +1257,7 @@ def _handle_starbridge_recipe_plan(arguments: JsonObject) -> JsonObject:
         "transaction": transaction.to_dict(),
         "steps": recipe["steps"],
         "evidence_requirements": recipe["evidence"],
+        "operation_context": operation_context_contract(),
         "safety_boundary": recipe["safety"],
         "next_steps": [
             "Run listed tools in order only after reviewing their own safety annotations.",
@@ -1209,6 +1269,8 @@ def _handle_starbridge_recipe_plan(arguments: JsonObject) -> JsonObject:
             "mode": "plan_then_execute",
             "requires_user_confirmation_before_write": True,
             "tool_sequence": [step["tool"] for step in recipe["steps"]],
+            "observation_tool": "starbridge.operation_context",
+            "observation_capture_points": operation_context_contract()["capture_points"],
         }
     return sanitize(
         {
@@ -1248,10 +1310,12 @@ def _handle_starbridge_recipe_evidence(arguments: JsonObject) -> JsonObject:
             "goal": recipe["goal"],
             "tools": [step["tool"] for step in recipe["steps"]],
             "safety_boundary": recipe["safety"],
+            "operation_context_schema": operation_context_contract()["schema_version"],
         },
         notes=[
             "preview only; not saved to disk",
             "quality gates must pass before any confirmed bridge write",
+            "capture a sanitized operation context after every major action or failure",
         ],
     )
     for gate_name in recipe["quality_gates"]:
@@ -1275,6 +1339,7 @@ def _handle_starbridge_recipe_evidence(arguments: JsonObject) -> JsonObject:
         "confirm_write": manifest.confirm_write,
         "requires_confirmation_before_write": True,
         "sandbox_or_metadata_only": True,
+        "operation_context_required_after_major_action": True,
     }
     return sanitize(
         {
@@ -2113,6 +2178,7 @@ TOOL_HANDLERS: dict[str, ToolHandler] = {
     "starbridge.evidence_init": _handle_evidence_init,
     "starbridge.evidence_validate": _handle_evidence_validate,
     "starbridge.job_status": _handle_job_status,
+    "starbridge.operation_context": _handle_operation_context,
     "starbridge.recipe_list": _handle_starbridge_recipe_list,
     "starbridge.recipe_plan": _handle_starbridge_recipe_plan,
     "starbridge.recipe_evidence": _handle_starbridge_recipe_evidence,

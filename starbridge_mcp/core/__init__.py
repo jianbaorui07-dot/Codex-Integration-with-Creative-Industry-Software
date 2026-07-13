@@ -22,6 +22,8 @@ __all__ = [
     "CreativeTransaction",
     "ModelPolicy",
     "create_recipe_transaction",
+    "build_operation_context",
+    "operation_context_contract",
     "VectorDimensionResult",
     "VectorQualityFinding",
     "evaluate_reference_vector_quality",
@@ -79,6 +81,10 @@ from starbridge_mcp.core.evidence import (
     save_manifest,
 )
 from starbridge_mcp.core.job_status import JobStatus
+from starbridge_mcp.core.operation_context import (
+    build_operation_context,
+    operation_context_contract,
+)
 from starbridge_mcp.core.result_schema import make_result, validate_result
 from starbridge_mcp.core.safe_roots import safe_roots_summary
 from starbridge_mcp.core.security import redact_path, redact_text, sanitize, sanitize_path

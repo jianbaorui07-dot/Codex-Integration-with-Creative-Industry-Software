@@ -161,6 +161,23 @@ CAPABILITIES: tuple[ToolCapability, ...] = (
         invocation="python -m starbridge_mcp.server job-status --json",
     ),
     ToolCapability(
+        name="starbridge.operation_context",
+        bridge="all",
+        action="operation_context",
+        maturity="implemented",
+        risk_level="safe_read_only",
+        description="把调用方传入的安全 before/after 指标转换为可链式状态差异和证据引用。",
+        side_effects="纯内存处理；不访问文件、网络或桌面软件，不接收文档名、图层名或任意路径。",
+        safe_default=True,
+        requires_confirmation=False,
+        requires_local_software=False,
+        source_projects=(
+            "alisaitteke/photoshop-mcp",
+            "modelcontextprotocol/specification",
+        ),
+        invocation="python -m starbridge_mcp.mcp_server",
+    ),
+    ToolCapability(
         name="starbridge.recipe_list",
         bridge="all",
         action="recipe_list",
@@ -1196,6 +1213,7 @@ def capability_summary(*, bridge: str = "all", include_guarded: bool = True) -> 
                     "starbridge.recipe_evidence",
                     "starbridge.job_status",
                 ],
+                "observation_tools": ["starbridge.operation_context"],
                 "confirmed_action_rule": (
                     "Call safe_default tools first; guarded tools require the matching "
                     "confirm_write, confirm_export, or confirm_run flag and must stay inside safe roots."

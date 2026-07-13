@@ -158,6 +158,17 @@ def build_control_plan(
                 "purpose": "把 compose/build 返回的内联 workflow 转为脱敏 Mermaid，先审图再执行。",
             }
         )
+    phases.append(
+        {
+            "phase": "observe",
+            "tools": ["starbridge.operation_context"],
+            "required_arguments": ["before_state", "after_state"],
+            "purpose": (
+                "由调用方传入白名单状态指标，生成 before/after delta、warning 和逻辑 evidence 引用；"
+                "不自动读取桌面软件。"
+            ),
+        }
+    )
     phases.append(review_phase)
     guarded = route.get("guarded")
     if include_guarded_candidates and guarded:
@@ -186,6 +197,7 @@ def build_control_plan(
                 "no_private_path_leak",
                 "dry_run_first",
                 "explicit_confirmation_before_write",
+                "operation_context_captured",
                 "evidence_manifest_valid",
             ],
             "safety_boundary": safety_boundary,

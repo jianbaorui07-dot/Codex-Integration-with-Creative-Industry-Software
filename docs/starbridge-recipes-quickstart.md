@@ -10,9 +10,12 @@ mode until a bridge-specific tool receives explicit confirmation.
 2. Read `starbridge://capabilities` and use `manifest_version=starbridge.capabilities.v2`.
 3. Call `starbridge.recipe_list` to choose a reviewed workflow.
 4. Call `starbridge.recipe_plan` to inspect the dry-run action plan and quality gates.
-5. Call `starbridge.recipe_evidence` to preview the standard `EvidenceManifest`.
-6. Only then call a bridge-specific write/export/run tool, and only with the required
+5. Call `starbridge.operation_context` with a caller-supplied safe `before_state`.
+6. Call `starbridge.recipe_evidence` to preview the standard `EvidenceManifest`.
+7. Only then call a bridge-specific write/export/run tool, and only with the required
    confirmation flag and sandbox output root.
+8. After each major action or failure, call `starbridge.operation_context` again with
+   the safe `after_state` and chain the returned `context_id`.
 
 ## MCP Calls
 
@@ -83,6 +86,8 @@ Preview its evidence contract:
 - `bridge_overview.<bridge>.guarded_tools` names the tools that need confirmation.
 - `planner_hints.safe_discovery_sequence` gives the safe discovery order.
 - `quality_gates` must pass or be intentionally waived before execution.
+- `operation_context` accepts only whitelisted metrics and logical evidence IDs; never
+  put document names, layer names, prompts, model names, or paths into a state snapshot.
 - `asset_manifest` must contain only sanitized, repo-relative, or generated asset
   summaries. Do not include customer paths, model paths, account data, or private
   source files.

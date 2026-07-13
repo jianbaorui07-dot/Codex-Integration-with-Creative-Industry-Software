@@ -54,7 +54,7 @@ class ControlPlannerTests(unittest.TestCase):
 
     def test_evidence_preview_is_bound_to_selected_software_recipe(self) -> None:
         result = build_control_plan(goal="用 Blender 规划三维场景")
-        review = result["phases"][2]
+        review = result["phases"][3]
 
         self.assertEqual(["starbridge.recipe_evidence"], review["tools"])
         self.assertEqual(
@@ -63,14 +63,36 @@ class ControlPlannerTests(unittest.TestCase):
         )
 
         capcut = build_control_plan(goal="检查剪映视频草稿")
-        self.assertEqual(["starbridge.evidence_init"], capcut["phases"][2]["tools"])
+        self.assertEqual(["starbridge.evidence_init"], capcut["phases"][3]["tools"])
 
     def test_comfyui_route_includes_visual_review_before_evidence(self) -> None:
         result = build_control_plan(goal="搭建 ComfyUI 文生图 workflow")
         phases = [phase["phase"] for phase in result["phases"]]
 
-        self.assertEqual(["discover", "plan", "visual_review", "review"], phases)
+        self.assertEqual(
+            ["discover", "plan", "visual_review", "observe", "review"],
+            phases,
+        )
         self.assertEqual(["comfy.workflow_visualize"], result["phases"][2]["tools"])
+
+    def test_every_selected_route_includes_operation_context_observation(self) -> None:
+        for bridge in (
+            "photoshop",
+            "illustrator",
+            "comfyui",
+            "autocad_dxf",
+            "blender",
+            "jianying_capcut",
+        ):
+            with self.subTest(bridge=bridge):
+                result = build_control_plan(goal="公开测试", preferred_bridge=bridge)
+                observe = next(phase for phase in result["phases"] if phase["phase"] == "observe")
+                self.assertEqual(["starbridge.operation_context"], observe["tools"])
+                self.assertEqual(
+                    ["before_state", "after_state"],
+                    observe["required_arguments"],
+                )
+                self.assertIn("operation_context_captured", result["quality_gates"])
 
     def test_result_redacts_private_path_text(self) -> None:
         result = build_control_plan(goal="Photoshop 处理 C:\\Users\\private\\client.psd")
@@ -88,6 +110,10 @@ class ControlPlannerTests(unittest.TestCase):
         self.assertTrue(tool["annotations"]["readOnlyHint"])
         self.assertTrue(tool["annotations"]["safeDefault"])
         self.assertFalse(tool["annotations"]["requiresConfirmation"])
+        self.assertEqual(
+            "control_plan",
+            tool["outputSchema"]["properties"]["action"]["const"],
+        )
 
         capabilities = {item["name"]: item for item in list_capabilities()}
         self.assertEqual("safe_read_only", capabilities["starbridge.control_plan"]["risk_level"])

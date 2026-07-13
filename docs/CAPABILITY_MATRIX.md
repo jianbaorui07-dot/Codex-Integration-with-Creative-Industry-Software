@@ -11,7 +11,7 @@
 
 | Bridge | Capability categories | Stable | Experimental | Planned | Evidence / job lifecycle | Writes files | CI safe | Needs local app | Safety notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| StarBridge core | discovery, planning, execution, validation, evidence, cleanup | `starbridge.status`, `starbridge.tools`, `starbridge.control_plan`, `starbridge.safe_roots`, `starbridge.evidence_init`, `starbridge.evidence_validate`, `starbridge.job_status`, MCP stdio `tools/list` / `tools/call` | none | more client adapters | `control_plan` only selects a bridge and returns dry-run phases; `EvidenceManifest` and `JobStatus` remain sanitized and limited to safe roots | ignored JSON only | Yes | No | no desktop launch, no private file reads, guarded candidates are never executed by the planner |
+| StarBridge core | discovery, planning, execution, validation, evidence, cleanup | `starbridge.status`, `starbridge.tools`, `starbridge.control_plan`, `starbridge.operation_context`, `starbridge.safe_roots`, `starbridge.evidence_init`, `starbridge.evidence_validate`, `starbridge.job_status`, MCP stdio `tools/list` / `tools/call` | none | more client adapters | `operation_context` returns a sanitized before/after delta and logical evidence refs; `EvidenceManifest` and `JobStatus` remain limited to safe roots | ignored JSON only | Yes | No | no desktop launch, no private file reads, guarded candidates are never executed by the planner |
 | ComfyUI | discovery, planning, execution, validation, evidence | `comfyui.workflow_validate`, `comfy.workflow_lifecycle_summary`, `comfy.workflow_visualize` | `comfyui.system_probe`, local `txt2img` submit script | read-only queue snapshot, progress events, dry-run queue payload | lifecycle summary reports redacted job/asset roles; visualizer returns Mermaid without prompt、模型名或 input values | validate/visualize/lifecycle: No | Yes for validate、visualize and lifecycle; probe soft-exits when offline | Only for live probe or generation | do not expose checkpoints, LoRA, VAE, ControlNet, generated images, or local output paths |
 | AutoCAD / DXF headless | planning, execution, validation, evidence, cleanup | `autocad_dxf.validate_cad_plan`, `autocad_dxf.summarize_plan`, DXF dry-run | guarded `write_dxf` with `confirm_write=true` | richer CAD entity schema | evidence is currently manifest-level; no desktop launch required | only `examples/cad/output` | Yes | No | path cannot escape sandbox output root |
 | CAD / AutoCAD desktop probe | discovery, planning, validation, evidence | `cad_autocad.environment_probe` | real AutoCAD COM/MCP control | guarded desktop CAD demo | status only for now | No | Yes, as unavailable/warning when app is absent | Yes | do not open customer DWG/DXF or write real project outputs |
@@ -34,6 +34,7 @@
 - `python -m starbridge_mcp.server evidence --init --json`
 - `python -m starbridge_mcp.server evidence --validate --json`
 - `python -m starbridge_mcp.server job-status --json`
+- MCP `starbridge.operation_context`（纯内存、白名单状态字段、逻辑 evidence ID）
 
 这些命令只读或只写入被 `.gitignore` 忽略的 `examples/output/evidence/`，不会启动真实桌面软件，也不会读取私有素材。
 
