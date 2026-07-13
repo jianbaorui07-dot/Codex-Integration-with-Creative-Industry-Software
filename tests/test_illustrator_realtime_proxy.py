@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import time
 import unittest
@@ -25,10 +26,34 @@ def request(url, data=None, headers=None):
 class IllustratorRealtimeProxyTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        node = shutil.which("node")
+        if node is None:
+            raise unittest.SkipTest("Node.js is not installed")
+
+        dependency = subprocess.run(
+            [node, "--input-type=module", "-e", "import('ws')"],
+            cwd=SERVER.parent,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if dependency.returncode != 0:
+            output = f"{dependency.stdout}\n{dependency.stderr}"
+            if "ERR_MODULE_NOT_FOUND" in output and "ws" in output:
+                raise unittest.SkipTest(
+                    "Illustrator realtime proxy requires an installed ws package"
+                )
+            raise RuntimeError(f"unable to verify Illustrator proxy dependencies\n{output}")
+
         env = dict(os.environ)
         env["STARBRIDGE_ILLUSTRATOR_PROXY_PORT"] = "8976"
         cls.process = subprocess.Popen(
-            ["node", str(SERVER)], cwd=ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            [node, str(SERVER)],
+            cwd=ROOT,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
         )
         for _ in range(50):
             try:
@@ -36,7 +61,10 @@ class IllustratorRealtimeProxyTests(unittest.TestCase):
                 return
             except Exception:
                 time.sleep(0.1)
-        raise RuntimeError("proxy did not start")
+        if cls.process.poll() is None:
+            cls.process.terminate()
+        stdout, stderr = cls.process.communicate(timeout=5)
+        raise RuntimeError(f"proxy did not start\nSTDOUT:\n{stdout}\nSTDERR:\n{stderr}")
 
     @classmethod
     def tearDownClass(cls):
