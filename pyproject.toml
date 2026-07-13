@@ -43,7 +43,9 @@ cad = [
   "ezdxf>=1.3",
   "pywin32>=306; platform_system == 'Windows'",
 ]
-comfy = []
+comfy = [
+  "websocket-client>=1.8,<2",
+]
 adobe = [
   "pywin32>=306; platform_system == 'Windows'",
 ]

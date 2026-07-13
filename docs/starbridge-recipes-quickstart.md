@@ -12,11 +12,13 @@ mode until a bridge-specific tool receives explicit confirmation.
 4. Call `starbridge.recipe_plan` to inspect the dry-run action plan and quality gates.
 5. For ComfyUI, call `comfyui.queue_snapshot` in plan mode; opt into a live loopback read
    before considering a confirmed submit.
-6. Call `starbridge.operation_context` with a caller-supplied safe `before_state`.
-7. Call `starbridge.recipe_evidence` to preview the standard `EvidenceManifest`.
-8. Only then call a bridge-specific write/export/run tool, and only with the required
+6. Keep `comfyui.progress_monitor` in plan mode until a bounded live observation is needed;
+   live mode returns only hashed IDs, numeric progress and safe status.
+7. Call `starbridge.operation_context` with a caller-supplied safe `before_state`.
+8. Call `starbridge.recipe_evidence` to preview the standard `EvidenceManifest`.
+9. Only then call a bridge-specific write/export/run tool, and only with the required
    confirmation flag and sandbox output root.
-9. After each major action or failure, call `starbridge.operation_context` again with
+10. After each major action or failure, call `starbridge.operation_context` again with
    the safe `after_state` and chain the returned `context_id`.
 
 ## MCP Calls
@@ -92,6 +94,8 @@ Preview its evidence contract:
   put document names, layer names, prompts, model names, or paths into a state snapshot.
 - `queue_snapshot` must return a live `idle` decision before it can satisfy the ComfyUI
   backpressure gate; it never replaces explicit submission confirmation.
+- `progress_monitor` is also plan-only by default. A live `stalled` result is evidence for
+  manual review, not permission to cancel or restart ComfyUI.
 - `asset_manifest` must contain only sanitized, repo-relative, or generated asset
   summaries. Do not include customer paths, model paths, account data, or private
   source files.

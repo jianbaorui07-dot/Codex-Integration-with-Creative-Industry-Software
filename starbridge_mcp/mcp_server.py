@@ -36,6 +36,14 @@ from starbridge_mcp.core.operation_context_schema import (
     OPERATION_CONTEXT_INPUT_SCHEMA,
     OPERATION_CONTEXT_OUTPUT_SCHEMA,
 )
+from starbridge_mcp.core.progress_monitor import (
+    build_progress_monitor,
+    progress_monitor_contract,
+)
+from starbridge_mcp.core.progress_monitor_schema import (
+    PROGRESS_MONITOR_INPUT_SCHEMA,
+    PROGRESS_MONITOR_OUTPUT_SCHEMA,
+)
 from starbridge_mcp.core.prompts import get_prompt, list_prompts
 from starbridge_mcp.core.queue_snapshot import (
     DEFAULT_COMFY_URL,
@@ -382,6 +390,17 @@ TOOL_DEFINITIONS: list[JsonObject] = [
         ),
         "inputSchema": QUEUE_SNAPSHOT_INPUT_SCHEMA,
         "outputSchema": QUEUE_SNAPSHOT_OUTPUT_SCHEMA,
+        "annotations": _safe_read_annotations(requires_local_software=True),
+    },
+    {
+        "name": "comfyui.progress_monitor",
+        "title": "ComfyUI Progress Monitor",
+        "description": (
+            "默认只返回计划；connect=true 时只监听 loopback ComfyUI /ws，输出哈希 job/node、"
+            "单调数值进度和 stalled 判定。不会返回 workflow、异常正文、预览图或输出文件。"
+        ),
+        "inputSchema": PROGRESS_MONITOR_INPUT_SCHEMA,
+        "outputSchema": PROGRESS_MONITOR_OUTPUT_SCHEMA,
         "annotations": _safe_read_annotations(requires_local_software=True),
     },
     _standard_tool(
@@ -1163,9 +1182,14 @@ STARBRIDGE_RECIPES: dict[str, JsonObject] = {
                 "tool": "comfy.workflow_lifecycle_summary",
                 "purpose": "summarize job and asset lifecycle",
             },
+            {
+                "tool": "comfyui.progress_monitor",
+                "purpose": "plan a bounded live progress observation for separately confirmed runs",
+            },
         ],
         "quality_gates": [
             "queue_backpressure_reviewed",
+            "live_progress_reviewed",
             "workflow_schema",
             "prompt_redacted",
             "no_queue_submit",
@@ -1173,6 +1197,7 @@ STARBRIDGE_RECIPES: dict[str, JsonObject] = {
         "evidence": ["workflow_hash", "asset_manifest_preview"],
         "safety": (
             "queue snapshot is plan-only by default and live mode is loopback read-only; "
+            "progress monitoring is also plan-only by default and omits raw events; "
             "the recipe does not submit to /prompt or read local model/image folders."
         ),
     },
@@ -1298,6 +1323,7 @@ def _handle_starbridge_recipe_plan(arguments: JsonObject) -> JsonObject:
     }
     if recipe["bridge"] == "comfyui":
         plan["queue_snapshot"] = queue_snapshot_contract()
+        plan["progress_monitor"] = progress_monitor_contract()
     if arguments.get("action_plan", True):
         plan["action_plan"] = {
             "mode": "plan_then_execute",
@@ -1340,6 +1366,7 @@ def _handle_starbridge_recipe_evidence(arguments: JsonObject) -> JsonObject:
     }
     if recipe["bridge"] == "comfyui":
         input_summary["queue_snapshot_schema"] = queue_snapshot_contract()["schema_version"]
+        input_summary["progress_monitor_schema"] = progress_monitor_contract()["schema_version"]
     manifest = create_manifest(
         bridge=str(recipe["bridge"]),
         action="recipe_evidence",
@@ -1354,6 +1381,7 @@ def _handle_starbridge_recipe_evidence(arguments: JsonObject) -> JsonObject:
             "quality gates must pass before any confirmed bridge write",
             "capture a sanitized operation context after every major action or failure",
             "review queue backpressure before any confirmed ComfyUI submit",
+            "review bounded live progress without returning raw WebSocket events",
         ],
     )
     for gate_name in recipe["quality_gates"]:
@@ -1379,6 +1407,7 @@ def _handle_starbridge_recipe_evidence(arguments: JsonObject) -> JsonObject:
         "sandbox_or_metadata_only": True,
         "operation_context_required_after_major_action": True,
         "queue_backpressure_review_required": recipe["bridge"] == "comfyui",
+        "live_progress_review_required": recipe["bridge"] == "comfyui",
     }
     return sanitize(
         {
@@ -1441,6 +1470,17 @@ def _handle_comfy_queue_snapshot(arguments: JsonObject) -> JsonObject:
         timeout=arguments.get("timeout", 5),
         max_items=arguments.get("max_items", 25),
         progress=arguments.get("progress"),
+    )
+
+
+def _handle_comfy_progress_monitor(arguments: JsonObject) -> JsonObject:
+    return build_progress_monitor(
+        connect=arguments.get("connect", False),
+        comfy_url=arguments.get("comfy_url", DEFAULT_COMFY_URL),
+        listen_seconds=arguments.get("listen_seconds", 5),
+        stall_after_seconds=arguments.get("stall_after_seconds", 5),
+        max_events=arguments.get("max_events", 100),
+        target_job_id=arguments.get("target_job_id"),
     )
 
 
@@ -2233,6 +2273,7 @@ TOOL_HANDLERS: dict[str, ToolHandler] = {
     "starbridge.recipe_evidence": _handle_starbridge_recipe_evidence,
     "comfyui.system_probe": _handle_comfy_system_probe,
     "comfyui.queue_snapshot": _handle_comfy_queue_snapshot,
+    "comfyui.progress_monitor": _handle_comfy_progress_monitor,
     "comfyui.workflow_validate": _handle_workflow_validate,
     "comfyui.workflow_build_plan": _handle_comfy_workflow_build_plan,
     "comfyui.workflow_build": _handle_comfy_workflow_build,

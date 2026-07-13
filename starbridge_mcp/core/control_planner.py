@@ -27,6 +27,7 @@ BRIDGE_ROUTES: dict[str, dict[str, Any]] = {
         "label": "ComfyUI 图像生成桥",
         "probe": "comfyui.system_probe",
         "queue_snapshot": "comfyui.queue_snapshot",
+        "progress_monitor": "comfyui.progress_monitor",
         "plan": "comfyui.workflow_build_plan",
         "visual_review": "comfy.workflow_visualize",
         "recipe_id": "comfyui_txt2img_lifecycle",
@@ -176,6 +177,11 @@ def build_control_plan(
             ),
         }
     )
+    progress_monitor = route.get("progress_monitor")
+    if progress_monitor:
+        observe_phase = phases[-1]
+        observe_phase["tools"].append(progress_monitor)
+        observe_phase["tool_arguments"] = {progress_monitor: {"connect": False}}
     phases.append(review_phase)
     guarded = route.get("guarded")
     if include_guarded_candidates and guarded:
@@ -198,6 +204,8 @@ def build_control_plan(
     ]
     if queue_snapshot:
         quality_gates.insert(1, "queue_backpressure_reviewed")
+    if progress_monitor:
+        quality_gates.insert(2, "live_progress_reviewed")
 
     return sanitize(
         {

@@ -94,7 +94,7 @@ Use this routing table:
 | --- | --- | --- |
 | Overall status | `starbridge.status`, `starbridge.tools` | Read-only, redacted |
 | Evidence/job state | `starbridge.evidence_init`, `starbridge.evidence_validate`, `starbridge.job_status` | No private file reads |
-| ComfyUI | `comfyui.system_probe`, `comfyui.workflow_validate`, workflow draft/build/repair tools | Probe and validate before queueing; do not expose model paths or generated images |
+| ComfyUI | `comfyui.system_probe`, `comfyui.queue_snapshot`, `comfyui.progress_monitor`, workflow validate/draft/build/repair tools | Queue/progress default to plan-only; live stays direct loopback and must not expose raw events, model paths, previews, errors, or generated images |
 | AutoCAD/DXF | `cad_autocad.environment_probe`, `autocad_dxf.*` | Prefer offline DXF plan validation; real writes need sandbox and confirmation |
 | Photoshop | `photoshop.session_info`, `ps.probe`, `ps.document.info`, `ps.layers.list`, recipe tools | Inspect active session only; do not open private PSD or run arbitrary scripts |
 | Illustrator | `illustrator.document_info`, `illustrator.preflight` | Use redacted document summaries; no private `.ai` or Image Trace source images by default |

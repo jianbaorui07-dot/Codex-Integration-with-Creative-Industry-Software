@@ -321,6 +321,28 @@ CAPABILITIES: tuple[ToolCapability, ...] = (
         invocation="python -m starbridge_mcp.mcp_server",
     ),
     ToolCapability(
+        name="comfyui.progress_monitor",
+        bridge="comfyui",
+        action="progress_monitor",
+        maturity="implemented",
+        risk_level="safe_read_only",
+        description=(
+            "默认只返回计划；显式 connect 时监听 loopback /ws，并输出脱敏、单调的任务进度与 stalled 判定。"
+        ),
+        side_effects=(
+            "不提交或取消任务，不读取 workflow/history/output；live 模式只建立有界的 loopback WebSocket 连接。"
+        ),
+        safe_default=True,
+        requires_confirmation=False,
+        requires_local_software=True,
+        source_projects=(
+            "Comfy-Org/ComfyUI",
+            "artokun/comfyui-mcp",
+            "websocket-client/websocket-client",
+        ),
+        invocation="python -m starbridge_mcp.mcp_server",
+    ),
+    ToolCapability(
         name="comfyui.workflow_validate",
         bridge="comfyui",
         action="workflow_validate",

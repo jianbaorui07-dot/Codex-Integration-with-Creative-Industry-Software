@@ -46,7 +46,7 @@ This note tracks ideas from comparable public creative-software MCP projects tha
    - `needs_user`
 
 4. Add optional progress/evidence monitoring:
-   - structured tools can report job status
+   - `comfyui.progress_monitor` now reports bounded loopback WebSocket status, monotonic numeric progress and stalled/terminal decisions without returning raw events
    - Computer Use plans can report current GUI step and screenshot evidence
    - no CI path should launch real desktop software
 

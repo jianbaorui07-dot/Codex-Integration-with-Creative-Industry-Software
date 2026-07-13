@@ -12,6 +12,7 @@
 | workflow 示例 | `examples/comfy_bridge/workflows/txt2img_basic_api.json` | API 格式 workflow |
 | workflow template 快捷入口 | `examples/comfy_bridge/workflow_templates.py` | 只读列出、读取和组合公开模板，不提交队列 |
 | workflow lifecycle 摘要 | `examples/comfy_bridge/workflow_lifecycle.py` | 生成脱敏 job / asset 生命周期摘要，不暴露模型名、素材路径或输出文件 |
+| live 进度监控 | MCP `comfyui.progress_monitor` | 默认 plan-only；显式 connect 时监听直接 loopback `/ws`，返回哈希 ID、单调数值进度与 stalled/终态 |
 
 `run_txt2img.py` 已做离线 workflow 节点存在性检查、节点 `class_type` 检查、checkpoint 检查和 CLI 参数化。脚本不会默认选择第一个 checkpoint；必须传 `--ckpt`，或显式加 `--allow-first-checkpoint`。
 
@@ -103,12 +104,13 @@ python examples\comfy_bridge\run_txt2img.py `
 - 当前模板入口只生成 placeholder workflow，不会提交 ComfyUI 队列。
 - 当前 lifecycle 摘要只返回节点统计、资产角色、workflow hash、确认门和 evidence 预览；不返回原始 workflow、prompt 文本、模型名或输出文件名。
 - 当前 queue snapshot 默认 plan-only；`probe=true` 时只读 loopback `/queue`，只返回哈希 job ID、计数、顺序与 backpressure，不返回 workflow/history。
+- 当前 progress monitor 默认 plan-only；`connect=true` 时只监听直接 loopback `/ws`，不使用代理、不跟随重定向、不返回异常正文、二进制预览、workflow 或输出文件。live 依赖 `python -m pip install -e ".[comfy]"`。
 - 当前 workflow 校验覆盖 bundled public workflow 和模板组合结果，不是通用 ComfyUI 图校验器。
 
 ## 下一步
 
 1. 扩展 workflow 校验，覆盖更多输入引用、节点类型和常见错误。
-2. 增加 live WebSocket progress，并保持数值单调与 stall/backlog 检测。
+2. 增加断线恢复与完成通知；仍不得读取 history 私有字段。
 3. 增加 queue payload dry-run，默认不请求 `/prompt`。
 4. 设计受控 cancel；必须区分 running interrupt 与 pending removal，不自动升级到进程重启。
 5. 保持真实 submit 走显式确认，本地 manifest 继续脱敏。
