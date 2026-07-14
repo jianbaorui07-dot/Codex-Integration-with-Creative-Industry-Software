@@ -15,6 +15,7 @@
     "source",
     "strategy",
     "application_matrix",
+    "preprocess",
     "trace",
     "quality_gates",
     "outputs",
@@ -66,6 +67,28 @@
         }
       }
     },
+    "preprocess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "app",
+        "normalize_srgb",
+        "max_dimension",
+        "median_radius",
+        "output_dir",
+        "sandbox_copy_before_photoshop"
+      ],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "app": { "const": "photoshop" },
+        "normalize_srgb": { "type": "boolean" },
+        "max_dimension": { "type": "integer", "minimum": 256, "maximum": 8192 },
+        "median_radius": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "output_dir": { "const": "examples/output/photoshop" },
+        "sandbox_copy_before_photoshop": { "const": true }
+      }
+    },
     "trace": {
       "type": "object",
       "additionalProperties": false,
@@ -96,6 +119,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "aspect_ratio_error_max",
         "silhouette_iou_min",
         "mean_delta_e_max",
         "p95_delta_e_max",
@@ -103,6 +127,7 @@
         "max_anchor_count"
       ],
       "properties": {
+        "aspect_ratio_error_max": { "type": "number", "minimum": 0, "maximum": 1 },
         "silhouette_iou_min": { "type": "number", "minimum": 0, "maximum": 1 },
         "mean_delta_e_max": { "type": "number", "minimum": 0, "maximum": 100 },
         "p95_delta_e_max": { "type": "number", "minimum": 0, "maximum": 100 },
