@@ -3,38 +3,44 @@
   "name": "Illustrator / AI vector files",
   "status": "experimental",
   "platform": [
-    "Windows"
+    "Windows",
+    "Linux"
   ],
   "requires": [
-    "Adobe Illustrator desktop",
-    "PowerShell",
-    "Illustrator.Application COM"
+    "Python 3.10+ and optional .[illustrator-trace] for offline color tracing",
+    "Adobe Illustrator desktop, PowerShell, and Illustrator.Application COM only for desktop flows"
   ],
   "entrypoints": {
     "probe": "powershell -ExecutionPolicy Bypass -File examples/illustrator_bridge/probe.ps1",
     "color_vectorize_plan": "powershell -ExecutionPolicy Bypass -File examples/illustrator_bridge/scripts/color_vectorize.ps1",
+    "color_raster_to_svg": "python examples/illustrator_bridge/scripts/trace_photo_preview.py --input <explicit-image.png> --commit-preset flat_16",
     "vector_line_extract": "python examples/illustrator_bridge/vector_rebuild/extract_vector_lines.py --input <source.ai|source.pdf|source.svg> --out <local-output-dir>",
     "closed_contour_reduce": "python examples/illustrator_bridge/vector_rebuild/reduce_closed_contours.py --lines-json <local-output-dir>/lines.json --out <local-output-dir> --mode fine"
   },
   "supported_tasks": [
     "environment probe",
     "COM availability check",
+    "offline color raster to verified editable SVG preview",
     "PDF-compatible AI/PDF/SVG vector line extraction",
     "local rebuilt SVG export",
     "local closed-contour simplification",
     "dry-run color vectorization planning",
+    "sanitized color vectorization evidence validation",
+    "authorized reference and sandbox preview comparison",
+    "bounded deterministic color vector repair planning with dry-run execute and compare templates",
     "confirmed local Illustrator color trace to sandbox AI/SVG/PNG"
   ],
   "unsupported_tasks": [
     "unconfirmed desktop Illustrator writes",
     "cloud Image Trace upload",
-    "automatic Photoshop preprocessing execution",
-    "automatic pixel comparison and VectorPatch repair",
+    "production photo, gradient, transparency, or text fidelity",
+    "automatic VectorPatch repair",
     "committing private .ai project outputs"
   ],
   "safety_notes": [
     "Do not commit customer .ai files, source images, exported SVG/PDF/PNG files, commercial fonts, or brushes.",
-    "Input image and export paths must be passed as parameters.",
+    "The offline color trace accepts one explicit input and writes only below ignored examples/output/illustrator/trace-practice.",
+    "Input image and desktop export paths must be passed as parameters.",
     "Keep ILLUSTRATOR_EXE and local artwork paths outside the repository."
   ]
 }

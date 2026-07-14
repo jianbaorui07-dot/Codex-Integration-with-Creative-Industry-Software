@@ -33,6 +33,7 @@ npm.cmd run illustrator:preflight:plan
 npm.cmd run illustrator:info
 python examples\illustrator_bridge\scripts\preflight_plan.py --json
 python -m unittest tests.test_color_vectorization
+python -m unittest tests.test_color_vector_repair
 powershell -ExecutionPolicy Bypass -File examples\illustrator_bridge\scripts\color_vectorize.ps1
 python -m starbridge_mcp.server tools --json --safe-only
 python examples\bridge_status.py --json --redact-paths --soft-exit
@@ -51,6 +52,7 @@ Do not hardcode local Illustrator install paths in docs, tests, or examples.
 | Trace/vectorize plan | `illustrator.color_vectorize_plan` | Explicit authorization; no pixel read, path, cloud upload, or app launch |
 | Validate trace quality | `illustrator.color_vectorize_validate` | Sanitized metrics only; no reference/preview file read |
 | Compare trace preview | `illustrator.color_vectorize_compare` | One authorized PNG/JPEG + one sandbox PNG; no path, pixel, or metadata returned |
+| Plan bounded repair | `illustrator.color_vectorize_repair_plan` | Sanitized findings to allowlisted parameters plus dry-run execute/compare templates; at most 3 rounds; no script or desktop execution |
 | Execute color trace | `illustrator.color_vectorize_execute` | Default dry-run; fixed JSX, explicit single image, dual confirmation, sandbox only |
 | Export | color trace executor or demo export | Confirmed sandbox export only |
 
