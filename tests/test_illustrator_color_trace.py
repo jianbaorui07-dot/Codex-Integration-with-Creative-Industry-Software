@@ -420,6 +420,18 @@ class ColorTraceClosedLoopTests(unittest.TestCase):
         self.assertEqual(metadata["original_width"], 40)
         self.assertEqual(metadata["original_height"], 80)
 
+    def test_repository_relative_paths_normalize_root_aliases(self) -> None:
+        aliased_root = self.root / "lexical-alias" / ".."
+        artifact = self.output_root / "alias-test" / "artifact.svg"
+
+        with mock.patch.object(trace, "REPO_ROOT", aliased_root):
+            public_path = trace.repo_relative_path(artifact)
+
+        self.assertEqual(
+            public_path,
+            "examples/output/illustrator/trace-practice/alias-test/artifact.svg",
+        )
+
     def test_cli_failure_is_structured_and_does_not_echo_input_path(self) -> None:
         missing = self.root / "do-not-echo-this-name.png"
         stdout = io.StringIO()

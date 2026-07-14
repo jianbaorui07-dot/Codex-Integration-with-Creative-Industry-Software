@@ -170,6 +170,18 @@ def safe_output_dir(value: str) -> Path:
     return resolved
 
 
+def repo_relative_path(path: Path) -> str:
+    """Return a stable public path even when Windows exposes 8.3 and long aliases."""
+
+    try:
+        return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+    except (OSError, ValueError) as exc:
+        raise TraceRunError(
+            "artifact_outside_repository",
+            "Artifact paths must stay inside the resolved repository root.",
+        ) from exc
+
+
 def load_image(path: str, max_dimension: int) -> tuple[np.ndarray, dict[str, Any]]:
     require_trace_runtime()
     if max_dimension <= 0 or max_dimension > MAX_ALLOWED_WORK_DIMENSION:
@@ -534,7 +546,7 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
         "bridge": "illustrator",
         "task": "trace_photo_preview",
         "source": source_meta,
-        "output_dir": output_dir.relative_to(REPO_ROOT).as_posix(),
+        "output_dir": repo_relative_path(output_dir),
         "presets": [],
         "recommended_preset": None,
         "final": None,
@@ -566,8 +578,8 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
                 staged_svg, expected_width=width, expected_height=height
             )
             preview_verification = verify_raster_artifact(staged_preview)
-            svg_public_path = final_svg.relative_to(REPO_ROOT).as_posix()
-            preview_public_path = final_preview.relative_to(REPO_ROOT).as_posix()
+            svg_public_path = repo_relative_path(final_svg)
+            preview_public_path = repo_relative_path(final_preview)
             svg_artifact = artifact_entry("editable_svg", svg_public_path, svg_verification)
             preview_artifact = artifact_entry(
                 "quantized_preview", preview_public_path, preview_verification
@@ -608,7 +620,7 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
         final_contact_sheet = output_dir / staged_contact_sheet.name
         make_contact_sheet(contact_inputs, staged_contact_sheet)
         contact_verification = verify_raster_artifact(staged_contact_sheet)
-        contact_public_path = final_contact_sheet.relative_to(REPO_ROOT).as_posix()
+        contact_public_path = repo_relative_path(final_contact_sheet)
         report["contact_sheet"] = contact_public_path
         report["artifacts"].append(
             artifact_entry("preset_contact_sheet", contact_public_path, contact_verification)
@@ -627,8 +639,8 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
                 staged_final_svg, expected_width=width, expected_height=height
             )
             final_preview_verification = verify_raster_artifact(staged_final_preview)
-            final_svg_public_path = final_svg.relative_to(REPO_ROOT).as_posix()
-            final_preview_public_path = final_preview.relative_to(REPO_ROOT).as_posix()
+            final_svg_public_path = repo_relative_path(final_svg)
+            final_preview_public_path = repo_relative_path(final_preview)
             report["final"] = {
                 "preset": args.commit_preset,
                 "svg": final_svg_public_path,
@@ -656,7 +668,7 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
             json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
         report_verification = verify_json_artifact(staged_report)
-        report_public_path = final_report.relative_to(REPO_ROOT).as_posix()
+        report_public_path = repo_relative_path(final_report)
         report_artifact = artifact_entry("trace_report", report_public_path, report_verification)
         publish_pairs.append((staged_report, final_report))
 
