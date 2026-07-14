@@ -76,12 +76,12 @@ const runner = await import(moduleUrl);
 const success = await runner.runModalJob(
   "ps.test.write",
   {{ commandName: "Test Commit", timeoutSeconds: 7 }},
-  async () => ({{ warnings: ["C:/Users/private/source.psd"] }}),
+  async () => ({{ warnings: ["C:/Users/<USER_HOME>/source.psd"] }}),
 );
 const failed = await runner.runModalJob(
   "ps.test.write",
   {{ commandName: "Test Rollback" }},
-  async () => {{ throw new Error("C:/Users/private/source.psd failed"); }},
+  async () => {{ throw new Error("C:/Users/<USER_HOME>/source.psd failed"); }},
 );
 const cancelled = await runner.runModalJob(
   "ps.test.write",
