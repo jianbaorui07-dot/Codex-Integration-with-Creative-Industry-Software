@@ -64,8 +64,8 @@ class SvgArtifactVerifierTests(unittest.TestCase):
         schema = json.loads(QUALITY_SCHEMA.read_text(encoding="utf-8"))
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual(
-            "in_memory_quantized_target",
-            schema["properties"]["target_kind"]["const"],
+            {"in_memory_quantized_target", "explicit_reference_work_rgb"},
+            set(schema["properties"]["target_kind"]["enum"]),
         )
         safety = schema["properties"]["safety"]["properties"]
         self.assertFalse(safety["source_path_reported"]["const"])
@@ -243,15 +243,30 @@ class ColorTraceClosedLoopTests(unittest.TestCase):
         target = trace.np.full((16, 16, 3), 255, dtype=trace.np.uint8)
         target[2:14, 2:14] = (230, 35, 45)
 
-        passed = trace.measure_svg_raster_quality(svg_path, target)
-        review = trace.measure_svg_raster_quality(svg_path, trace.np.full_like(target, 255))
+        passed = trace.measure_svg_raster_quality(
+            svg_path,
+            target,
+            target_kind="in_memory_quantized_target",
+        )
+        review = trace.measure_svg_raster_quality(
+            svg_path,
+            trace.np.full_like(target, 255),
+            target_kind="explicit_reference_work_rgb",
+        )
 
         self.assertEqual("pass", passed["verdict"])
         self.assertEqual(1.0, passed["similarity"])
         self.assertEqual(1.0, passed["exact_pixel_match_ratio"])
         self.assertEqual("review_required", review["verdict"])
+        self.assertEqual("explicit_reference_work_rgb", review["target_kind"])
         self.assertLess(review["similarity"], review["similarity_min"])
         self.assertNotIn(str(svg_path), json.dumps(passed))
+        with self.assertRaisesRegex(ValueError, "target_kind"):
+            trace.measure_svg_raster_quality(
+                svg_path,
+                target,
+                target_kind="untrusted_target",
+            )
 
     def test_real_color_trace_is_deterministic_topology_safe_and_manifested(self) -> None:
         source = self.make_ring_image()
@@ -319,10 +334,19 @@ class ColorTraceClosedLoopTests(unittest.TestCase):
             set(quality["safety"]),
         )
         self.assertEqual(quality, first["final"]["svg_raster_quality"])
+        reference_quality = report["presets"][0]["reference_svg_quality"]
+        self.assertEqual("explicit_reference_work_rgb", reference_quality["target_kind"])
+        self.assertGreaterEqual(reference_quality["similarity"], 0.0)
+        self.assertLessEqual(reference_quality["similarity"], 1.0)
+        self.assertEqual(reference_quality, first["final"]["reference_svg_quality"])
         second_report = json.loads((self.output_root / "second" / "trace_report.json").read_text())
         self.assertEqual(
             quality,
             second_report["presets"][0]["svg_raster_quality"],
+        )
+        self.assertEqual(
+            reference_quality,
+            second_report["presets"][0]["reference_svg_quality"],
         )
 
     def test_zero_path_generation_fails_without_publishing_partial_artifacts(self) -> None:

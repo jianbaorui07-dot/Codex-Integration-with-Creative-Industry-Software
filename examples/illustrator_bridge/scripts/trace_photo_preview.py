@@ -39,6 +39,10 @@ MAX_SOURCE_PIXELS = 40_000_000
 ALLOWED_INPUT_FORMATS = {"JPEG", "PNG"}
 SVG_QUALITY_SCHEMA_VERSION = "starbridge.headless-svg-quality.v1"
 SVG_RASTER_SIMILARITY_MIN = 0.95
+SVG_QUALITY_TARGET_KINDS = {
+    "in_memory_quantized_target",
+    "explicit_reference_work_rgb",
+}
 _SVG_PATH_SEGMENT = re.compile(r"M\s+(.+?)\s+Z")
 _SVG_POINT = re.compile(r"(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)")
 
@@ -356,24 +360,27 @@ def _hex_rgb(value: str) -> tuple[int, int, int]:
 
 def measure_svg_raster_quality(
     svg_path: Path,
-    quantized_target: np.ndarray,
+    target_rgb: np.ndarray,
     *,
+    target_kind: str,
     similarity_min: float = SVG_RASTER_SIMILARITY_MIN,
 ) -> dict[str, Any]:
     """Rasterize the verified SVG subset and compare it with an in-memory target."""
 
     require_trace_runtime()
     if (
-        not isinstance(quantized_target, np.ndarray)
-        or quantized_target.ndim != 3
-        or quantized_target.shape[2] != 3
-        or quantized_target.size == 0
+        not isinstance(target_rgb, np.ndarray)
+        or target_rgb.ndim != 3
+        or target_rgb.shape[2] != 3
+        or target_rgb.size == 0
     ):
-        raise ValueError("quantized_target must be a non-empty RGB array")
+        raise ValueError("target_rgb must be a non-empty RGB array")
+    if target_kind not in SVG_QUALITY_TARGET_KINDS:
+        raise ValueError("unsupported SVG quality target_kind")
     if not 0.5 <= similarity_min <= 1.0:
         raise ValueError("similarity_min must be between 0.5 and 1.0")
 
-    height, width = quantized_target.shape[:2]
+    height, width = target_rgb.shape[:2]
     verify_svg_artifact(svg_path, expected_width=width, expected_height=height)
     root = ET.parse(svg_path).getroot()
     namespace = {"svg": "http://www.w3.org/2000/svg"}
@@ -398,14 +405,14 @@ def measure_svg_raster_quality(
             mask = cv2.bitwise_xor(mask, contour_mask)
         raster[mask > 0] = _hex_rgb(path.get("fill", "#000000"))
 
-    target = quantized_target.astype(np.uint8, copy=False)
+    target = target_rgb.astype(np.uint8, copy=False)
     difference = np.abs(raster.astype(np.int16) - target.astype(np.int16))
     exact_match_ratio = float(np.mean(np.all(raster == target, axis=2)))
     mean_absolute_error = float(np.mean(difference))
     similarity = max(0.0, 1.0 - mean_absolute_error / 255.0)
     return {
         "schema_version": SVG_QUALITY_SCHEMA_VERSION,
-        "target_kind": "in_memory_quantized_target",
+        "target_kind": target_kind,
         "rasterizer": "restricted_svg_rect_path_v1",
         "pixel_count": int(width * height),
         "exact_pixel_match_ratio": round(exact_match_ratio, 6),
@@ -660,7 +667,16 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
                 staged_svg, expected_width=width, expected_height=height
             )
             preview_verification = verify_raster_artifact(staged_preview)
-            svg_raster_quality = measure_svg_raster_quality(staged_svg, result["quantized_target"])
+            svg_raster_quality = measure_svg_raster_quality(
+                staged_svg,
+                result["quantized_target"],
+                target_kind="in_memory_quantized_target",
+            )
+            reference_svg_quality = measure_svg_raster_quality(
+                staged_svg,
+                rgb,
+                target_kind="explicit_reference_work_rgb",
+            )
             svg_public_path = repo_relative_path(final_svg)
             preview_public_path = repo_relative_path(final_preview)
             svg_artifact = artifact_entry("editable_svg", svg_public_path, svg_verification)
@@ -684,6 +700,7 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
                 "palette": result["palette"],
                 "svg_artifact": svg_artifact,
                 "svg_raster_quality": svg_raster_quality,
+                "reference_svg_quality": reference_svg_quality,
             }
             metrics["control_score"] = round(
                 score_metrics(
@@ -732,6 +749,9 @@ def run_trace(args: argparse.Namespace) -> dict[str, Any]:
                 "preview": final_preview_public_path,
                 "svg_raster_quality": preset_metrics_by_name[args.commit_preset][
                     "svg_raster_quality"
+                ],
+                "reference_svg_quality": preset_metrics_by_name[args.commit_preset][
+                    "reference_svg_quality"
                 ],
             }
             report["artifacts"].extend(

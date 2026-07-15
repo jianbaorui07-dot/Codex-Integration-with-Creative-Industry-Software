@@ -11,7 +11,9 @@
   ],
   "properties": {
     "schema_version": { "const": "starbridge.headless-svg-quality.v1" },
-    "target_kind": { "const": "in_memory_quantized_target" },
+    "target_kind": {
+      "enum": ["in_memory_quantized_target", "explicit_reference_work_rgb"]
+    },
     "rasterizer": { "const": "restricted_svg_rect_path_v1" },
     "pixel_count": { "type": "integer", "minimum": 1 },
     "exact_pixel_match_ratio": { "type": "number", "minimum": 0, "maximum": 1 },

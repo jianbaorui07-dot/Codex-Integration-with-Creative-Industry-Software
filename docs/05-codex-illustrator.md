@@ -42,7 +42,7 @@ npm.cmd run illustrator:vectorize:offline -- --input "<input.png>" --commit-pres
 
 默认生成 `flat_8`、`flat_16`、`line_color_16`、`nianhua_24` 四组候选。`--commit-preset` 会把选中的已验证 SVG 和预览复制为 `final_trace.svg` 与 `final_preview.png`。默认输出在被 Git 忽略的 `examples/output/illustrator/trace-practice/`；自定义输出也必须留在这个 headless 专用子树中，报告不写源图路径和文件名。
 
-这条 CLI 适合扁平插画、图标和色块稿预处理。SVG 验证除证明“确实产生了可编辑路径且没有偷偷嵌入原图”，还会用受限本地 rasterizer 把最终 SVG 的纯色 `rect/path` 回栅格，与本轮内存中的量化目标比较，报告像素完全匹配率、平均绝对误差和归一化相似度。相似度低于 `0.95` 时只标记 `review_required`，不得冒充视觉通过；复杂照片、渐变、透明度、文字和细小拓扑仍需在 Illustrator 中人工复核。
+这条 CLI 适合扁平插画、图标和色块稿预处理。SVG 验证除证明“确实产生了可编辑路径且没有偷偷嵌入原图”，还会用受限本地 rasterizer 把最终 SVG 的纯色 `rect/path` 回栅格，并分开报告两组指标：`svg_raster_quality` 对比本轮内存量化目标，用于证明矢量几何没有额外丢色；`reference_svg_quality` 对比应用 EXIF 方向和尺寸限制后的显式输入工作 RGB，用于暴露调色、量化、轮廓简化和小区域丢弃造成的整体偏差。两组都只返回像素完全匹配率、平均绝对误差和归一化相似度，不返回像素、文件名或路径。相似度低于 `0.95` 时只标记 `review_required`，不得冒充视觉通过；复杂照片、渐变、透明度、文字、ICC 严格色差和细小拓扑仍需在 Illustrator 中人工复核。
 
 ## Illustrator 桌面链路需要什么
 
@@ -121,6 +121,6 @@ python -m unittest tests.test_illustrator_color_trace -v
 3. 为原生 Image Trace 补用户授权公开样例的真实桌面 E2E 证据；未运行前继续明确标注。
 4. 用 `next_execute_template` 驱动 execute dry-run；真实执行仍需显式确认，随后按 `post_execute_compare` 绑定明确参考图、sandbox PNG 和 trace evidence，达到轮次上限后停止，不自动重复桌面写入。
 5. 评估 VTracer 作为 headless 可选高质量后端，仍复用当前 SVG verifier 和产物清单。
-6. 后续把受限 SVG 回栅格指标扩展为“原始授权参考图↔最终 SVG”独立 compare；当前仅比较本轮量化目标，并与原生 PNG compare 分开报告。
+6. 后续为 `reference_svg_quality` 增加 ICC/alpha/轮廓/SSIM 等严格指标；当前只比较解码后的工作 RGB，并与原生 PNG compare 分开报告。
 7. 扩展 preflight 检查，例如字体替换风险、颜色空间和链接资产风险。
 8. 所有桌面软件真实写入继续要求 dry-run 之后显式确认。
