@@ -9,7 +9,7 @@
 - [Vector short-Chinese command language](vector-command-language.md)
 - [Color-faithful vectorization protocol](color-faithful-vectorization.md)
 
-这份文档说明 Adobe Illustrator 和 `.ai` 矢量文件桥的真实状态。这里的 **AI 文件** 指 Adobe Illustrator 的 `.ai` 矢量工程文件，不是“大模型 AI”。当前仓库有接入说明、`bridge.json` manifest、环境探测、sandbox demo，以及受控彩色 Image Trace 原型，状态是 `experimental local executor available`。Image Trace 已有默认 dry-run、固定 JSX、参数白名单和 sandbox 输出；没有用户授权参考图时只做静态与拒绝路径验证，不声称已完成视觉验收。
+这份文档说明 Adobe Illustrator 和 `.ai` 矢量文件桥的真实状态。这里的 **AI 文件** 指 Adobe Illustrator 的 `.ai` 矢量工程文件，不是“大模型 AI”。当前桥有两条互补的 experimental 路线：Windows + 已授权 Illustrator 的受控原生 Image Trace，以及无需 Illustrator 的 headless OpenCV fallback。前者已有默认 dry-run、固定 JSX、参数白名单、双确认、sandbox AI/SVG/PNG 和 compare 协议，但公开 CI 不声称真实桌面 E2E；后者在 CI 中真实生成并复读 SVG，但不声称视觉等价或原生 Image Trace parity。
 
 公开仓库只描述接入方式、参数化脚本方向和安全边界，不上传客户图稿、源图路径、导出结果或私有 `.ai` 工程。
 
@@ -22,6 +22,8 @@
 | 总状态探测 | `examples/bridge_status.py` | 检查 `ILLUSTRATOR_EXE` 和 `Illustrator.Application` COM |
 | 当前文档信息 | `examples/illustrator_bridge/scripts/document_info.ps1` | 只读当前打开文档的名称、画板、图层和对象数量 |
 | 只读 preflight | `examples/illustrator_bridge/scripts/preflight_plan.py` | 对脱敏文档摘要做链接、颜色模式、文本对象风险检查，不打开 `.ai` |
+| headless 彩色位图→SVG | `examples/illustrator_bridge/scripts/trace_photo_preview.py` | 显式输入 PNG/JPEG；输出背景 `<rect>` + 可编辑 `<path>` 的纯矢量 SVG、PNG 预览、联系表和带 hash 的产物清单；不需要 Illustrator |
+| SVG 产物验证 | `examples/illustrator_bridge/scripts/svg_artifact_verifier.py` | 要求 XML/尺寸有效、非空路径、无嵌入位图/脚本/外链；失败不发布半成品 |
 | sandbox 画板 demo | `examples/illustrator_bridge/scripts/create_demo_artboard.ps1` | 默认 dry-run；确认后创建公开安全测试 `.ai` |
 | sandbox 导出 demo | `examples/illustrator_bridge/scripts/export_demo_assets.ps1` | 确认后只从 demo 文档导出 SVG、PNG 和 PDF |
 | 彩色矢量化协议 | `protocols/color_vectorization.v1.schema.json` | 固定授权、彩色描摹参数、质量闸门和本地安全边界 |
@@ -29,7 +31,20 @@
 | 彩色 Image Trace | `scripts/color_vectorize.ps1` + `jsx/color_vectorize.jsx` | 默认 dry-run；双确认后只处理明确传入的单张 PNG/JPEG，输出 AI/SVG/PNG 到 sandbox |
 | demo manifest | `examples/illustrator_bridge/write_demo_manifest.py` | 汇总本地 demo 输出，manifest 本身不提交 |
 
-## 需要本机安装什么
+## 彩色图如何直接变成矢量图
+
+离线转换不需要 Illustrator，只需要 Python 可选依赖：
+
+```powershell
+python -m pip install -e ".[illustrator-trace]"
+npm.cmd run illustrator:vectorize:offline -- --input "<input.png>" --commit-preset flat_16
+```
+
+默认生成 `flat_8`、`flat_16`、`line_color_16`、`nianhua_24` 四组候选。`--commit-preset` 会把选中的已验证 SVG 和预览复制为 `final_trace.svg` 与 `final_preview.png`。默认输出在被 Git 忽略的 `examples/output/illustrator/trace-practice/`；自定义输出也必须留在这个 headless 专用子树中，报告不写源图路径和文件名。
+
+这条 CLI 适合扁平插画、图标和色块稿预处理。SVG 验证证明“确实产生了可编辑路径且没有偷偷嵌入原图”，不等于视觉完全还原；复杂照片、渐变、透明度、文字和细小拓扑仍需在 Illustrator 中人工复核。
+
+## Illustrator 桌面链路需要什么
 
 - 已授权可用的 Adobe Illustrator desktop。
 - Windows PowerShell。
@@ -56,7 +71,9 @@ powershell -ExecutionPolicy Bypass -File examples\illustrator_bridge\probe.ps1
 python examples\bridge_status.py --probe-executables --json
 python examples\illustrator_bridge\scripts\preflight_plan.py --json
 python -m unittest tests.test_color_vectorization
+python -m unittest tests.test_color_vector_repair
 powershell -ExecutionPolicy Bypass -File examples\illustrator_bridge\scripts\color_vectorize.ps1
+python -m unittest tests.test_illustrator_color_trace -v
 ```
 
 ## 推荐 MCP 工具方向
@@ -71,25 +88,39 @@ powershell -ExecutionPolicy Bypass -File examples\illustrator_bridge\scripts\col
 | `illustrator.color_vectorize_compare` | 比较明确授权参考图与 sandbox PNG，自动计算 ICC、轮廓、色差、SSIM 和矢量证据 | 已实现，只读两个明确文件，不返回路径、像素或元数据 |
 | `illustrator.color_vectorize_repair_plan` | 把脱敏 compare findings 编译为最多三轮的确定性 Image Trace 参数修复计划 | 已实现纯内存计划；输出 execute dry-run 模板、post-execute compare 契约与明确停止条件 |
 | `illustrator.color_vectorize_execute` | 对明确传入的 PNG/JPEG 执行固定 Image Trace，输出 AI/SVG/PNG | 已实现受控本地原型，默认 dry-run、双确认 |
+| `trace_photo_preview.py` | headless 色彩量化与轮廓化，真实生成并复读无嵌入位图 SVG | 已有 standalone fallback CLI；不是 MCP tool |
 | `illustrator.export_demo_assets` | 从 sandbox demo 文档导出 SVG、PDF 和 PNG | 已有 sandbox demo，需显式确认 |
 | `illustrator.run_demo` | 创建测试画板、导出 demo 产物并生成 manifest | 已有一键流程，需显式确认 |
 
-旧规划名 `trace_image_to_vector` 已拆分为 plan / validate / compare / execute 四个入口，避免把只读计划、自动验收和真实写入混在一个高风险工具里。
+旧规划名 `trace_image_to_vector` 已拆分为 plan / validate / compare / repair_plan / execute 五个入口，避免把只读计划、自动验收、受限修复规划和真实写入混在一个高风险工具里。
 
 ## 不能做什么
 
 - 不能把 Image Trace 生成结果直接声称为“原样通过”；真实输出必须先看 PNG 预览并通过外部质量指标。
-- 当前 Photoshop 预处理只进入应用矩阵计划，尚未提供真实执行器；不要写成已完成 PS + AI 全自动闭环。
+- headless CLI 只是实验性色彩量化与多边形轮廓，不承诺照片级曲线、渐变、透明度或文字保真，也不能替代原生 Image Trace。
+- 产物验证只证明文件结构、可编辑路径和非嵌入位图，不证明视觉等价或生产质量。
 - 不能提交 `.ai` 私有工程、客户图稿、商业字体、商业画笔、购买素材。
 - 不能提交源图路径、微信临时路径、桌面路径、导出目录和真实项目输出。
 - 不能提交 Illustrator 安装路径、Creative Cloud 缓存、账号、许可证、Cookie 或 token。
 - 不能自动登录、绕过授权或批量抓取账号内云文档。
 
+## 同类项目对比与差距（2026-07-14）
+
+| 项目 | 可借鉴能力 | StarBridge 当前差距 |
+| --- | --- | --- |
+| [VTracer @ `fd9cdb0`](https://github.com/visioncortex/vtracer/commit/fd9cdb08e622f237eb05be553a020ddc9e4c47a1) | MIT、无 GUI、彩色高分辨率、stacked/cutout、polygon/spline、poster/photo 预设 | headless OpenCV fallback 只有调色板量化和多边形；缺少平滑曲线、照片模式与更成熟的层次策略。VTracer 是后续候选，但其进程成功也仍需经过同一 verifier。 |
+| [ImageTracerJS @ `cb0c84a`](https://github.com/jankovicsandras/imagetracerjs/commit/cb0c84a309df5e75614d3b5166cdc77a56f12a98) | 浏览器/Node 彩色 tracing；测试会统计 SVG bytes、路径数和像素差异 | headless fallback 已补 bytes/hash/path/color 证据，但还缺把最终 SVG 回栅格后的像素差异门；原生路线已有参考 PNG↔sandbox PNG compare，二者不能混作同一证据。 |
+| [Inkscape @ `e76072a`](https://gitlab.com/inkscape/inkscape/-/commit/e76072ae5ae7d2ab77886450102d4d5e245834ac) | Potrace/Autotrace/libdepixelize、彩色多扫描、中心线与编辑器内结果 | 适合作为已安装编辑器的 fallback；`object-trace` 的完成文本不能证明有路径，仍须解析最终 SVG。StarBridge 尚未接入。 |
+
+本轮只补 headless 小闭环：固定 K-means 随机种子、用 `evenodd` 复合路径保留超过最小面积阈值的孔洞、验证真实 SVG 并提供事务式发布恢复；若自动恢复本身失败，旧产物备份会留在忽略输出目录供人工恢复。原生 Image Trace 的 plan / validate / compare / repair_plan / execute 保持不变；VTracer 与最终 SVG 回栅格视觉差异分别留给后续独立小轮次。
+
 ## 下一步
 
 1. 保留 `examples/bridge_status.py` 的 Illustrator 状态检查入口。
 2. 继续把 demo 输出保持在 `examples/output/illustrator/`，不提交真实生成物。
-3. 补 Photoshop sandbox 预处理执行器，并保持源图只由参数传入。
-4. 用 `next_execute_template` 驱动 execute dry-run，真实执行后按 `post_execute_compare` 绑定明确参考图、sandbox PNG 和 trace evidence；达到轮次上限后停止，不自动重复桌面写入。
-5. 扩展 preflight 检查，例如字体替换风险、颜色空间和链接资产风险。
-6. 所有真实写入继续要求 dry-run 之后显式确认。
+3. 为原生 Image Trace 补用户授权公开样例的真实桌面 E2E 证据；未运行前继续明确标注。
+4. 用 `next_execute_template` 驱动 execute dry-run；真实执行仍需显式确认，随后按 `post_execute_compare` 绑定明确参考图、sandbox PNG 和 trace evidence，达到轮次上限后停止，不自动重复桌面写入。
+5. 评估 VTracer 作为 headless 可选高质量后端，仍复用当前 SVG verifier 和产物清单。
+6. 增加最终 SVG 回栅格后的像素差异指标，并与现有 PNG compare 分开报告。
+7. 扩展 preflight 检查，例如字体替换风险、颜色空间和链接资产风险。
+8. 所有桌面软件真实写入继续要求 dry-run 之后显式确认。

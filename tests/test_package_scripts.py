@@ -73,6 +73,7 @@ class PackageScriptsTest(unittest.TestCase):
                 "illustrator:realtime:adapter",
                 "illustrator:realtime:capture",
                 "illustrator:preflight:plan",
+                "illustrator:vectorize:offline",
                 "illustrator:demo:plan",
                 "illustrator:demo",
                 "illustrator:manifest",
@@ -126,6 +127,12 @@ class PackageScriptsTest(unittest.TestCase):
         ):
             self.assertIn(name, self.scripts)
 
+    def test_illustrator_color_trace_shortcut_is_registered(self) -> None:
+        self.assertEqual(
+            "python examples/illustrator_bridge/scripts/trace_photo_preview.py",
+            self.scripts["illustrator:vectorize:offline"],
+        )
+
     def test_comfy_template_shortcuts_are_registered(self) -> None:
         self.assertEqual(
             "python examples/comfy_bridge/workflow_templates.py list --json",
@@ -150,7 +157,7 @@ class PackageScriptsTest(unittest.TestCase):
         self.assertIsNotNone(match)
         extras_block = match.group(1)
 
-        for extra in ("dev", "cad", "comfy", "adobe"):
+        for extra in ("dev", "cad", "comfy", "adobe", "illustrator-trace"):
             self.assertRegex(extras_block, rf"(?m)^{extra}\s*=")
         self.assertIn("pytest>=8", extras_block)
         self.assertIn("ezdxf>=1.3", extras_block)
