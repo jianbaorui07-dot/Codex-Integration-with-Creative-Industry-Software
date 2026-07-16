@@ -1,4 +1,4 @@
-# StarBridge：精确像素矢量重建 + Codex Skill + MCP
+# StarBridge：三模式图片矢量化 + Codex Skill + MCP
 
 [![CI](https://github.com/jianbaorui07-dot/Codex-Integration-with-Creative-Industry-Software/actions/workflows/ci.yml/badge.svg)](https://github.com/jianbaorui07-dot/Codex-Integration-with-Creative-Industry-Software/actions/workflows/ci.yml)
 ![Windows first](https://img.shields.io/badge/Windows-first-2563eb)
@@ -7,18 +7,20 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-StarBridge 是以**图片精确转 SVG / Illustrator AI**为主推能力的本地创意软件开源接入层。它把 **Codex Skill** 的任务路由、**StarBridge MCP** 的结构化工具，以及 **Adobe UXP / Node Proxy** 的桌面软件通道组合成一套可审计的工作流；ComfyUI、Photoshop、CAD / AutoCAD、Blender 和 CapCut / 剪映等桥仍完整保留。
+StarBridge 是以**智能矢量、轻量矢量和精确重建**为主推能力的本地创意软件开源接入层。它把 **Codex Skill** 的任务路由、**StarBridge MCP** 的结构化工具，以及 **Adobe UXP / Node Proxy** 的桌面软件通道组合成一套可审计的工作流；ComfyUI、Photoshop、CAD / AutoCAD、Blender 和 CapCut / 剪映等桥仍完整保留。
 
-当前默认图片转矢量路线不使用 Illustrator Image Trace。它把用户明确授权的单张 PNG / JPEG 按原始 RGBA 像素网格重建为矩形复合路径，验证 SVG 中没有嵌入位图、脚本或外链，再交给 Illustrator 存储为 `.ai`。颜色不量化、像素不缩放，复杂度会如实反映在路径数量和写入时间上。
+普通图片默认进入**智能矢量**：本地减色、透明度分级、小区域清理、颜色区域轮廓提取和节点简化。Logo、图标和纹样可选择**轻量矢量**；需要技术验证或像素存档时选择**精确重建**。三种模式都生成纯路径 SVG，并拒绝嵌入位图、脚本和外链；均不调用 Illustrator Image Trace。
 
 ```mermaid
 flowchart LR
-  A["用户授权的单张 PNG / JPEG"] --> B["读取原始 RGBA 像素"]
-  B --> C["连续同色像素合并为矩形"]
-  C --> D["按 paint 合并复合 path"]
-  D --> E["验证 SVG 无位图 / 脚本 / 外链"]
-  E --> F["Illustrator 打开并存储为 AI"]
-  F --> G["核对文件与脱敏证据"]
+  A["用户授权的单张 PNG / JPEG"] --> B{"选择模式"}
+  B --> C["智能：色块与轮廓平衡"]
+  B --> D["轻量：减少颜色与节点"]
+  B --> E["精确：RGBA 像素矩形重建"]
+  C --> F["纯路径 SVG + 预览 + 报告"]
+  D --> F
+  E --> F
+  F --> G["可选 Illustrator AI 交付"]
 ```
 
 项目坚持 local-first：默认只读或 `dry-run`，真实写入必须显式确认并限制在安全输出目录；仓库不保存客户素材、PSD / AI / DWG 私有工程、账号状态、模型文件、token 或本机路径。
@@ -28,7 +30,7 @@ flowchart LR
 | 状态 | 已覆盖能力 | 证据边界 |
 | --- | --- | --- |
 | stable（稳定） | MCP stdio、工具注册、resources / prompts、状态探针、路径脱敏、operation context、ComfyUI 队列/进度/任务快照与工作流验证；AutoCAD/DXF plan validate / dry-run / guarded write | Windows 与 Ubuntu CI 验证结构、schema、安全边界和 soft-exit |
-| primary（主推） | 精确 RGBA 像素→矩形复合路径→已验证 SVG→Illustrator AI 交付 | 不使用 Image Trace、不嵌入位图、不量化颜色；只读单张明确输入，输出留在忽略 sandbox；桌面 AI 写入需要明确请求 |
+| primary（主推） | 智能、轻量、精确三模式统一 CLI→已验证 SVG、PNG 预览和 JSON/Markdown 报告 | 智能模式默认；轻量模式限制颜色与节点；精确模式验证 RGBA 像素一致；输出留在忽略 sandbox |
 | experimental（其他 Adobe 协议） | Photoshop / Illustrator 规划、预检、受控执行接口；彩色矢量化 plan / validate / compare / repair_plan / execute；旧量化 SVG fallback | 兼容与研究用途；默认不作为普通图片转矢量入口；compare 只读取两个明确授权文件 |
 | UXP 安全执行已实现 | Photoshop `executeAsModal` 有界排队、取消状态、history commit / rollback、临时文档自动关闭 | 已通过 Node 模拟与协议测试；仍需已授权 Photoshop 桌面实测 |
 | planned（仍在推进） | repair plan → Illustrator execute → compare 的显式确认闭环、Adobe 桌面端端到端验收、Blender 确认渲染、CapCut 草稿骨架 | 未经本地运行证据，不宣称真实桌面控制已验证 |
@@ -36,11 +38,19 @@ flowchart LR
 
 Photoshop, Illustrator, Blender, and CapCut write flows are experimental or planned unless a reviewed local run proves otherwise.
 
-完整状态见 [精确像素矢量重建](docs/exact-pixel-vectorization.md)、[能力矩阵](docs/CAPABILITY_MATRIX.md)、[彩色矢量化协议](docs/color-faithful-vectorization.md) 和 [v0.1-alpha 发布说明](docs/RELEASE_V0_1_ALPHA.md)。
+完整状态见 [三模式矢量化](docs/vectorization-modes.md)、[精确像素矢量重建](docs/exact-pixel-vectorization.md)、[能力矩阵](docs/CAPABILITY_MATRIX.md)、[彩色矢量化协议](docs/color-faithful-vectorization.md) 和 [v0.1-alpha 发布说明](docs/RELEASE_V0_1_ALPHA.md)。
 
-## 主推：精确像素矢量重建
+## 三种产品模式
 
-目标是在源像素网格上确定性地保留 RGBA 值与位置，同时产出不含嵌入位图的可编辑矢量文件。详细写入过程和本机证据见[精确像素矢量重建文档](docs/exact-pixel-vectorization.md)。
+| 模式 | 产品定位 | 核心处理 |
+| --- | --- | --- |
+| **智能矢量（默认）** | 普通插画、海报素材和设计再编辑 | 24 色默认、透明度分级、小区域清理、复合轮廓、适度节点简化 |
+| **轻量矢量** | Logo、图标、纹样和流畅编辑 | 8 色默认、更强清理和简化、较低子路径/节点/文件大小上限 |
+| **精确重建** | 专业验证、技术证明和像素网格存档 | 不减色、不缩放；连续同色扫描段横向与纵向合并，重建后逐像素比对 |
+
+完整参数、输出和边界见[三模式矢量化文档](docs/vectorization-modes.md)。精确模式的桌面 AI 证据见[精确像素矢量重建文档](docs/exact-pixel-vectorization.md)。
+
+### 精确模式边界
 
 | 阶段 | 作用 | 默认行为 |
 | --- | --- | --- |
@@ -88,18 +98,36 @@ PowerShell 如果拦截 `npm.ps1`，请使用 `npm.cmd`。
 
 | 路线 | 适用场景 | 当前证据 |
 | --- | --- | --- |
-| **精确像素矢量重建（默认）** | 普通 PNG/JPEG→逐像素矩形复合路径→SVG→Illustrator AI | 确定性输出、原始 RGBA paint、无嵌入位图；736×1314 本机样例成功生成 742,922 个子路径 AI |
-| 旧量化 SVG 实验 | 扁平插画、图标和色块稿的低复杂度候选 | 保留兼容命令、CI 复读 SVG；不作为默认图片转矢量入口 |
+| **智能矢量（默认）** | 普通图片的可编辑色块和轮廓 | 统一 CLI、透明度处理、区域清理、节点简化、无嵌入位图 |
+| **轻量矢量** | Logo、图标、纹样和编辑性能优先 | 更少颜色、更少碎片、更严格的路径/节点/文件大小限制 |
+| **精确重建** | 原始 RGBA 像素网格→矩形复合路径 | 像素一致性验证；736×1314 本机旧样例成功生成 742,922 个子路径 AI |
+| 旧量化 SVG 实验 | 旧版兼容和回归研究 | 保留兼容命令；不再作为新产品模式入口 |
 | 原生 Image Trace 协议 | 研究、兼容和既有 MCP schema | 代码仍保留；普通图片转矢量工作流禁止自动选择 |
 
 主推命令：
 
 ```powershell
-python -m pip install -e ".[illustrator-vector]"
-npm.cmd run illustrator:vectorize:offline -- --input "<input.png>" --reference-id "reference"
+python -m pip install -e ".[vectorization]"
+npm.cmd run illustrator:vectorize -- --input "<input.png>" --reference-id "reference"
 ```
 
-默认输出写入已被 Git 忽略的 `examples/output/illustrator/exact-pixel/<reference-id>/`。脚本记录脱敏输入 hash、画布、像素数、path 数、矩形子路径数、paint 数、SVG bytes 与 hash；不返回源文件名或绝对路径。
+轻量和精确模式：
+
+```powershell
+npm.cmd run illustrator:vectorize -- --input "<input.png>" --mode lightweight --reference-id "reference"
+npm.cmd run illustrator:vectorize -- --input "<input.png>" --mode exact --reference-id "reference"
+```
+
+默认输出写入已被 Git 忽略的 `examples/output/vectorization/<reference-id>/<mode>/`，包含 `vector.svg`、`preview.png`、`parameters.json`、`vector_report.json` 和 `vector_report.md`。报告只记录脱敏 hash 和仓库相对输出路径，不返回源文件名或绝对路径。
+
+桌面软件原型：
+
+```powershell
+python -m pip install -e ".[vector-app]"
+npm.cmd run vector-app:start
+```
+
+桌面原型支持拖放、三模式卡片、参数调整、后台转换、原图/结果双预览、结果指标和打开输出目录。基础转换不要求安装 Illustrator。
 
 旧量化命令仍可用于兼容实验：
 
@@ -134,7 +162,8 @@ flowchart LR
 | 项目定位 | [Skill / MCP / UXP 定位](docs/skill-mcp-uxp-positioning.md) | `python scripts\starbridge_preflight.py --markdown` |
 | Photoshop | [Photoshop 接入](docs/03-codex-photoshop.md) / [UXP modal 安全协议](docs/photoshop-uxp-modal-envelope.md) | `npm.cmd run photoshop:diagnose` |
 | Illustrator | [Illustrator 接入](docs/05-codex-illustrator.md) | `npm.cmd run illustrator:preflight:plan` |
-| 精确图片转 SVG / AI | [精确像素矢量重建](docs/exact-pixel-vectorization.md) | `npm.cmd run illustrator:vectorize:offline -- --input "<input.png>" --reference-id "reference"` |
+| 三模式图片转 SVG | [三模式矢量化](docs/vectorization-modes.md) | `npm.cmd run illustrator:vectorize -- --input "<input.png>" --reference-id "reference"` |
+| 精确图片转 SVG / AI（兼容入口） | [精确像素矢量重建](docs/exact-pixel-vectorization.md) | `npm.cmd run illustrator:vectorize:offline -- --input "<input.png>" --reference-id "reference"` |
 | 其他彩色矢量协议 | [参考图彩色矢量化协议](docs/color-faithful-vectorization.md) | MCP `illustrator.color_vectorize_compare` |
 | ComfyUI | [ComfyUI 接入](docs/02-codex-comfyui.md) | `python examples\comfy_bridge\comfy_probe.py` |
 | CAD / AutoCAD | [CAD 接入](docs/01-codex-cad.md) | `python scripts\test_autocad_mcp.py` |
@@ -149,7 +178,7 @@ flowchart LR
 | --- | --- |
 | 图像生成区 | ComfyUI workflow 校验、队列监控、模板和任务生命周期摘要 |
 | 工程制图区 | CAD / AutoCAD plan、DXF dry-run 与受控写入 |
-| AI 矢量文件桥 | 主推精确像素矢量重建；另保留 Illustrator 规划、比较、修复协议和旧量化 SVG 实验 |
+| AI 矢量文件桥 | 主推智能、轻量、精确三模式；另保留 Illustrator 规划、比较、修复协议和旧量化 SVG 实验 |
 | 图像编辑区 | Photoshop UXP、Node Proxy、modal 回滚与 sandbox demo |
 | 视频草稿区 | CapCut / 剪映只读探针；未配置时报告“剪映可执行文件”状态 |
 
@@ -212,7 +241,7 @@ npm.cmd test
 
 ## English
 
-StarBridge is a Windows-first, local-first integration layer whose primary workflow reconstructs an authorized PNG/JPEG pixel grid as grouped RGBA rectangle paths, verifies a raster-free SVG, and hands it to Illustrator for Save As AI without Image Trace. The repository also retains guarded Adobe protocols, legacy quantized SVG research, ComfyUI, CAD/AutoCAD, Blender, CapCut/Jianying, MCP stdio, UXP, and local proxy bridges. Public examples default to read-only checks or safe ignored outputs; desktop writes require explicit confirmation.
+StarBridge is a Windows-first, local-first integration layer with three verified raster-to-vector modes: Smart Vector by default, Lightweight Vector for low-complexity editing, and Exact Reconstruction for RGBA pixel-grid proof. Every mode emits raster-free SVG without Illustrator Image Trace. The repository also retains guarded Adobe protocols, legacy quantized SVG research, ComfyUI, CAD/AutoCAD, Blender, CapCut/Jianying, MCP stdio, UXP, and local proxy bridges. Public examples write only to ignored safe outputs; desktop writes require explicit confirmation.
 
 ## License
 

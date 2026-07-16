@@ -59,11 +59,24 @@ illustrator-trace = [
 illustrator-vector = [
   "Pillow>=10,<13",
 ]
+vectorization = [
+  "numpy>=2,<3",
+  "opencv-python-headless>=4.10,<6",
+  "Pillow>=10,<13",
+]
+vector-app = [
+  "numpy>=2,<3",
+  "opencv-python-headless>=4.10,<6",
+  "Pillow>=10,<13",
+  "PySide6>=6.8,<7",
+]
 
 [project.scripts]
 starbridge = "starbridge_mcp.server:main"
 starbridge-mcp = "starbridge_mcp.mcp_server:main"
 starbridge-backend = "starbridge_mcp.backend:main"
+starbridge-vectorize = "starbridge_mcp.vectorization.cli:main"
+vectorflow-studio = "starbridge_mcp.vectorization.app:main"
 
 [tool.setuptools.packages.find]
 include = ["starbridge_mcp*"]
