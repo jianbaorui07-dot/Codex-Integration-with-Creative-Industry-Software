@@ -582,14 +582,30 @@ def _write_artisan_svg(path: Path, scene: Any, paints: dict[int, Paint]) -> None
             stream.write(f'<g id="layer-{role}" data-role="{role}">\n')
             for shape in shapes:
                 paint = paints[shape.label]
-                opacity = "" if paint.alpha == 255 else f' fill-opacity="{_opacity(paint.alpha)}"'
                 parent = shape.parent_shape_id or "none"
-                stream.write(
+                metadata = (
                     f'<path id="{shape.shape_id}" data-role="{shape.role}" '
                     f'data-depth="{shape.depth}" data-parent="{parent}" '
-                    f'fill="{paint.fill}"{opacity} fill-rule="evenodd" stroke="none" '
-                    f'd="{" ".join(shape.path_parts)}"/>\n'
                 )
+                if shape.kind == "stroke":
+                    opacity = (
+                        "" if paint.alpha == 255 else f' stroke-opacity="{_opacity(paint.alpha)}"'
+                    )
+                    stream.write(
+                        f'{metadata}fill="none" stroke="{paint.fill}" '
+                        f'stroke-width="{shape.stroke_width:g}"{opacity} '
+                        'stroke-linecap="round" stroke-linejoin="round" '
+                        f'd="{" ".join(shape.path_parts)}"/>\n'
+                    )
+                else:
+                    opacity = (
+                        "" if paint.alpha == 255 else f' fill-opacity="{_opacity(paint.alpha)}"'
+                    )
+                    stream.write(
+                        f'{metadata}fill="{paint.fill}"{opacity} '
+                        'fill-rule="evenodd" stroke="none" '
+                        f'd="{" ".join(shape.path_parts)}"/>\n'
+                    )
             stream.write("</g>\n")
         stream.write("</svg>\n")
 
@@ -601,44 +617,39 @@ def _artisan_structure_manifest(scene: Any, paints: dict[int, Paint]) -> dict[st
     shapes = []
     for shape in scene.shapes:
         paint = paints[shape.label]
-        error_mean = (
-            shape.contour_error_total / shape.contour_error_samples
-            if shape.contour_error_samples
-            else 0.0
-        )
-        shapes.append(
-            {
-                "id": shape.shape_id,
-                "kind": shape.kind,
-                "role": shape.role,
-                "parent_id": shape.parent_shape_id,
-                "depth": shape.depth,
-                "paint": {
-                    "fill": paint.fill,
-                    "opacity": round(paint.alpha / 255, 4),
-                },
-                "area_px": round(shape.area, 2),
-                "area_ratio": round(shape.area / canvas_area, 6),
-                "bbox": {
-                    "x": shape.bbox[0],
-                    "y": shape.bbox[1],
-                    "width": shape.bbox[2],
-                    "height": shape.bbox[3],
-                },
-                "touches_canvas": shape.touches_canvas,
-                "hole_count": shape.hole_count,
-                "subpath_count": shape.subpath_count,
-                "anchors": shape.anchors,
-                "control_points": shape.control_points,
-                "curve_segments": shape.curve_segments,
-                "line_segments": shape.line_segments,
-                "mean_contour_error_px": round(error_mean, 4),
-                "maximum_contour_error_px": round(shape.maximum_contour_error, 4),
-                "maximum_area_error_ratio": round(shape.maximum_area_error_ratio, 6),
-                "compound_area_error_ratio": round(shape.compound_area_error_ratio, 6),
-                "quality_fallback_contours": shape.quality_fallback_contours,
-            }
-        )
+        record = {
+            "id": shape.shape_id,
+            "kind": shape.kind,
+            "role": shape.role,
+            "parent_id": shape.parent_shape_id,
+            "depth": shape.depth,
+            "bbox": list(shape.bbox),
+            "subpaths": shape.subpath_count,
+            "anchors": shape.anchors,
+            "controls": shape.control_points,
+        }
+        if shape.kind == "stroke":
+            record["paint"] = [paint.fill, shape.stroke_width, round(paint.alpha / 255, 4)]
+        else:
+            error_mean = (
+                shape.contour_error_total / shape.contour_error_samples
+                if shape.contour_error_samples
+                else 0.0
+            )
+            record.update(
+                {
+                    "paint": [paint.fill, round(paint.alpha / 255, 4)],
+                    "area_ratio": round(shape.area / canvas_area, 6),
+                    "touches_canvas": shape.touches_canvas,
+                    "holes": shape.hole_count,
+                    "mean_error_px": round(error_mean, 4),
+                    "maximum_error_px": round(shape.maximum_contour_error, 4),
+                    "maximum_area_error_ratio": round(shape.maximum_area_error_ratio, 6),
+                    "compound_area_error_ratio": round(shape.compound_area_error_ratio, 6),
+                    "quality_fallbacks": shape.quality_fallback_contours,
+                }
+            )
+        shapes.append(record)
     layers = [
         {
             "id": f"layer-{role}",
@@ -651,7 +662,7 @@ def _artisan_structure_manifest(scene: Any, paints: dict[int, Paint]) -> dict[st
         for index, (role, layer_shapes) in enumerate(scene.ordered_layers())
     ]
     core = {
-        "schema_version": 1,
+        "schema_version": 2,
         "strategy": scene.strategy,
         "canvas": {"width": scene.width, "height": scene.height},
         "layers": layers,
@@ -671,6 +682,11 @@ def _artisan_structure_manifest(scene: Any, paints: dict[int, Paint]) -> dict[st
             "local_analysis_only": True,
             "external_ai_calls": 0,
             "edit_reference_format": "<structure_ref> <shape-id|layer-id> <change>",
+            "preferred_reference": (
+                "stroke-batch-id"
+                if any(shape.kind == "stroke" for shape in scene.shapes)
+                else "shape-or-layer-id"
+            ),
         },
     }
 
@@ -760,6 +776,23 @@ def _markdown_report(report: dict[str, Any]) -> str:
                     f"- 省略的背景小岛：{vector['suppressed_foundation_islands']}",
                 ]
             )
+        if vector.get("centerline_candidate_used"):
+            lines.extend(
+                [
+                    "- Centerline stroke reconstruction: enabled",
+                    f"- Editable stroke batches: {vector['stroke_shape_count']}",
+                    f"- Centerline anchors: {vector['centerline_candidate_anchors']}",
+                    f"- Outline-fill anchors: {vector['outline_fill_anchors']}",
+                    f"- Additional anchor reduction: {vector['centerline_anchor_reduction_ratio']:.1%}",
+                    f"- Stroke raster precision: {vector['centerline_precision']:.1%}",
+                    f"- Stroke raster recall: {vector['centerline_recall']:.1%}",
+                    f"- Stroke raster Dice: {vector['centerline_dice']:.1%}",
+                ]
+            )
+        elif "centerline_candidate_used" in vector:
+            lines.append(
+                "- Centerline stroke reconstruction: quality gate rejected; outline-fill fallback retained"
+            )
     if report["warnings"]:
         lines.extend(["", "## 说明", "", *[f"- {item}" for item in report["warnings"]]])
     return "\n".join(lines) + "\n"
@@ -826,7 +859,12 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                 _write_artisan_svg(svg_path, artisan_scene, paints)
                 artisan_structure = _artisan_structure_manifest(artisan_scene, paints)
                 (staging / "artisan_structure.json").write_text(
-                    json.dumps(artisan_structure, ensure_ascii=False, indent=2) + "\n",
+                    json.dumps(
+                        artisan_structure,
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                    )
+                    + "\n",
                     encoding="utf-8",
                 )
             else:
@@ -865,6 +903,7 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
             or evidence["nested_path_count"] != vector_metrics["nested_shape_count"]
             or evidence["maximum_structure_depth"] != vector_metrics["maximum_structure_depth"]
             or evidence["semantic_role_counts"] != vector_metrics["design_role_counts"]
+            or evidence["stroke_path_count"] != vector_metrics.get("stroke_shape_count", 0)
         ):
             raise VectorizationError(
                 "structure_validation_failed",
@@ -929,6 +968,7 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                         "layer_count",
                         "shape_count",
                         "knockout_shape_count",
+                        "stroke_shape_count",
                         "maximum_subpaths_per_shape",
                         "root_shape_count",
                         "nested_shape_count",
@@ -944,6 +984,19 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                         "line_art_color_separation",
                         "suppressed_foundation_holes",
                         "suppressed_foundation_islands",
+                        "centerline_candidate_used",
+                        "centerline_rejection_reasons",
+                        "centerline_candidate_anchors",
+                        "centerline_candidate_points",
+                        "centerline_anchor_reduction_ratio",
+                        "centerline_point_reduction_ratio",
+                        "centerline_precision",
+                        "centerline_recall",
+                        "centerline_dice",
+                        "centerline_min_stroke_width",
+                        "centerline_max_stroke_width",
+                        "outline_fill_anchors",
+                        "outline_fill_points",
                     }
                 },
             },

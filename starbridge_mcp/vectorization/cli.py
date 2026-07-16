@@ -38,6 +38,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-subpaths", type=int, default=None)
     parser.add_argument("--max-points", type=int, default=None)
     parser.add_argument("--max-svg-size-mb", type=float, default=None)
+    parser.add_argument(
+        "--compact",
+        action="store_true",
+        help="Print an agent-friendly summary; the full report is still saved to disk.",
+    )
     return parser.parse_args(argv)
 
 
@@ -58,9 +63,62 @@ def config_from_args(args: argparse.Namespace) -> RunConfig:
     )
 
 
+def compact_result(result: dict[str, object]) -> dict[str, object]:
+    if not result.get("ok"):
+        return result
+    mode = result["mode"]
+    vector = result["vector"]
+    validation = result["validation"]
+    structure = result.get("artisan_structure")
+    assert isinstance(mode, dict)
+    assert isinstance(vector, dict)
+    assert isinstance(validation, dict)
+    summary_fields = (
+        "width",
+        "height",
+        "path_objects",
+        "subpaths",
+        "points",
+        "svg_bytes",
+        "anchor_reduction_ratio",
+        "centerline_candidate_used",
+        "centerline_anchor_reduction_ratio",
+        "centerline_precision",
+        "centerline_recall",
+        "centerline_dice",
+    )
+    artifacts = result.get("artifacts")
+    artifact_refs = (
+        [
+            {"role": item["role"], "path": item["path"]}
+            for item in artifacts
+            if isinstance(item, dict) and "role" in item and "path" in item
+        ]
+        if isinstance(artifacts, list)
+        else []
+    )
+    return {
+        "ok": True,
+        "mode": mode["key"],
+        "output_dir": result["output_dir"],
+        "vector": {key: vector[key] for key in summary_fields if key in vector},
+        "validation": {
+            "svg_verified": validation["svg_verified"],
+            "embedded_raster_count": validation["embedded_raster_count"],
+            "external_reference_count": validation["external_reference_count"],
+        },
+        "edit_ref": structure.get("structure_ref") if isinstance(structure, dict) else None,
+        "artifacts": artifact_refs,
+        "elapsed_seconds": result["elapsed_seconds"],
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     try:
-        result = run_vectorization(config_from_args(parse_args(argv)))
+        args = parse_args(argv)
+        result = run_vectorization(config_from_args(args))
+        if args.compact:
+            result = compact_result(result)
     except VectorizationError as exc:
         result = {"ok": False, "error": {"code": exc.code, "message": str(exc)}}
     except Exception:

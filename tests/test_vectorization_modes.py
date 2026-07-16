@@ -80,6 +80,7 @@ class VectorizationModeTests(unittest.TestCase):
     def test_default_cli_mode_is_smart_and_balanced_is_an_alias(self) -> None:
         parsed = cli.parse_args(["--input", "placeholder.png"])
         self.assertEqual(parsed.mode, "smart")
+        self.assertFalse(parsed.compact)
         self.assertEqual(
             engine._configured(RunConfig("placeholder.png", mode="balanced")).mode, "smart"
         )
@@ -139,6 +140,32 @@ class VectorizationModeTests(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertEqual(response["error"]["code"], "unsupported_input")
         self.assertNotIn(private_path.name, stdout.getvalue())
+
+    def test_compact_cli_returns_edit_refs_without_repeating_full_report(self) -> None:
+        source = self.make_exact_source()
+        stdout = io.StringIO()
+
+        with contextlib.redirect_stdout(stdout):
+            exit_code = cli.main(
+                [
+                    "--input",
+                    str(source),
+                    "--mode",
+                    "exact",
+                    "--reference-id",
+                    "compact-case",
+                    "--compact",
+                ]
+            )
+
+        response = json.loads(stdout.getvalue())
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(response["mode"], "exact")
+        self.assertTrue(response["validation"]["svg_verified"])
+        self.assertIn("output_dir", response)
+        self.assertNotIn("source", response)
+        self.assertNotIn("purpose_zh", stdout.getvalue())
+        self.assertLess(len(stdout.getvalue()), 1800)
 
 
 @unittest.skipUnless(HAS_DESIGN_RUNTIME, "smart-vector optional dependencies not installed")
@@ -240,7 +267,9 @@ class DesignVectorizationModeTests(VectorizationModeTests):
         self.assertNotIn("<image", svg)
         self.assertNotIn("base64", svg)
 
-    def test_artisan_line_art_builds_bounded_knockouts_and_stable_edit_reference(self) -> None:
+    def test_artisan_line_art_builds_quality_gated_centerlines_and_stable_reference(
+        self,
+    ) -> None:
         source = self.make_line_art_source()
 
         first = run_vectorization(
@@ -255,7 +284,13 @@ class DesignVectorizationModeTests(VectorizationModeTests):
         svg = (output / "vector.svg").read_text(encoding="utf-8")
         vector = first["vector"]
         self.assertTrue(vector["line_art_adaptation"])
-        self.assertGreater(vector["knockout_shape_count"], 0)
+        self.assertTrue(vector["centerline_candidate_used"])
+        self.assertGreater(vector["stroke_shape_count"], 0)
+        self.assertEqual(vector["knockout_shape_count"], 0)
+        self.assertLess(vector["centerline_candidate_anchors"], vector["outline_fill_anchors"])
+        self.assertGreaterEqual(vector["centerline_precision"], 0.6)
+        self.assertGreaterEqual(vector["centerline_recall"], 0.9)
+        self.assertGreaterEqual(vector["centerline_dice"], 0.72)
         self.assertLessEqual(vector["maximum_subpaths_per_shape"], 96)
         self.assertLessEqual(vector["maximum_contour_error_px"], vector["curve_error_tolerance_px"])
         self.assertLessEqual(
@@ -270,13 +305,88 @@ class DesignVectorizationModeTests(VectorizationModeTests):
         self.assertRegex(first["artisan_structure"]["structure_ref"], r"^artisan:[0-9a-f]{12}$")
         self.assertTrue(structure["interaction_contract"]["stable_shape_ids"])
         self.assertEqual(structure["interaction_contract"]["external_ai_calls"], 0)
+        self.assertEqual(
+            structure["interaction_contract"]["preferred_reference"], "stroke-batch-id"
+        )
         self.assertEqual(len(structure["shapes"]), vector["shape_count"])
         self.assertEqual(
             sum(item["shape_count"] for item in structure["layers"]),
             vector["shape_count"],
         )
         self.assertIn('<g id="layer-foundation" data-role="foundation">', svg)
+        self.assertIn('fill="none" stroke="#', svg)
+        self.assertIn('stroke-linecap="round" stroke-linejoin="round"', svg)
         self.assertNotIn(source.name, json.dumps(structure, ensure_ascii=False))
+
+    def test_artisan_centerline_quality_gate_retains_outline_fallback(self) -> None:
+        source = self.make_line_art_source()
+        rejected_metrics = {
+            "skeleton_pixels": 0,
+            "junction_pixels": 0,
+            "junction_clusters": 0,
+            "thinning_rounds": 0,
+            "centerline_raw_paths": 0,
+            "centerline_subpaths": 0,
+            "centerline_batches": 0,
+            "centerline_raw_anchors": 0,
+            "centerline_anchors": 0,
+            "centerline_simplify_epsilon": 1.0,
+            "centerline_precision": 0.0,
+            "centerline_recall": 0.0,
+            "centerline_dice": 0.0,
+            "centerline_min_stroke_width": 0.0,
+            "centerline_max_stroke_width": 0.0,
+        }
+
+        with mock.patch(
+            "starbridge_mcp.vectorization.artisan_strokes.trace_centerline_batches",
+            return_value=((), rejected_metrics),
+        ):
+            result = run_vectorization(
+                RunConfig(input_path=str(source), mode="artisan", reference_id="fallback")
+            )
+
+        vector = result["vector"]
+        self.assertFalse(vector["centerline_candidate_used"])
+        self.assertIn("no_centerline_paths", vector["centerline_rejection_reasons"])
+        self.assertEqual(vector["stroke_shape_count"], 0)
+        self.assertGreater(vector["knockout_shape_count"], 0)
+
+    def test_svg_verifier_accepts_open_round_centerlines_and_rejects_unsafe_style(
+        self,
+    ) -> None:
+        path = self.root / "centerline.svg"
+        path.write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" '
+            'viewBox="0 0 100 100">'
+            '<g id="layer-subject" data-role="subject">'
+            '<path id="shape-0001" data-role="subject" data-depth="0" '
+            'data-parent="none" fill="none" stroke="#bc5439" stroke-width="2.5" '
+            'stroke-linecap="round" stroke-linejoin="round" '
+            'd="M 10 20 C 30 10 50 30 70 20 L 90 40"/></g></svg>',
+            encoding="utf-8",
+        )
+
+        evidence = verify_svg_artifact(path, expected_width=100, expected_height=100)
+
+        self.assertEqual(evidence["stroke_path_count"], 1)
+        self.assertEqual(evidence["stroke_subpath_count"], 1)
+        self.assertEqual(evidence["anchor_point_count"], 3)
+        self.assertEqual(evidence["control_point_count"], 2)
+
+        for replacement in ('stroke-width="0"', 'stroke-linecap="square"'):
+            unsafe = self.root / f"unsafe-{replacement.split('=')[0]}.svg"
+            unsafe.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    'stroke-width="2.5"'
+                    if replacement.startswith("stroke-width")
+                    else 'stroke-linecap="round"',
+                    replacement,
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaises(SvgArtifactError):
+                verify_svg_artifact(unsafe)
 
     def test_svg_verifier_validates_structured_parent_references(self) -> None:
         path = self.root / "structured.svg"
