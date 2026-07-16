@@ -2,6 +2,19 @@
 
 本路线图记录 StarBridge 公开仓库的下一步方向。当前项目定位是 **Codex Computer Use + StarBridge MCP + Safety Verification Layer**：Computer Use 负责 GUI 观察和复现，MCP tools 负责结构化生产操作，Safety layer 负责脱敏、权限边界和发布前验证。
 
+## 产品化升级 P0–P3
+
+本轮 Windows 桌面、GitHub 文档和产品界面升级以 [P0 产品化审计](docs/PRODUCTIZATION_AUDIT.md) 为事实基线，按以下顺序实施：
+
+| 阶段 | 范围 | 完成证据 |
+| --- | --- | --- |
+| P0 | 仓库审计、能力分级、启动关系、安全边界和实施计划 | 审计文档、基线命令和未运行项记录 |
+| P1 | Tauri 2 桌面 MVP、PyInstaller sidecar、会话保护、首页/连接/诊断 | 本地开发构建、sidecar 生命周期和 health 测试 |
+| P2 | README/文档、官网多路由、桌面工作流/任务/证据、设计系统 | 页面/路由/可访问性/截图测试和统一文案 |
+| P3 | 安装器、版本、构建校验、签名/更新方案和发布流程 | 真实 Windows 安装、升级、卸载和回滚记录 |
+
+在安装包完成真实构建与首次启动验证前，不把“下载 Windows 版”描述为已经可用。
+
 ## v0.1.0
 
 - Adobe sandbox demo bridge
