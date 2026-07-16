@@ -91,6 +91,12 @@ def compact_result(result: dict[str, object]) -> dict[str, object]:
         "continuation_anchor_reduction_ratio",
         "continuation_batch_reduction_ratio",
         "continuation_mean_path_length_gain_ratio",
+        "semantic_candidate_used",
+        "semantic_intent_counts",
+        "semantic_pruned_micro_paths",
+        "semantic_anchor_reduction_ratio",
+        "semantic_point_reduction_ratio",
+        "semantic_batch_reduction_ratio",
     )
     artifacts = result.get("artifacts")
     artifact_refs = (
@@ -112,7 +118,14 @@ def compact_result(result: dict[str, object]) -> dict[str, object]:
             "embedded_raster_count": validation["embedded_raster_count"],
             "external_reference_count": validation["external_reference_count"],
         },
-        "edit_ref": structure.get("structure_ref") if isinstance(structure, dict) else None,
+        "edit_ref": (
+            structure.get("edit_ref", structure.get("structure_ref"))
+            if isinstance(structure, dict)
+            else None
+        ),
+        "edit_selectors": (
+            structure.get("intent_selectors", []) if isinstance(structure, dict) else []
+        ),
         "artifacts": artifact_refs,
         "elapsed_seconds": result["elapsed_seconds"],
     }

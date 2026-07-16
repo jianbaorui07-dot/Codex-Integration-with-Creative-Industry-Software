@@ -9,7 +9,7 @@
 
 StarBridge 是以**匠心矢量**为高级方向，并完整保留**智能矢量、轻量矢量和精确重建**三种基础模式的本地创意软件开源接入层。它把 **Codex Skill** 的任务路由、**StarBridge MCP** 的结构化工具，以及 **Adobe UXP / Node Proxy** 的桌面软件通道组合成一套可审计的工作流；ComfyUI、Photoshop、CAD / AutoCAD、Blender 和 CapCut / 剪映等桥仍完整保留。
 
-普通图片默认进入**智能矢量**；Logo、图标和纹样可选择**轻量矢量**；需要技术验证或像素存档时选择**精确重建**。在三种基础模式之上，新增加定位更高的 **匠心矢量**：保留关键角点，以更少锚点生成直线、三次贝塞尔轮廓和人工描线式开放描边，并按切线与线宽把交叉点两侧续接成长路径。基础、主体、细节和点睛形状组织为可引用的设计图层。所有模式都生成纯路径 SVG，并拒绝嵌入位图、脚本和外链；均不调用 Illustrator Image Trace。
+普通图片默认进入**智能矢量**；Logo、图标和纹样可选择**轻量矢量**；需要技术验证或像素存档时选择**精确重建**。在三种基础模式之上，新增加定位更高的 **匠心矢量**：保留关键角点，以更少锚点生成直线、三次贝塞尔轮廓和人工描线式开放描边，并按切线与线宽把交叉点两侧续接成长路径。第 5 轮会按局部几何把描边分成主轮廓、装饰纹、细节和微细节，分别选择简化与平滑强度；只有锚点、总点数、编辑批次和像素质量同时通过质量门时才采用。所有模式都生成纯路径 SVG，并拒绝嵌入位图、脚本和外链；均不调用 Illustrator Image Trace。
 
 ```mermaid
 flowchart LR
@@ -17,7 +17,7 @@ flowchart LR
   B --> C["智能：色块与轮廓平衡"]
   B --> D["轻量：减少颜色与节点"]
   B --> E["精确：RGBA 像素矩形重建"]
-  B --> H["匠心：少锚点 + 中心线描边 + 曲线续接"]
+  B --> H["匠心：少锚点 + 曲线续接 + 几何意图分级"]
   C --> F["纯路径 SVG + 预览 + 报告"]
   D --> F
   E --> F
@@ -32,7 +32,7 @@ flowchart LR
 | 状态 | 已覆盖能力 | 证据边界 |
 | --- | --- | --- |
 | stable（稳定） | MCP stdio、工具注册、resources / prompts、状态探针、路径脱敏、operation context、ComfyUI 队列/进度/任务快照与工作流验证；AutoCAD/DXF plan validate / dry-run / guarded write | Windows 与 Ubuntu CI 验证结构、schema、安全边界和 soft-exit |
-| primary（主推） | 匠心高级模式 + 智能、轻量、精确三种基础模式→已验证 SVG、PNG 预览和报告 | 匠心模式增加设计图层、稳定形状 ID、质量门控中心线描边、轮廓填充回退和紧凑结构引用；基础模式及旧入口完整保留 |
+| primary（主推） | 匠心高级模式 + 智能、轻量、精确三种基础模式→已验证 SVG、矢量采样预览和报告 | 匠心模式增加几何意图分级、稳定形状 ID、四级质量门控、轮廓填充回退和 6 KB 级局部编辑索引；基础模式及旧入口完整保留 |
 | experimental（其他 Adobe 协议） | Photoshop / Illustrator 规划、预检、受控执行接口；彩色矢量化 plan / validate / compare / repair_plan / execute；旧量化 SVG fallback | 兼容与研究用途；默认不作为普通图片转矢量入口；compare 只读取两个明确授权文件 |
 | UXP 安全执行已实现 | Photoshop `executeAsModal` 有界排队、取消状态、history commit / rollback、临时文档自动关闭 | 已通过 Node 模拟与协议测试；仍需已授权 Photoshop 桌面实测 |
 | planned（仍在推进） | repair plan → Illustrator execute → compare 的显式确认闭环、Adobe 桌面端端到端验收、Blender 确认渲染、CapCut 草稿骨架 | 未经本地运行证据，不宣称真实桌面控制已验证 |
@@ -46,7 +46,7 @@ Photoshop, Illustrator, Blender, and CapCut write flows are experimental or plan
 
 | 模式 | 产品定位 | 核心处理 |
 | --- | --- | --- |
-| **匠心矢量（高级）** | 艺术稿、品牌图形和接近人工绘制的高级交付 | 自适应少锚点、中心线描边、交叉点曲线续接、设计图层、三级质量门控与安全回退 |
+| **匠心矢量（高级）** | 艺术稿、品牌图形和接近人工绘制的高级交付 | 自适应少锚点、中心线描边、交叉点曲线续接、几何意图分级、四级质量门控与安全回退 |
 | **智能矢量（默认）** | 普通插画、海报素材和设计再编辑 | 24 色默认、透明度分级、小区域清理、复合轮廓、适度节点简化 |
 | **轻量矢量** | Logo、图标、纹样和流畅编辑 | 8 色默认、更强清理和简化、较低子路径/节点/文件大小上限 |
 | **精确重建** | 专业验证、技术证明和像素网格存档 | 不减色、不缩放；连续同色扫描段横向与纵向合并，重建后逐像素比对 |
@@ -123,9 +123,15 @@ npm.cmd run illustrator:vectorize -- --input "<input.png>" --mode exact --refere
 npm.cmd run illustrator:vectorize -- --input "<input.png>" --mode artisan --reference-id "reference"
 ```
 
-Codex 或其他代理调用时可追加 `--compact`，只返回关键质量指标、输出位置和匠心结构短引用；完整报告仍保存在本地输出目录，从源头减少重复上下文和 token。
+Codex 或其他代理调用时可追加 `--compact`，只返回关键质量指标、输出位置、`edit_ref` 和意图选择器；完整报告仍保存在本地输出目录，从源头减少重复上下文和 token。
 
-默认输出写入已被 Git 忽略的 `examples/output/vectorization/<reference-id>/<mode>/`，包含 `vector.svg`、`preview.png`、`parameters.json`、`vector_report.json` 和 `vector_report.md`；匠心模式额外生成 `artisan_structure.json`。结构文件提供稳定的 `shape-*` / `layer-*` 引用和短 `structure_ref`，后续修改可只描述局部对象，减少重复上下文和 token。报告只记录脱敏 hash 和仓库相对输出路径，不返回源文件名或绝对路径。
+默认输出写入已被 Git 忽略的 `examples/output/vectorization/<reference-id>/<mode>/`，包含 `vector.svg`、矢量采样 `preview.png`、参数和报告；匠心模式额外生成完整 `artisan_structure.json` 与紧凑 `artisan_edit_index.json`。后续修改优先使用 `edit_ref + intent:* / shape-*`，无需加载完整结构或重新描述图片。报告只记录脱敏 hash 和仓库相对输出路径，不返回源文件名或绝对路径。
+
+```powershell
+python -m starbridge_mcp.vectorization.artisan_edit `
+  --index "<output>/artisan_edit_index.json" `
+  --selector intent:flow-contour
+```
 
 桌面软件原型：
 

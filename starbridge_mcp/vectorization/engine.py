@@ -621,6 +621,7 @@ def _artisan_structure_manifest(scene: Any, paints: dict[int, Paint]) -> dict[st
             "id": shape.shape_id,
             "kind": shape.kind,
             "role": shape.role,
+            "geometric_intent": shape.geometric_intent,
             "parent_id": shape.parent_shape_id,
             "depth": shape.depth,
             "bbox": list(shape.bbox),
@@ -661,11 +662,29 @@ def _artisan_structure_manifest(scene: Any, paints: dict[int, Paint]) -> dict[st
         }
         for index, (role, layer_shapes) in enumerate(scene.ordered_layers())
     ]
+    intent_groups = [
+        {
+            "selector": f"intent:{intent}",
+            "object_count": len(members),
+            "anchors": sum(int(item["anchors"]) for item in members),
+            "subpaths": sum(int(item["subpaths"]) for item in members),
+        }
+        for intent in (
+            "flow-contour",
+            "ornament",
+            "detail",
+            "micro-detail",
+            "unclassified",
+            "paint-region",
+        )
+        if (members := [item for item in shapes if item["geometric_intent"] == intent])
+    ]
     core = {
-        "schema_version": 2,
+        "schema_version": 3,
         "strategy": scene.strategy,
         "canvas": {"width": scene.width, "height": scene.height},
         "layers": layers,
+        "intent_groups": intent_groups,
         "shapes": shapes,
     }
     canonical = json.dumps(core, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
@@ -678,16 +697,58 @@ def _artisan_structure_manifest(scene: Any, paints: dict[int, Paint]) -> dict[st
         "structure_ref": f"artisan:{digest[:12]}",
         "interaction_contract": {
             "stable_shape_ids": True,
+            "stable_intent_selectors": True,
             "compact_reference": f"artisan:{digest[:12]}",
             "local_analysis_only": True,
             "external_ai_calls": 0,
-            "edit_reference_format": "<structure_ref> <shape-id|layer-id> <change>",
+            "edit_reference_format": (
+                "<structure_ref> <intent:selector|shape-id|layer-id> <change>"
+            ),
             "preferred_reference": (
-                "stroke-batch-id"
+                "intent-selector-or-shape-id"
                 if any(shape.kind == "stroke" for shape in scene.shapes)
                 else "shape-or-layer-id"
             ),
         },
+    }
+
+
+def _artisan_edit_index(structure: dict[str, Any]) -> dict[str, Any]:
+    core = {
+        "schema_version": 1,
+        "structure_ref": structure["structure_ref"],
+        "strategy": structure["strategy"],
+        "selectors": [
+            [
+                item["selector"],
+                item["object_count"],
+                item["anchors"],
+                item["subpaths"],
+            ]
+            for item in structure["intent_groups"]
+        ],
+        "objects": [
+            [
+                item["id"],
+                item["geometric_intent"],
+                item["bbox"],
+                item["anchors"],
+                item["subpaths"],
+            ]
+            for item in structure["shapes"]
+        ],
+        "edit_reference_format": "<edit_ref> <intent:selector|shape-id> <change>",
+    }
+    canonical = json.dumps(core, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
+    digest = hashlib.sha256(canonical).hexdigest()
+    return {
+        **core,
+        "edit_index_sha256": digest,
+        "edit_ref": f"edit:{digest[:12]}",
+        "local_analysis_only": True,
+        "external_ai_calls": 0,
     }
 
 
@@ -696,6 +757,34 @@ def _design_preview(labels: Any, paints: dict[int, Paint]) -> Image.Image:
     for label in [int(value) for value in np.unique(labels) if value >= 0]:
         paint = paints[label]
         rgba[labels == label] = (paint.red, paint.green, paint.blue, paint.alpha)
+    return Image.fromarray(rgba, mode="RGBA")
+
+
+def _artisan_preview(scene: Any, paints: dict[int, Paint], fallback: Image.Image) -> Image.Image:
+    strokes = [shape for shape in scene.shapes if shape.kind == "stroke"]
+    foundations = [shape for shape in scene.shapes if shape.role == "foundation"]
+    if not strokes or len(foundations) != 1:
+        return fallback
+    foundation_paint = paints[foundations[0].label]
+    rgba = np.empty((scene.height, scene.width, 4), dtype=np.uint8)
+    rgba[:, :] = (
+        foundation_paint.red,
+        foundation_paint.green,
+        foundation_paint.blue,
+        foundation_paint.alpha,
+    )
+    for shape in strokes:
+        paint = paints[shape.label]
+        if not shape.preview_paths:
+            continue
+        cv2.polylines(
+            rgba,
+            list(shape.preview_paths),
+            False,
+            (paint.red, paint.green, paint.blue, paint.alpha),
+            max(1, round(float(shape.stroke_width))),
+            cv2.LINE_AA,
+        )
     return Image.fromarray(rgba, mode="RGBA")
 
 
@@ -804,6 +893,22 @@ def _markdown_report(report: dict[str, Any]) -> str:
                 lines.append(
                     "- Junction curve continuation: quality gate rejected; iteration-3 centerlines retained"
                 )
+            if vector.get("semantic_candidate_used"):
+                intent_counts = vector["semantic_intent_counts"]
+                lines.extend(
+                    [
+                        "- 几何意图分级：已通过质量门",
+                        f"- 主轮廓 / 装饰纹 / 细节 / 微细节："
+                        f"{intent_counts['flow-contour']} / {intent_counts['ornament']} / "
+                        f"{intent_counts['detail']} / {intent_counts['micro-detail']}",
+                        f"- 覆盖感知微短枝清理：{vector['semantic_pruned_micro_paths']}",
+                        f"- 本轮额外减少锚点：{vector['semantic_anchor_reduction_ratio']:.1%}",
+                        f"- 本轮额外减少总点数：{vector['semantic_point_reduction_ratio']:.1%}",
+                        f"- 本轮编辑批次减少：{vector['semantic_batch_reduction_ratio']:.1%}",
+                    ]
+                )
+            elif "semantic_candidate_used" in vector:
+                lines.append("- 几何意图分级：质量门拒绝，保留第 4 轮曲线续接结果")
         elif "centerline_candidate_used" in vector:
             lines.append(
                 "- Centerline stroke reconstruction: quality gate rejected; outline-fill fallback retained"
@@ -833,6 +938,8 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
         warnings_list: list[str] = []
         exact_validation: dict[str, Any] | None = None
         artisan_structure: dict[str, Any] | None = None
+        artisan_edit_index: dict[str, Any] | None = None
+        artisan_scene: Any | None = None
 
         if preset.mode == "exact":
             rectangles = _merge_exact_rectangles(source_image, preset)
@@ -873,9 +980,19 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                     raise VectorizationError("vector_too_complex", str(exc)) from exc
                 _write_artisan_svg(svg_path, artisan_scene, paints)
                 artisan_structure = _artisan_structure_manifest(artisan_scene, paints)
+                artisan_edit_index = _artisan_edit_index(artisan_structure)
                 (staging / "artisan_structure.json").write_text(
                     json.dumps(
                         artisan_structure,
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                (staging / "artisan_edit_index.json").write_text(
+                    json.dumps(
+                        artisan_edit_index,
                         ensure_ascii=False,
                         separators=(",", ":"),
                     )
@@ -887,7 +1004,10 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                 _write_design_svg(svg_path, work_image.width, work_image.height, paths)
             vector_metrics["cleaned_small_regions"] = cleaned_regions
             vector_metrics.update(line_art_metrics)
-            _design_preview(labels, paints).save(preview_path, format="PNG")
+            processed_preview = _design_preview(labels, paints)
+            if artisan_scene is not None:
+                processed_preview = _artisan_preview(artisan_scene, paints, processed_preview)
+            processed_preview.save(preview_path, format="PNG")
             if preset.mode == "artisan":
                 warnings_list.append(
                     "匠心模式使用少量锚点、贝塞尔曲线和本地构图层级推断；当前角色是几何设计角色，不宣称识别人脸、文字等内容语义。"
@@ -990,7 +1110,9 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                         "maximum_structure_depth",
                         "hole_count",
                         "design_role_counts",
+                        "geometric_intent_shape_counts",
                         "stable_shape_references",
+                        "stable_intent_selectors",
                         "external_ai_calls",
                         "line_art_adaptation",
                         "ink_pixel_ratio",
@@ -1036,6 +1158,29 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                         "continuation_precision_delta",
                         "continuation_recall_delta",
                         "continuation_dice_delta",
+                        "semantic_candidate_used",
+                        "semantic_rejection_reasons",
+                        "semantic_intent_counts",
+                        "semantic_pruned_micro_paths",
+                        "semantic_pruned_micro_anchors",
+                        "semantic_baseline_subpaths",
+                        "semantic_candidate_subpaths",
+                        "semantic_path_reduction_ratio",
+                        "semantic_baseline_anchors",
+                        "semantic_candidate_anchors",
+                        "semantic_anchor_reduction_ratio",
+                        "semantic_baseline_points",
+                        "semantic_candidate_points",
+                        "semantic_point_reduction_ratio",
+                        "semantic_baseline_batches",
+                        "semantic_candidate_batches",
+                        "semantic_batch_reduction_ratio",
+                        "semantic_precision_delta",
+                        "semantic_recall_delta",
+                        "semantic_dice_delta",
+                        "semantic_minimum_epsilon",
+                        "semantic_maximum_epsilon",
+                        "semantic_quality_thresholds",
                     }
                 },
             },
@@ -1053,6 +1198,12 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                     "structure_sha256": artisan_structure["structure_sha256"],
                     "strategy": artisan_structure["strategy"],
                     "stable_shape_ids": True,
+                    "stable_intent_selectors": True,
+                    "intent_selectors": [
+                        item["selector"] for item in artisan_structure["intent_groups"]
+                    ],
+                    "edit_ref": artisan_edit_index["edit_ref"],
+                    "edit_index_sha256": artisan_edit_index["edit_index_sha256"],
                     "external_ai_calls": 0,
                 }
                 if artisan_structure is not None
@@ -1086,6 +1237,7 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
         ]
         if artisan_structure is not None:
             final_structure = output_dir / "artisan_structure.json"
+            final_edit_index = output_dir / "artisan_edit_index.json"
             report["artifacts"].append(
                 {
                     **_artifact(
@@ -1097,6 +1249,17 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                 }
             )
             publish_filenames.append("artisan_structure.json")
+            report["artifacts"].append(
+                {
+                    **_artifact(
+                        staging / "artisan_edit_index.json",
+                        "artisan_compact_edit_index",
+                        "application/json",
+                    ),
+                    "path": repo_relative(final_edit_index),
+                }
+            )
+            publish_filenames.append("artisan_edit_index.json")
         report_json = staging / "vector_report.json"
         report_markdown = staging / "vector_report.md"
         report_json.write_text(

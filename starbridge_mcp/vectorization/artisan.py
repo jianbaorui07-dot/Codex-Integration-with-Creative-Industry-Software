@@ -65,6 +65,8 @@ class ArtisanShape:
     parent_shape_id: str | None = None
     depth: int = 0
     role: str = "accent"
+    geometric_intent: str = "paint-region"
+    preview_paths: tuple[Any, ...] = ()
 
     @property
     def subpath_count(self) -> int:
@@ -488,6 +490,17 @@ def _scene_metrics(
     area_error_total = sum(shape.area_error_total for shape in shapes)
     area_error_weight = sum(shape.area_error_weight for shape in shapes)
     role_counts = {role: sum(shape.role == role for shape in shapes) for role in ARTISAN_ROLE_ORDER}
+    intent_names = (
+        "flow-contour",
+        "ornament",
+        "detail",
+        "micro-detail",
+        "unclassified",
+        "paint-region",
+    )
+    intent_shape_counts = {
+        intent: sum(shape.geometric_intent == intent for shape in shapes) for intent in intent_names
+    }
     return {
         "path_objects": len(shapes),
         "subpaths": sum(shape.subpath_count for shape in shapes),
@@ -538,7 +551,9 @@ def _scene_metrics(
         "suppressed_foundation_holes": suppressed_foundation_holes,
         "suppressed_foundation_islands": suppressed_foundation_islands,
         "design_role_counts": role_counts,
+        "geometric_intent_shape_counts": intent_shape_counts,
         "stable_shape_references": True,
+        "stable_intent_selectors": True,
         "external_ai_calls": 0,
     }
 
@@ -673,7 +688,12 @@ def _centerline_scene_candidate(
         shape_id = f"shape-{next_id:04d}"
         used_ids.add(shape_id)
         next_id += 1
-        role = "subject" if batch is largest_batch else "detail"
+        role = {
+            "flow-contour": "subject",
+            "ornament": "detail",
+            "detail": "detail",
+            "micro-detail": "accent",
+        }.get(batch.intent, "subject" if batch is largest_batch else "detail")
         shapes.append(
             ArtisanShape(
                 shape_id=shape_id,
@@ -707,6 +727,8 @@ def _centerline_scene_candidate(
                 parent_shape_id=foundation.shape_id,
                 depth=1,
                 role=role,
+                geometric_intent=batch.intent,
+                preview_paths=batch.preview_paths,
             )
         )
 
@@ -715,9 +737,13 @@ def _centerline_scene_candidate(
         height=fill_scene.height,
         shapes=tuple(shapes),
         strategy=(
-            "curve-continuation-v2"
-            if centerline_metrics.get("continuation_candidate_used")
-            else "centerline-stroke-v1"
+            "geometric-intent-v3"
+            if centerline_metrics.get("semantic_candidate_used")
+            else (
+                "curve-continuation-v2"
+                if centerline_metrics.get("continuation_candidate_used")
+                else "centerline-stroke-v1"
+            )
         ),
     )
     metrics = _scene_metrics(
