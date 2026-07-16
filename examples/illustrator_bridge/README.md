@@ -1,8 +1,24 @@
 # Illustrator / AI 矢量文件桥
 
-这个 `prototype` 桥主推精确像素矢量重建：单张授权 PNG/JPEG 的原始 RGBA 像素被重建为矩形复合 path，验证 SVG 后再由 Illustrator 存储为 AI，不使用 Image Trace。既有原生 Image Trace 协议和 headless OpenCV 量化 fallback 继续保留用于兼容、研究和测试。
+这个 `prototype` 桥现在提供智能、轻量、精确三种模式，统一生成经过验证的纯路径 SVG，不使用 Image Trace。既有精确模式兼容脚本、原生 Image Trace 协议和旧 headless OpenCV 量化实验继续保留用于证据、兼容、研究和测试。
 
-## 默认：精确像素 SVG → Illustrator AI
+## 默认：智能矢量
+
+```powershell
+python -m pip install -e ".[vectorization]"
+npm.cmd run illustrator:vectorize -- --input "<input.png>" --reference-id reference
+```
+
+使用 `--mode lightweight` 生成更少颜色、路径和节点；使用 `--mode exact` 执行 RGBA 像素网格重建和逐像素验证。统一输出位于 `examples/output/vectorization/<reference-id>/<mode>/`。
+
+也可运行桌面原型：
+
+```powershell
+python -m pip install -e ".[vector-app]"
+npm.cmd run vector-app:start
+```
+
+## 兼容：精确像素 SVG → Illustrator AI
 
 ```powershell
 python -m pip install -e ".[illustrator-vector]"

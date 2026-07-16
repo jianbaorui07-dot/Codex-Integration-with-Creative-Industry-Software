@@ -2,6 +2,13 @@
 
 ## Unreleased / Optimizations
 
+### 2026-07-16 — Three-mode vector engine and desktop prototype
+
+* Added one verified vectorization core with Smart Vector as the default, Lightweight Vector for low-complexity editing, and Exact Reconstruction for RGBA pixel proof.
+* Added deterministic local SVG/PNG/report outputs, path/point/file-size limits, vertically merged exact rectangles, and exact pixel validation.
+* Added a PySide6 desktop prototype with image drag-and-drop, three mode cards, parameter controls, background conversion, side-by-side previews, result metrics, and local output-folder access.
+* Preserved the previous exact and legacy quantized commands as compatibility entry points; Illustrator remains an optional explicit desktop handoff.
+
 ### 2026-07-15 — Exact pixel-vector reconstruction becomes primary
 
 * Added `exact_pixel_vector.py`, which rebuilds one explicit PNG/JPEG RGBA grid as grouped rectangle compound paths, verifies a raster-free SVG, and hands it to Illustrator for Save As AI without Image Trace.
