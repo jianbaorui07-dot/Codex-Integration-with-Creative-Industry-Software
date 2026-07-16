@@ -2,6 +2,15 @@
 
 ## Unreleased / Optimizations
 
+### 2026-07-16 — Artisan Vector iteration 3
+
+* Added deterministic local centerline extraction for thin line art, producing editable open cubic strokes with round caps, round joins, and bounded variable widths.
+* Added quality-gated selection against the existing outline-fill result; insufficient anchor reduction, precision, recall, Dice similarity, or complexity automatically retains the previous safe output.
+* Extended the fail-closed SVG verifier with a separate open-stroke contract while preserving the original closed-fill contract.
+* Added compact stroke-batch edit references so follow-up changes can target a stable local object without repeating the image context.
+* Added a `--compact` CLI response and minified edit manifest; the local sample structure index dropped from 88,720 to 39,756 bytes while the full report remains on disk.
+* Validated the authorized local traditional-pattern sample without committing source or outputs: 45,029 anchors, 22.44% fewer than the iteration-2 outline fill and 38.39% fewer than the 73,086-anchor baseline, with 94.25% recall, 75.00% Dice, and zero external AI calls.
+
 ### 2026-07-16 — Artisan Vector iteration 2
 
 * Added deterministic design layers, stable shape ids, parent/depth metadata, and a compact structure reference for low-token follow-up edits.
