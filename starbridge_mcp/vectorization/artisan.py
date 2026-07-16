@@ -61,6 +61,7 @@ class ArtisanShape:
     adapted_contours: int
     quality_fallback_contours: int
     kind: str = "paint"
+    stroke_width: float | None = None
     parent_shape_id: str | None = None
     depth: int = 0
     role: str = "accent"
@@ -528,6 +529,7 @@ def _scene_metrics(
         "layer_count": len(scene.ordered_layers()),
         "shape_count": len(shapes),
         "knockout_shape_count": sum(shape.kind == "knockout" for shape in shapes),
+        "stroke_shape_count": sum(shape.kind == "stroke" for shape in shapes),
         "maximum_subpaths_per_shape": max((shape.subpath_count for shape in shapes), default=0),
         "root_shape_count": sum(shape.parent_shape_id is None for shape in shapes),
         "nested_shape_count": sum(shape.parent_shape_id is not None for shape in shapes),
@@ -587,6 +589,156 @@ def _shape_from_fitted(
         kind=kind,
         parent_shape_id=parent_shape_id,
     )
+
+
+def _centerline_scene_candidate(
+    labels: Any,
+    preset: VectorPreset,
+    fill_scene: ArtisanScene,
+    fill_metrics: dict[str, Any],
+    *,
+    foundation_labels: set[int],
+    skipped_contours: int,
+    suppressed_foundation_holes: int,
+    suppressed_foundation_islands: int,
+    error_tolerance: float,
+) -> tuple[ArtisanScene, dict[str, Any]]:
+    from .artisan_strokes import trace_centerline_batches
+
+    ink_labels = [
+        label
+        for label in (int(value) for value in np.unique(labels) if value >= 0)
+        if label not in foundation_labels
+    ]
+    foundation_shapes = [shape for shape in fill_scene.shapes if shape.role == "foundation"]
+    if len(ink_labels) != 1 or len(foundation_shapes) != 1:
+        return fill_scene, fill_metrics
+
+    batches, centerline_metrics = trace_centerline_batches(labels == ink_labels[0], preset)
+    foundation = foundation_shapes[0]
+    candidate_anchors = foundation.anchors + sum(batch.anchors for batch in batches)
+    candidate_controls = foundation.control_points + sum(batch.control_points for batch in batches)
+    candidate_subpaths = foundation.subpath_count + sum(len(batch.path_parts) for batch in batches)
+    fill_anchors = int(fill_metrics["anchors"])
+    fill_points = fill_anchors + int(fill_metrics["control_points"])
+    candidate_points = candidate_anchors + candidate_controls
+    anchor_reduction = max(0.0, 1.0 - candidate_anchors / fill_anchors) if fill_anchors else 0.0
+    point_reduction = max(0.0, 1.0 - candidate_points / fill_points) if fill_points else 0.0
+    rejection_reasons: list[str] = []
+    if not batches:
+        rejection_reasons.append("no_centerline_paths")
+    if anchor_reduction < 0.08:
+        rejection_reasons.append("anchor_reduction_below_8_percent")
+    if float(centerline_metrics["centerline_precision"]) < 0.6:
+        rejection_reasons.append("precision_below_0_60")
+    if float(centerline_metrics["centerline_recall"]) < 0.9:
+        rejection_reasons.append("recall_below_0_90")
+    if float(centerline_metrics["centerline_dice"]) < 0.72:
+        rejection_reasons.append("dice_below_0_72")
+    if candidate_subpaths > preset.max_subpaths:
+        rejection_reasons.append("subpath_limit_exceeded")
+    if candidate_points > preset.max_points:
+        rejection_reasons.append("point_limit_exceeded")
+
+    candidate_summary = {
+        **centerline_metrics,
+        "centerline_candidate_anchors": candidate_anchors,
+        "centerline_candidate_points": candidate_points,
+        "centerline_anchor_reduction_ratio": round(anchor_reduction, 4),
+        "centerline_point_reduction_ratio": round(point_reduction, 4),
+        "outline_fill_anchors": fill_anchors,
+        "outline_fill_points": fill_points,
+        "centerline_quality_thresholds": {
+            "minimum_anchor_reduction_ratio": 0.08,
+            "minimum_precision": 0.6,
+            "minimum_recall": 0.9,
+            "minimum_dice": 0.72,
+        },
+    }
+    if rejection_reasons:
+        return fill_scene, {
+            **fill_metrics,
+            **candidate_summary,
+            "centerline_candidate_used": False,
+            "centerline_rejection_reasons": rejection_reasons,
+        }
+
+    largest_batch = max(batches, key=lambda batch: batch.length_px)
+    shapes = [foundation]
+    used_ids = {foundation.shape_id}
+    next_id = 1
+    for batch in batches:
+        while f"shape-{next_id:04d}" in used_ids:
+            next_id += 1
+        shape_id = f"shape-{next_id:04d}"
+        used_ids.add(shape_id)
+        next_id += 1
+        role = "subject" if batch is largest_batch else "detail"
+        shapes.append(
+            ArtisanShape(
+                shape_id=shape_id,
+                label=ink_labels[0],
+                path_parts=batch.path_parts,
+                outer_contour=batch.representative_path,
+                outer_area=batch.length_px * batch.stroke_width,
+                area=batch.length_px * batch.stroke_width,
+                bbox=batch.bbox,
+                touches_canvas=False,
+                hole_count=0,
+                anchors=batch.anchors,
+                baseline_anchors=batch.raw_anchors,
+                control_points=batch.control_points,
+                curve_segments=batch.curve_segments,
+                line_segments=batch.line_segments,
+                corner_anchors=batch.corner_anchors,
+                smooth_anchors=batch.smooth_anchors,
+                source_contour_points=batch.source_points,
+                contour_error_total=0.0,
+                contour_error_samples=0,
+                maximum_contour_error=0.0,
+                area_error_total=0.0,
+                area_error_weight=0.0,
+                maximum_area_error_ratio=0.0,
+                compound_area_error_ratio=0.0,
+                adapted_contours=len(batch.path_parts),
+                quality_fallback_contours=0,
+                kind="stroke",
+                stroke_width=batch.stroke_width,
+                parent_shape_id=foundation.shape_id,
+                depth=1,
+                role=role,
+            )
+        )
+
+    scene = ArtisanScene(
+        width=fill_scene.width,
+        height=fill_scene.height,
+        shapes=tuple(shapes),
+        strategy="centerline-stroke-v1",
+    )
+    metrics = _scene_metrics(
+        scene,
+        skipped_contours=skipped_contours,
+        suppressed_foundation_holes=suppressed_foundation_holes,
+        suppressed_foundation_islands=suppressed_foundation_islands,
+        error_tolerance=error_tolerance,
+    )
+    metrics.update(candidate_summary)
+    metrics.update(
+        {
+            "baseline_polygon_anchors": fill_metrics["baseline_polygon_anchors"],
+            "anchor_reduction_ratio": round(
+                max(
+                    0.0,
+                    1.0 - candidate_anchors / int(fill_metrics["baseline_polygon_anchors"]),
+                ),
+                4,
+            ),
+            "centerline_candidate_used": True,
+            "centerline_rejection_reasons": [],
+        }
+    )
+    return scene, metrics
 
 
 def trace_artisan_scene(
@@ -748,14 +900,28 @@ def trace_artisan_scene(
             "Artisan reconstruction removed every region; lower the cleanup threshold."
         )
     _assign_shape_structure(shapes, width, height)
-    scene = ArtisanScene(width=width, height=height, shapes=tuple(shapes))
-    metrics = _scene_metrics(
-        scene,
+    fill_scene = ArtisanScene(width=width, height=height, shapes=tuple(shapes))
+    fill_metrics = _scene_metrics(
+        fill_scene,
         skipped_contours=skipped,
         suppressed_foundation_holes=suppressed_foundation_holes,
         suppressed_foundation_islands=suppressed_foundation_islands,
         error_tolerance=error_tolerance,
     )
+    if split_line_art_knockouts:
+        scene, metrics = _centerline_scene_candidate(
+            labels,
+            preset,
+            fill_scene,
+            fill_metrics,
+            foundation_labels=foundation_labels,
+            skipped_contours=skipped,
+            suppressed_foundation_holes=suppressed_foundation_holes,
+            suppressed_foundation_islands=suppressed_foundation_islands,
+            error_tolerance=error_tolerance,
+        )
+    else:
+        scene, metrics = fill_scene, fill_metrics
     if metrics["subpaths"] > preset.max_subpaths or (
         metrics["anchors"] + metrics["control_points"] > preset.max_points
     ):

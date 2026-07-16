@@ -23,6 +23,10 @@ _ALLOWED_ATTRIBUTES = {
         "fill-opacity",
         "fill-rule",
         "stroke",
+        "stroke-width",
+        "stroke-opacity",
+        "stroke-linecap",
+        "stroke-linejoin",
     },
 }
 _HEX_COLOR = re.compile(r"#[0-9a-fA-F]{6}\Z")
@@ -98,7 +102,7 @@ def _tokenize_path(path_data: str) -> list[str]:
     return tokens
 
 
-def _path_metrics(path_data: str) -> dict[str, Any]:
+def _path_metrics(path_data: str, *, require_closed: bool) -> dict[str, Any]:
     tokens = _tokenize_path(path_data)
     index = 0
     subpaths = 0
@@ -135,7 +139,7 @@ def _path_metrics(path_data: str) -> dict[str, Any]:
         segment_count = 0
         last_endpoint = start
 
-        while index < len(tokens) and tokens[index] != "Z":
+        while index < len(tokens) and tokens[index] not in {"M", "Z"}:
             command = tokens[index]
             index += 1
             if command == "L":
@@ -158,18 +162,28 @@ def _path_metrics(path_data: str) -> dict[str, Any]:
                 )
             segment_count += 1
 
-        if index >= len(tokens) or tokens[index] != "Z":
-            raise SvgArtifactError("invalid_path_data", "Every SVG subpath must be closed with Z.")
-        index += 1
-        if segment_count < 2:
+        closed = index < len(tokens) and tokens[index] == "Z"
+        if closed:
+            index += 1
+        if require_closed and not closed:
+            raise SvgArtifactError("invalid_path_data", "Every fill subpath must be closed with Z.")
+        if not require_closed and closed:
             raise SvgArtifactError(
-                "invalid_path_data", "Every SVG subpath must contain at least two segments."
+                "invalid_path_data", "Editable centerline strokes must remain open paths."
+            )
+        minimum_segments = 2 if require_closed else 1
+        if segment_count < minimum_segments:
+            raise SvgArtifactError(
+                "invalid_path_data",
+                f"Every SVG subpath must contain at least {minimum_segments} segment(s).",
             )
         if last_endpoint == start:
             subpath_anchors -= 1
-        if subpath_anchors < 3:
+        minimum_anchors = 3 if require_closed else 2
+        if subpath_anchors < minimum_anchors:
             raise SvgArtifactError(
-                "invalid_path_data", "Every SVG subpath must contain at least three anchors."
+                "invalid_path_data",
+                f"Every SVG subpath must contain at least {minimum_anchors} anchors.",
             )
         subpaths += 1
         anchor_count += subpath_anchors
@@ -300,6 +314,8 @@ def verify_svg_artifact(
     control_point_count = 0
     curve_segment_count = 0
     line_segment_count = 0
+    stroke_path_count = 0
+    stroke_subpath_count = 0
     shape_depths: dict[str, int] = {}
     shape_parents: dict[str, str | None] = {}
     semantic_role_counts = dict.fromkeys(_ARTISAN_ROLES, 0)
@@ -338,16 +354,62 @@ def verify_svg_artifact(
             continue
         path_data = (element.get("d") or "").strip()
         fill = (element.get("fill") or "").strip()
+        stroke = (element.get("stroke") or "").strip()
         if not path_data:
             raise SvgArtifactError("invalid_path_data", "SVG path data cannot be empty.")
-        metrics = _path_metrics(path_data)
-        if not _HEX_COLOR.fullmatch(fill):
-            raise SvgArtifactError("invalid_fill", "SVG paths must use explicit RGB fills.")
-        opacity = _fill_opacity(element.get("fill-opacity"))
-        if element.get("fill-rule") != "evenodd" or element.get("stroke") != "none":
-            raise SvgArtifactError(
-                "invalid_path_style", "SVG paths must use the generated editable fill contract."
-            )
+        is_centerline = fill == "none"
+        if is_centerline:
+            if not _HEX_COLOR.fullmatch(stroke):
+                raise SvgArtifactError(
+                    "invalid_path_style", "Centerline strokes must use an explicit RGB stroke."
+                )
+            try:
+                stroke_width = float(element.get("stroke-width") or "")
+            except ValueError as exc:
+                raise SvgArtifactError(
+                    "invalid_path_style", "Centerline stroke width must be numeric."
+                ) from exc
+            if not math.isfinite(stroke_width) or not 0 < stroke_width <= 64:
+                raise SvgArtifactError(
+                    "invalid_path_style", "Centerline stroke width must be between 0 and 64."
+                )
+            if (
+                element.get("stroke-linecap") != "round"
+                or element.get("stroke-linejoin") != "round"
+                or element.get("fill-rule") is not None
+                or element.get("fill-opacity") is not None
+            ):
+                raise SvgArtifactError(
+                    "invalid_path_style",
+                    "Centerline strokes must use round caps and joins without fill styling.",
+                )
+            opacity = _fill_opacity(element.get("stroke-opacity"))
+            metrics = _path_metrics(path_data, require_closed=False)
+            color = stroke
+            stroke_path_count += 1
+            stroke_subpath_count += int(metrics["subpaths"])
+        else:
+            if not _HEX_COLOR.fullmatch(fill):
+                raise SvgArtifactError("invalid_fill", "SVG paths must use explicit RGB fills.")
+            if any(
+                element.get(attribute) is not None
+                for attribute in (
+                    "stroke-width",
+                    "stroke-opacity",
+                    "stroke-linecap",
+                    "stroke-linejoin",
+                )
+            ):
+                raise SvgArtifactError(
+                    "invalid_path_style", "Fill paths cannot declare centerline stroke styling."
+                )
+            opacity = _fill_opacity(element.get("fill-opacity"))
+            if element.get("fill-rule") != "evenodd" or stroke != "none":
+                raise SvgArtifactError(
+                    "invalid_path_style", "SVG paths must use the generated editable fill contract."
+                )
+            metrics = _path_metrics(path_data, require_closed=True)
+            color = fill
         structure_values = (
             element.get("id"),
             element.get("data-role"),
@@ -393,8 +455,8 @@ def verify_svg_artifact(
                 "path_outside_canvas", "SVG path coordinates must stay inside the canvas."
             )
         paths.append(element)
-        fills.add(fill.lower())
-        paints.add((fill.lower(), opacity))
+        fills.add(color.lower())
+        paints.add((color.lower(), opacity))
         subpath_count += metrics["subpaths"]
         point_count += metrics["point_count"]
         anchor_point_count += metrics["anchor_count"]
@@ -437,6 +499,8 @@ def verify_svg_artifact(
         "control_point_count": control_point_count,
         "curve_segment_count": curve_segment_count,
         "line_segment_count": line_segment_count,
+        "stroke_path_count": stroke_path_count,
+        "stroke_subpath_count": stroke_subpath_count,
         "color_count": len(fills),
         "paint_count": len(paints),
         "layer_count": len(group_roles),
