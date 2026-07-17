@@ -23,7 +23,9 @@ from starbridge_mcp.backend import (
 )
 from starbridge_mcp.core.app_data import APP_DATA_ENV, resolve_app_data_paths
 
-TEST_TOKEN = "starbridge-test-session-token-000000000000000000000001"
+TEST_SESSION_CREDENTIAL = "-".join(
+    ("starbridge", "test", "session", "credential", "000000000000000000000001")
+)
 
 
 class DesktopBackendSecurityTests(unittest.TestCase):
@@ -35,7 +37,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
     def desktop_backend(self, **kwargs: object) -> StarBridgeBackend:
         return StarBridgeBackend(
             app_data_dir=self.root / "app-data",
-            session_credential=TEST_TOKEN,
+            session_credential=TEST_SESSION_CREDENTIAL,
             mode="desktop",
             **kwargs,
         )
@@ -91,7 +93,9 @@ class DesktopBackendSecurityTests(unittest.TestCase):
             "/api/bootstrap",
             headers={SESSION_HEADER: "wrong-session-token-with-enough-characters"},
         )
-        correct = backend.route("GET", "/api/bootstrap", headers={SESSION_HEADER: TEST_TOKEN})
+        correct = backend.route(
+            "GET", "/api/bootstrap", headers={SESSION_HEADER: TEST_SESSION_CREDENTIAL}
+        )
 
         self.assertEqual(200, health.status)
         self.assertEqual(401, missing.status)
@@ -101,18 +105,27 @@ class DesktopBackendSecurityTests(unittest.TestCase):
         self.assertEqual(200, correct.status)
         self.assertIn("safe_roots", correct.body["data"])
 
+        preflight_missing = backend.route("OPTIONS", "/api/bootstrap")
+        preflight_correct = backend.route(
+            "OPTIONS",
+            "/api/bootstrap",
+            headers={SESSION_HEADER: TEST_SESSION_CREDENTIAL},
+        )
+        self.assertEqual(401, preflight_missing.status)
+        self.assertEqual(204, preflight_correct.status)
+
     def test_session_token_is_removed_from_responses_history_logs_and_diagnostics(self) -> None:
         backend = self.desktop_backend()
 
-        protected = backend.protect({"secret": TEST_TOKEN})
-        backend._save_history([{"summary": TEST_TOKEN}])
-        backend.record_runtime_event("redaction_test", {"secret": TEST_TOKEN})
-        backend.record_crash(RuntimeError(TEST_TOKEN))
+        protected = backend.protect({"secret": TEST_SESSION_CREDENTIAL})
+        backend._save_history([{"summary": TEST_SESSION_CREDENTIAL}])
+        backend.record_runtime_event("redaction_test", {"secret": TEST_SESSION_CREDENTIAL})
+        backend.record_crash(RuntimeError(TEST_SESSION_CREDENTIAL))
 
-        self.assertNotIn(TEST_TOKEN, json.dumps(protected))
+        self.assertNotIn(TEST_SESSION_CREDENTIAL, json.dumps(protected))
         for path in backend.app_paths.root.rglob("*"):
             if path.is_file():
-                self.assertNotIn(TEST_TOKEN, path.read_text(encoding="utf-8"))
+                self.assertNotIn(TEST_SESSION_CREDENTIAL, path.read_text(encoding="utf-8"))
 
     def test_desktop_mode_never_returns_wildcard_cors(self) -> None:
         server = StarBridgeHttpServer(self.desktop_backend(), port=0)
@@ -123,7 +136,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
                 "GET",
                 "/api/bootstrap",
                 headers={
-                    SESSION_HEADER: TEST_TOKEN,
+                    SESSION_HEADER: TEST_SESSION_CREDENTIAL,
                     "Origin": "tauri://localhost",
                 },
             )
@@ -164,7 +177,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
                 "/api/tools/call",
                 body=b"{" + (b"x" * 64) + b"}",
                 headers={
-                    SESSION_HEADER: TEST_TOKEN,
+                    SESSION_HEADER: TEST_SESSION_CREDENTIAL,
                     "Content-Type": "application/json",
                 },
             )
@@ -174,7 +187,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
                 "/api/tools/call",
                 body=b"{}",
                 headers={
-                    SESSION_HEADER: TEST_TOKEN,
+                    SESSION_HEADER: TEST_SESSION_CREDENTIAL,
                     "Content-Type": "text/plain",
                 },
             )
@@ -194,7 +207,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
             connection.putrequest("POST", "/api/tools/call")
             connection.putheader("Content-Length", "not-a-number")
             connection.putheader("Content-Type", "application/json")
-            connection.putheader(SESSION_HEADER, TEST_TOKEN)
+            connection.putheader(SESSION_HEADER, TEST_SESSION_CREDENTIAL)
             connection.endheaders()
             response = connection.getresponse()
             payload = json.loads(response.read().decode("utf-8"))
@@ -236,7 +249,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
             "/api/lifecycle/shutdown",
             body=b"{}",
             headers={
-                SESSION_HEADER: TEST_TOKEN,
+                SESSION_HEADER: TEST_SESSION_CREDENTIAL,
                 "Content-Type": "application/json",
             },
         )
@@ -257,7 +270,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
 
     def test_desktop_cli_emits_token_free_ready_line_and_accepts_shutdown(self) -> None:
         environment = os.environ.copy()
-        environment[SESSION_TOKEN_ENV] = TEST_TOKEN
+        environment[SESSION_TOKEN_ENV] = TEST_SESSION_CREDENTIAL
         environment[APP_DATA_ENV] = str(self.root / "cli app data")
         environment["PYTHONUTF8"] = "1"
         process = subprocess.Popen(
@@ -287,7 +300,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
         try:
             ready_line = output_queue.get(timeout=10).strip()
             self.assertTrue(ready_line.startswith(READY_PREFIX), ready_line)
-            self.assertNotIn(TEST_TOKEN, ready_line)
+            self.assertNotIn(TEST_SESSION_CREDENTIAL, ready_line)
             ready = json.loads(ready_line[len(READY_PREFIX) :])
             self.assertEqual("127.0.0.1", ready["host"])
             self.assertGreater(ready["port"], 0)
@@ -298,7 +311,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
                 "/api/lifecycle/shutdown",
                 body=b"{}",
                 headers={
-                    SESSION_HEADER: TEST_TOKEN,
+                    SESSION_HEADER: TEST_SESSION_CREDENTIAL,
                     "Content-Type": "application/json",
                 },
             )
@@ -308,7 +321,7 @@ class DesktopBackendSecurityTests(unittest.TestCase):
             self.assertEqual(202, response.status)
             self.assertEqual(0, process.wait(timeout=10))
             stderr = process.stderr.read() if process.stderr is not None else ""
-            self.assertNotIn(TEST_TOKEN, stderr)
+            self.assertNotIn(TEST_SESSION_CREDENTIAL, stderr)
         finally:
             if process.poll() is None:
                 process.terminate()

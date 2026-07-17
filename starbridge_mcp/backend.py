@@ -572,9 +572,6 @@ class StarBridgeBackend:
                 next_steps=["请使用 StarBridge Desktop 或已配置的本地开发地址。"],
             )
 
-        if method == "OPTIONS":
-            return BackendResponse(204, {"ok": True})
-
         if method == "GET" and path == "/api/health":
             return BackendResponse(
                 200,
@@ -590,6 +587,9 @@ class StarBridgeBackend:
         if path.startswith("/api/"):
             if authorization_error := self._authorization_error(path, headers):
                 return authorization_error
+
+        if method == "OPTIONS":
+            return BackendResponse(204, {"ok": True})
 
         if len(raw_body) > self.max_request_body_bytes:
             return self._error(

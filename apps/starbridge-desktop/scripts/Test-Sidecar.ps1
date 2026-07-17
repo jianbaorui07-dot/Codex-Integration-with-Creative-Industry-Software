@@ -1,0 +1,259 @@
+[CmdletBinding()]
+param(
+    [string]$TargetTriple,
+    [int]$StartupTimeoutSeconds = 15
+)
+
+$ErrorActionPreference = "Stop"
+if ([string]::IsNullOrWhiteSpace($TargetTriple)) {
+    $architecture = if ($env:PROCESSOR_ARCHITEW6432) {
+        $env:PROCESSOR_ARCHITEW6432
+    }
+    else {
+        $env:PROCESSOR_ARCHITECTURE
+    }
+    $TargetTriple = switch ($architecture.ToUpperInvariant()) {
+        "AMD64" { "x86_64-pc-windows-msvc" }
+        "ARM64" { "aarch64-pc-windows-msvc" }
+        "X86" { "i686-pc-windows-msvc" }
+        default { throw "Could not infer the current Windows target triple. Pass -TargetTriple explicitly." }
+    }
+}
+$desktopRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
+$executable = Join-Path $desktopRoot "src-tauri\binaries\starbridge-sidecar-$TargetTriple.exe"
+if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) {
+    throw "The staged sidecar was not found. Run Build-Sidecar.ps1 first."
+}
+
+$temporaryRoot = [IO.Path]::GetFullPath(
+    (Join-Path ([IO.Path]::GetTempPath()) ("StarBridge Sidecar Test " + [Guid]::NewGuid().ToString("N")))
+)
+$tempPrefix = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd("\") + "\"
+if (-not $temporaryRoot.StartsWith($tempPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "Refusing to use a test directory outside the system temporary directory."
+}
+New-Item -ItemType Directory -Path $temporaryRoot -Force | Out-Null
+
+$randomBytes = New-Object byte[] 32
+$randomNumberGenerator = [Security.Cryptography.RandomNumberGenerator]::Create()
+try {
+    $randomNumberGenerator.GetBytes($randomBytes)
+}
+finally {
+    $randomNumberGenerator.Dispose()
+}
+$sessionCredential = -join ($randomBytes | ForEach-Object { $_.ToString("x2") })
+$startInfo = [Diagnostics.ProcessStartInfo]::new()
+$startInfo.FileName = $executable
+$startInfo.UseShellExecute = $false
+$startInfo.CreateNoWindow = $true
+$startInfo.RedirectStandardOutput = $true
+$startInfo.RedirectStandardError = $true
+$startInfo.Arguments = "--desktop --parent-pid $PID"
+$startInfo.EnvironmentVariables["STARBRIDGE_SESSION_TOKEN"] = $sessionCredential
+$startInfo.EnvironmentVariables["STARBRIDGE_APP_DATA_DIR"] = $temporaryRoot
+$process = [Diagnostics.Process]::new()
+$process.StartInfo = $startInfo
+$parentExitChildId = $null
+
+try {
+    if (-not $process.Start()) {
+        throw "The sidecar process could not be started."
+    }
+    $readyTask = $process.StandardOutput.ReadLineAsync()
+    if (-not $readyTask.Wait([TimeSpan]::FromSeconds($StartupTimeoutSeconds))) {
+        throw "The sidecar did not report ready before the startup timeout."
+    }
+    $readyLine = $readyTask.Result
+    $readyPrefix = "STARBRIDGE_READY "
+    if (-not $readyLine.StartsWith($readyPrefix, [StringComparison]::Ordinal)) {
+        throw "The sidecar emitted an invalid ready line."
+    }
+    if ($readyLine.IndexOf($sessionCredential, [StringComparison]::Ordinal) -ge 0) {
+        throw "The ready line exposed the session credential."
+    }
+    $ready = $readyLine.Substring($readyPrefix.Length) | ConvertFrom-Json
+    if ($ready.host -ne "127.0.0.1" -or $ready.port -le 0) {
+        throw "The sidecar did not bind a valid loopback address and random port."
+    }
+
+    $health = Invoke-RestMethod -Uri "http://127.0.0.1:$($ready.port)/api/health" -TimeoutSec 5
+    if (-not $health.ok) {
+        throw "The sidecar health check failed."
+    }
+    $wrongHeaders = @{ "X-StarBridge-Session" = ([Guid]::NewGuid().ToString("N") + [Guid]::NewGuid().ToString("N")) }
+    $wrongCredentialStatus = 0
+    try {
+        Invoke-WebRequest `
+            -UseBasicParsing `
+            -Uri "http://127.0.0.1:$($ready.port)/api/bootstrap" `
+            -Headers $wrongHeaders `
+            -TimeoutSec 5 `
+            -ErrorAction Stop | Out-Null
+        throw "The sidecar accepted an incorrect session credential."
+    }
+    catch {
+        if (-not $_.Exception.Response) {
+            throw
+        }
+        $wrongCredentialStatus = [int]$_.Exception.Response.StatusCode
+    }
+    if ($wrongCredentialStatus -ne 403) {
+        throw "The sidecar returned $wrongCredentialStatus instead of 403 for an incorrect credential."
+    }
+
+    $headers = @{ "X-StarBridge-Session" = $sessionCredential }
+    $bootstrap = Invoke-RestMethod `
+        -Uri "http://127.0.0.1:$($ready.port)/api/bootstrap" `
+        -Headers $headers `
+        -TimeoutSec 10
+    if (-not $bootstrap.ok) {
+        throw "The authenticated bootstrap request failed."
+    }
+    Invoke-RestMethod `
+        -Uri "http://127.0.0.1:$($ready.port)/api/lifecycle/shutdown" `
+        -Method Post `
+        -Headers $headers `
+        -ContentType "application/json" `
+        -Body "{}" `
+        -TimeoutSec 5 | Out-Null
+
+    if (-not $process.WaitForExit(10000)) {
+        throw "The sidecar did not exit after an authenticated shutdown request."
+    }
+    $stderrText = $process.StandardError.ReadToEnd()
+    if ($stderrText.IndexOf($sessionCredential, [StringComparison]::Ordinal) -ge 0) {
+        throw "The sidecar exposed the session credential on stderr."
+    }
+
+    $listener = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, [int]$ready.port)
+    try {
+        $listener.Start()
+    }
+    finally {
+        $listener.Stop()
+    }
+
+    $probeFile = Join-Path $temporaryRoot "parent-exit-probe.json"
+    $parentExitDataRoot = Join-Path $temporaryRoot "parent-exit-data"
+    $parentProbeScript = @'
+$ErrorActionPreference = "Stop"
+$credential = [Guid]::NewGuid().ToString("N") + [Guid]::NewGuid().ToString("N")
+$childInfo = [Diagnostics.ProcessStartInfo]::new()
+$childInfo.FileName = $env:STARBRIDGE_TEST_EXECUTABLE
+$childInfo.UseShellExecute = $false
+$childInfo.CreateNoWindow = $true
+$childInfo.RedirectStandardOutput = $true
+$childInfo.RedirectStandardError = $true
+$childInfo.Arguments = "--desktop --parent-pid $PID"
+$childInfo.EnvironmentVariables["STARBRIDGE_SESSION_TOKEN"] = $credential
+$childInfo.EnvironmentVariables["STARBRIDGE_APP_DATA_DIR"] = $env:STARBRIDGE_TEST_DATA_ROOT
+$child = [Diagnostics.Process]::new()
+$child.StartInfo = $childInfo
+if (-not $child.Start()) {
+    throw "Could not start child sidecar."
+}
+$readyPrefix = "STARBRIDGE_READY "
+$readyLine = $child.StandardOutput.ReadLine()
+if (-not $readyLine.StartsWith($readyPrefix, [StringComparison]::Ordinal)) {
+    throw "Child sidecar did not report ready."
+}
+$ready = $readyLine.Substring($readyPrefix.Length) | ConvertFrom-Json
+$payload = [ordered]@{ pid = $child.Id; port = $ready.port }
+[IO.File]::WriteAllText(
+    $env:STARBRIDGE_TEST_PROBE,
+    ($payload | ConvertTo-Json),
+    [Text.UTF8Encoding]::new($false)
+)
+$child.Dispose()
+'@
+    $encodedProbe = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($parentProbeScript))
+    $parentInfo = [Diagnostics.ProcessStartInfo]::new()
+    $parentInfo.FileName = (Get-Command powershell.exe -ErrorAction Stop).Source
+    $parentInfo.UseShellExecute = $false
+    $parentInfo.CreateNoWindow = $true
+    $parentInfo.RedirectStandardOutput = $true
+    $parentInfo.RedirectStandardError = $true
+    $parentInfo.Arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand $encodedProbe"
+    $parentInfo.EnvironmentVariables["STARBRIDGE_TEST_EXECUTABLE"] = $executable
+    $parentInfo.EnvironmentVariables["STARBRIDGE_TEST_DATA_ROOT"] = $parentExitDataRoot
+    $parentInfo.EnvironmentVariables["STARBRIDGE_TEST_PROBE"] = $probeFile
+    $parentProcess = [Diagnostics.Process]::new()
+    $parentProcess.StartInfo = $parentInfo
+    try {
+        if (-not $parentProcess.Start()) {
+            throw "The parent-exit probe process could not be started."
+        }
+        if (-not $parentProcess.WaitForExit(($StartupTimeoutSeconds + 5) * 1000)) {
+            $parentProcess.Kill()
+            throw "The parent-exit probe did not finish before the timeout."
+        }
+        if ($parentProcess.ExitCode -ne 0) {
+            throw "The parent-exit probe failed before reporting the child sidecar."
+        }
+    }
+    finally {
+        $parentProcess.Dispose()
+    }
+    if (-not (Test-Path -LiteralPath $probeFile -PathType Leaf)) {
+        throw "The parent-exit probe did not produce a result."
+    }
+    $parentProbe = Get-Content -LiteralPath $probeFile -Raw -Encoding utf8 | ConvertFrom-Json
+    $parentExitChildId = [int]$parentProbe.pid
+    $parentExitPort = [int]$parentProbe.port
+    $childStopped = $false
+    $childDeadline = [DateTime]::UtcNow.AddSeconds(10)
+    while ([DateTime]::UtcNow -lt $childDeadline) {
+        if (-not (Get-Process -Id $parentExitChildId -ErrorAction SilentlyContinue)) {
+            $childStopped = $true
+            break
+        }
+        Start-Sleep -Milliseconds 100
+    }
+    if (-not $childStopped) {
+        throw "The sidecar remained alive after its parent process exited."
+    }
+    $parentExitChildId = $null
+
+    $parentExitListener = [Net.Sockets.TcpListener]::new(
+        [Net.IPAddress]::Loopback,
+        $parentExitPort
+    )
+    try {
+        $parentExitListener.Start()
+    }
+    finally {
+        $parentExitListener.Stop()
+    }
+
+    [ordered]@{
+        ok = $true
+        ready = $true
+        loopback_only = $true
+        wrong_credential_rejected = $true
+        authenticated_bootstrap = $true
+        graceful_shutdown = $true
+        process_exited = $process.HasExited
+        port_released = $true
+        parent_exit_cleanup = $true
+        orphan_process = $false
+        credential_exposed = $false
+        app_data_cleaned = $true
+    } | ConvertTo-Json
+}
+finally {
+    if ($parentExitChildId) {
+        Stop-Process -Id $parentExitChildId -Force -ErrorAction SilentlyContinue
+    }
+    if (-not $process.HasExited) {
+        $process.Kill()
+        $process.WaitForExit(5000) | Out-Null
+    }
+    $process.Dispose()
+    if (Test-Path -LiteralPath $temporaryRoot) {
+        if (-not $temporaryRoot.StartsWith($tempPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to clean a path outside the system temporary directory."
+        }
+        Remove-Item -LiteralPath $temporaryRoot -Recurse -Force
+    }
+}

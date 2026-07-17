@@ -1,0 +1,43 @@
+import { describe, expect, it } from "vitest";
+
+import type { StarBridgeTransport } from "./transport";
+import { StarBridgeApiClient, UserFacingError } from "./client";
+
+function transportReturning(status: number, body: Record<string, unknown>): StarBridgeTransport {
+  return {
+    kind: "desktop",
+    request: async () => ({ status, body }),
+    getRuntimeStatus: async () => ({
+      state: "connected",
+      message: "connected",
+      recoveryAttempts: 0,
+    }),
+    restartBackend: async () => ({
+      state: "connected",
+      message: "connected",
+      recoveryAttempts: 1,
+    }),
+    openLogsDirectory: async () => "logs",
+    getVersion: async () => ({ desktop: "test" }),
+  } as StarBridgeTransport;
+}
+
+describe("API error translation", () => {
+  it.each([
+    [401, "authentication_required", "重新授权"],
+    [403, "authentication_failed", "会话已失效"],
+  ])("translates HTTP %s without hiding technical details", async (status, code, phrase) => {
+    const client = new StarBridgeApiClient(
+      transportReturning(status, {
+        ok: false,
+        error: { code, message: "raw backend message" },
+      }),
+    );
+
+    await expect(client.getBootstrap()).rejects.toMatchObject({
+      message: expect.stringContaining(phrase),
+      technicalDetails: `HTTP ${status}; ${code}`,
+      status,
+    } satisfies Partial<UserFacingError>);
+  });
+});
