@@ -77,11 +77,21 @@
     "canvas:mcp": "node examples/starbridge_canvas/mcp/server.mjs",
     "frontend:dev": "npm --prefix examples/starbridge_frontend run dev",
     "frontend:build": "npm --prefix examples/starbridge_frontend run build",
+    "desktop:install": "npm --prefix apps/starbridge-desktop install",
+    "desktop:test": "npm --prefix apps/starbridge-desktop test",
+    "desktop:build": "npm --prefix apps/starbridge-desktop run build",
+    "desktop:prerequisites": "powershell -ExecutionPolicy Bypass -File apps/starbridge-desktop/scripts/Check-Prerequisites.ps1",
+    "desktop:sidecar:build": "powershell -ExecutionPolicy Bypass -File apps/starbridge-desktop/scripts/Build-Sidecar.ps1",
+    "desktop:sidecar:test": "powershell -ExecutionPolicy Bypass -File apps/starbridge-desktop/scripts/Test-Sidecar.ps1",
+    "brand:build": "node brand/scripts/build-brand-assets.mjs",
     "app:dev": "powershell -ExecutionPolicy Bypass -File scripts/start_starbridge_app.ps1",
     "test": "python -m unittest discover -s tests",
     "test:pytest": "python -m pytest",
     "lint": "ruff check .",
     "format": "ruff format .",
     "format-check": "ruff format --check ."
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }
