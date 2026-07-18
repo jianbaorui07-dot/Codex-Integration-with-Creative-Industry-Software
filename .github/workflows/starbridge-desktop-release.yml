@@ -78,7 +78,7 @@ jobs:
           cache: pip
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
@@ -212,7 +212,7 @@ jobs:
           "STARBRIDGE_RELEASE_DIRECTORY=$releaseDirectory" >> $env:GITHUB_ENV
 
       - name: Upload verified release evidence
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: CreNexus-Desktop-${{ env.STARBRIDGE_RELEASE_VERSION }}-verified
           path: ${{ env.STARBRIDGE_RELEASE_DIRECTORY }}
