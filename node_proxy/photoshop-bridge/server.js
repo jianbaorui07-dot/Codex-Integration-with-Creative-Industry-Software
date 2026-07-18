@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { URL } from "node:url";
 import { fileURLToPath } from "node:url";
+import { createLiveSessionStore, rpcLiveSession } from "../live-session.js";
 
 let WebSocketServer = null;
 try {
@@ -15,6 +16,7 @@ try {
 const PORT = Number(process.env.STARBRIDGE_PHOTOSHOP_PROXY_PORT || 8971);
 const MAX_RPC_BYTES = 256 * 1024;
 const MAX_SOURCE_ASSET_BYTES = 512 * 1024 * 1024;
+const MAX_SESSION_BYTES = 32 * 1024;
 const PROXY_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(PROXY_DIR, "../..");
 const APP_DATA_CONFIGURED = process.env.STARBRIDGE_APP_DATA_DIR ||
@@ -65,6 +67,9 @@ const state = {
 const pending = new Map();
 const timedOutProductionStaging = new Map();
 let currentClient = null;
+const liveSession = createLiveSessionStore("photoshop", (update) => {
+  if (currentClient?.readyState === 1) currentClient.send(JSON.stringify(update));
+});
 
 function recordEvent(type, details = {}) {
   const event = {
@@ -103,6 +108,7 @@ function healthPayload() {
     last_client_registered_at: state.last_client_registered_at,
     last_error: state.last_error,
     websocket_enabled: Boolean(WebSocketServer),
+    live_session: liveSession.summary(),
   };
 }
 
@@ -384,6 +390,17 @@ function rpcToUxp(message) {
   });
 }
 
+async function readBody(request, limit) {
+  const chunks = [];
+  let bytes = 0;
+  for await (const chunk of request) {
+    bytes += chunk.length;
+    if (bytes > limit) throw new Error("payload_too_large");
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
 const server = http.createServer(async (request, response) => {
   const url = new URL(request.url || "/", `http://127.0.0.1:${PORT}`);
   if (request.method === "GET" && url.pathname === "/health") {
@@ -396,6 +413,21 @@ const server = http.createServer(async (request, response) => {
   }
   if (request.method === "GET" && url.pathname === "/events") {
     sendJson(response, 200, { ok: true, events: state.event_log });
+    return;
+  }
+  if (request.method === "GET" && url.pathname === "/session") {
+    sendJson(response, 200, liveSession.snapshot());
+    return;
+  }
+  if (request.method === "POST" && url.pathname === "/session") {
+    try {
+      const update = liveSession.publish(JSON.parse((await readBody(request, MAX_SESSION_BYTES)).toString("utf-8") || "{}"));
+      recordEvent("session_published", { session_id: update.session_id, phase: update.phase });
+      sendJson(response, 202, { ok: true, update });
+    } catch (error) {
+      recordEvent("session_rejected", { reason: String(error?.message || error) });
+      sendJson(response, 400, { ok: false, message: String(error?.message || error) });
+    }
     return;
   }
   if (request.method === "POST" && url.pathname === "/rpc") {
@@ -436,6 +468,19 @@ const server = http.createServer(async (request, response) => {
     if (message.method === "ps.production.execute_confirmed") {
       reply = finalizeProductionReply(reply, message.params || {});
     }
+    liveSession.publish(rpcLiveSession({ bridge: "photoshop", message, phase: "running" }));
+    reply = await rpcToUxp(message);
+    if (message.method === "ps.production.execute_confirmed") {
+      reply = finalizeProductionReply(reply, message.params || {});
+    }
+    liveSession.publish(
+      rpcLiveSession({
+        bridge: "photoshop",
+        message,
+        phase: reply.error ? "failed" : "completed",
+        errorMessage: reply.error?.message,
+      }),
+    );
     if (message.method === "starbridge.ping" && reply.result) {
       state.last_ping_at = new Date().toISOString();
       state.photoshop_host_seen = Boolean(reply.result.photoshop_host);
@@ -461,6 +506,7 @@ if (WebSocketServer) {
   wss.on("connection", (ws) => {
     currentClient = ws;
     state.uxp_client_connected = true;
+    if (liveSession.current()) ws.send(JSON.stringify(liveSession.current()));
     ws.on("message", (data) => {
       let message;
       try {
