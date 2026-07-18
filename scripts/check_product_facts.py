@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import json
 import re
-import tomllib
 from pathlib import Path
 from typing import Any
+
+try:
+    import tomllib
+except ImportError:  # Python 3.10
+    import tomli as tomllib
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -75,7 +79,9 @@ def check_product_facts() -> list[str]:
     allowed_statuses = set(model["allowedStatuses"])
     allowed_evidence = set(model["allowedEvidenceLevels"])
     if allowed_statuses != {"stable", "experimental", "planned", "not_implemented"}:
-        failures.append("capabilityModel.allowedStatuses must contain exactly four canonical values")
+        failures.append(
+            "capabilityModel.allowedStatuses must contain exactly four canonical values"
+        )
     if model["connectionStateDefault"] != "unknown":
         failures.append("static product facts must default connectionState to unknown")
 

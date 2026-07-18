@@ -1,9 +1,15 @@
 import type { PageId } from "../app/routes";
 import { EmptyState } from "../components/EmptyState/EmptyState";
-import type { CreativeJob, RuntimeStatus } from "../types/api";
+import type {
+  ConnectionOverview,
+  CreativeApplicationState,
+  CreativeJob,
+  RuntimeStatus,
+} from "../types/api";
 
 interface HomePageProps {
   status: RuntimeStatus;
+  connections: ConnectionOverview | null;
   recentTasks: CreativeJob[];
   onNavigate: (page: PageId) => void;
 }
@@ -17,8 +23,17 @@ const STATUS_LABELS: Record<CreativeJob["status"], string> = {
   cancelled: "已取消",
 };
 
-export function HomePage({ status, recentTasks, onNavigate }: HomePageProps) {
-  const ready = status.state === "connected";
+const APP_STATE: Record<CreativeApplicationState, string> = {
+  not_installed: "未找到",
+  installed: "已安装",
+  running: "运行中",
+  bridge_ready: "可桥接",
+  unavailable: "待重试",
+};
+
+export function HomePage({ status, connections, recentTasks, onNavigate }: HomePageProps) {
+  const runtimeReady = status.state === "connected";
+  const ready = runtimeReady && connections?.drawing_enabled === true;
   const recent = recentTasks[0];
   return (
     <div className="home-page">
@@ -30,11 +45,11 @@ export function HomePage({ status, recentTasks, onNavigate }: HomePageProps) {
         </div>
         <div className="hero-trajectory" aria-hidden="true"><span /><span /><i>✦</i></div>
         <div className="hero-actions">
-          <button type="button" className="primary" disabled={!ready} onClick={() => onNavigate("projects")}>新建或打开项目</button>
+          <button type="button" className="primary" disabled={!runtimeReady} onClick={() => onNavigate(ready ? "projects" : "integrations")}>{ready ? "新建或打开项目" : "连接 Codex 后开始制图"}</button>
           <button type="button" className="secondary" onClick={() => onNavigate("tasks")}>打开任务中心</button>
-          <button type="button" className="quiet-button" onClick={() => onNavigate("integrations")}>查看软件连接</button>
+          <button type="button" className="quiet-button" onClick={() => onNavigate("integrations")}>查看软件联动</button>
         </div>
-        {!ready ? <p className="inline-guidance">本地服务就绪后即可开始。你可以前往“设置与诊断”重新启动。</p> : null}
+        {!runtimeReady ? <p className="inline-guidance">本地服务就绪后即可开始。你可以前往“设置与诊断”重新启动。</p> : !ready ? <p className="inline-guidance">本地服务已就绪；还需要在连接中心关联本次 Codex 会话。</p> : null}
       </section>
 
       <section className="home-grid">
@@ -45,9 +60,8 @@ export function HomePage({ status, recentTasks, onNavigate }: HomePageProps) {
         <div className="section-panel software-panel">
           <div className="section-heading"><div><span>软件状态</span><h3>连接声明以探测证据为准</h3></div></div>
           <ul className="software-list">
-            <li><span className="software-monogram ai">Ai</span><div><strong>Illustrator</strong><small>公开交付协议存在；真实桌面连接尚未验收</small></div><span className="state-label planned">待验收</span></li>
-            <li><span className="software-monogram ps">Ps</span><div><strong>Photoshop</strong><small>公开桥接实现存在；当前未执行本机探测</small></div><span className="state-label neutral">未知</span></li>
-            <li><span className="software-monogram co">Co</span><div><strong>ComfyUI</strong><small>实验工作流已接入；当前未执行本机服务探测</small></div><span className="state-label neutral">未知</span></li>
+            {(connections?.applications.slice(0, 3) ?? []).map((application) => <li key={application.id}><span className="software-monogram">{application.mark}</span><div><strong>{application.name}</strong><small>{application.message}</small></div><span className={`state-label application-${application.state}`}>{APP_STATE[application.state]}</span></li>)}
+            {!connections?.applications.length ? <li><span className="software-monogram">…</span><div><strong>正在检测</strong><small>只读取固定安装、进程和回环接口线索</small></div><span className="state-label">检测中</span></li> : null}
           </ul>
         </div>
       </section>

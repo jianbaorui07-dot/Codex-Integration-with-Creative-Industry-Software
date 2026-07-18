@@ -14,6 +14,7 @@ import { VectorizationPage } from "../pages/VectorizationPage";
 import { WorkflowsPage } from "../pages/WorkflowsPage";
 import { StarBridgeApiClient, UserFacingError, type StarBridgeClient } from "../services/client";
 import type {
+  ConnectionOverview,
   LicenseStatus,
   CreativeJob,
   RuntimeStatus,
@@ -80,6 +81,9 @@ export function App({ client: providedClient }: AppProps) {
   const [tasks, setTasks] = useState<CreativeJob[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string>();
   const [selectedJobId, setSelectedJobId] = useState<string>();
+  const [connections, setConnections] = useState<ConnectionOverview | null>(null);
+  const [connectionsLoading, setConnectionsLoading] = useState(false);
+  const [connectionsError, setConnectionsError] = useState("");
   const [updateStatus, setUpdateStatus] = useState<SoftwareUpdateStatus>(INITIAL_UPDATE_STATUS);
   const [automaticUpdateChecks, setAutomaticUpdateChecks] = useState(
     () => window.localStorage.getItem(UPDATE_CHECK_PREFERENCE) !== "false",
@@ -91,6 +95,7 @@ export function App({ client: providedClient }: AppProps) {
   const [updateError, setUpdateError] = useState("");
   const mounted = useRef(true);
   const updateCheckInFlight = useRef(false);
+  const connectionCheckInFlight = useRef(false);
 
   const refreshStatus = useCallback(async () => {
     try {
@@ -98,6 +103,26 @@ export function App({ client: providedClient }: AppProps) {
       if (mounted.current) setStatus(next);
     } catch (error) {
       if (mounted.current) setStatus(statusFromError(error));
+    }
+  }, [client]);
+
+  const refreshConnections = useCallback(async () => {
+    if (connectionCheckInFlight.current) return;
+    connectionCheckInFlight.current = true;
+    setConnectionsLoading(true);
+    setConnectionsError("");
+    try {
+      const next = await client.getConnections();
+      if (mounted.current) setConnections(next);
+    } catch (error) {
+      if (mounted.current) {
+        setConnectionsError(
+          error instanceof Error ? error.message : "暂时无法读取连接状态。",
+        );
+      }
+    } finally {
+      connectionCheckInFlight.current = false;
+      if (mounted.current) setConnectionsLoading(false);
     }
   }, [client]);
 
@@ -189,11 +214,25 @@ export function App({ client: providedClient }: AppProps) {
       const timer = window.setTimeout(() => void refreshStatus(), 600);
       return () => window.clearTimeout(timer);
     }
-    if (status.state === "connected") void refreshTasks();
+    if (status.state === "connected") {
+      void refreshTasks();
+      void refreshConnections();
+    }
     return undefined;
-  }, [refreshStatus, refreshTasks, status.state]);
+  }, [refreshConnections, refreshStatus, refreshTasks, status.state]);
+
+  useEffect(() => {
+    if (
+      page !== "integrations"
+      || status.state !== "connected"
+      || connections?.drawing_enabled
+    ) return undefined;
+    const timer = window.setInterval(() => void refreshConnections(), 1800);
+    return () => window.clearInterval(timer);
+  }, [connections?.drawing_enabled, page, refreshConnections, status.state]);
 
   const restart = useCallback(async () => {
+    setConnections(null);
     setStatus((current) => ({ ...current, state: "recovering", message: "正在重新启动本地服务。" }));
     try {
       setStatus(await client.restartBackend());
@@ -218,20 +257,39 @@ export function App({ client: providedClient }: AppProps) {
     };
     switch (page) {
       case "home":
-        return <HomePage status={status} recentTasks={tasks} onNavigate={setPage} />;
+        return <HomePage status={status} connections={connections} recentTasks={tasks} onNavigate={setPage} />;
       case "projects":
         return <ProjectsPage client={client} runtimeReady={status.state === "connected"} onOpenWorkflow={openWorkflow} />;
       case "workflows":
       case "vectorization":
+        if (connections?.drawing_enabled !== true) {
+          return <IntegrationsPage client={client} connections={connections} loading={connectionsLoading} error={connectionsError} onRefresh={refreshConnections} onRestartBridge={restart} />;
+        }
         return <WorkflowsPage client={client} runtimeReady={status.state === "connected"} initialProjectId={selectedProjectId} onOpenProjects={() => setPage("projects")} onOpenJob={openJob} />;
       case "ai-generation":
+        if (connections?.drawing_enabled !== true) {
+          return <IntegrationsPage client={client} connections={connections} loading={connectionsLoading} error={connectionsError} onRefresh={refreshConnections} onRestartBridge={restart} />;
+        }
         return <ComfyUiGenerationPage client={client} runtimeReady={status.state === "connected"} initialProjectId={selectedProjectId} onOpenJob={openJob} />;
       case "legacy-vectorization":
-        return <VectorizationPage client={client} runtimeReady={status.state === "connected"} onTaskSaved={() => void refreshTasks()} />;
+        return <VectorizationPage
+          client={client}
+          runtimeReady={status.state === "connected"}
+          codexConnected={connections?.drawing_enabled === true}
+          onOpenConnections={() => setPage("integrations")}
+          onTaskSaved={() => void refreshTasks()}
+        />;
       case "batch":
         return <BatchPage />;
       case "integrations":
-        return <IntegrationsPage />;
+        return <IntegrationsPage
+          client={client}
+          connections={connections}
+          loading={connectionsLoading}
+          error={connectionsError}
+          onRefresh={refreshConnections}
+          onRestartBridge={restart}
+        />;
       case "tasks":
         return <TasksPage tasks={tasks} onStart={() => openWorkflow()} onOpenJob={openJob} />;
       case "job-detail":
@@ -261,7 +319,7 @@ export function App({ client: providedClient }: AppProps) {
   };
 
   return (
-    <AppShell currentPage={page} onNavigate={setPage} status={status} license={license} version={version} updateStatus={updateStatus}>
+    <AppShell currentPage={page} onNavigate={setPage} status={status} connections={connections} license={license} version={version} updateStatus={updateStatus} onOpenGitHub={() => client.openGitHubProject()}>
       {renderPage()}
     </AppShell>
   );

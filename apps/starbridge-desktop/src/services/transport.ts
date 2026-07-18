@@ -1,8 +1,11 @@
 import type {
   ApiEnvelope,
-  Project,
+  CodexConnectionResetResult,
+  CodexConnectorInstallResult,
+  CreativeApplicationConnection,
   LicenseRequestReceipt,
   LicenseStatus,
+  Project,
   RuntimeStatus,
   SoftwareUpdateProgress,
   SoftwareUpdateStatus,
@@ -32,6 +35,26 @@ export interface StarBridgeTransport {
   getRuntimeStatus(): Promise<RuntimeStatus>;
   restartBackend(): Promise<RuntimeStatus>;
   openLogsDirectory(): Promise<string>;
+  installCodexConnector(
+    confirmInstall: boolean,
+  ): Promise<TransportResponse<ApiEnvelope<CodexConnectorInstallResult>>>;
+  resetCodexConnection(
+    confirmReset: boolean,
+  ): Promise<TransportResponse<ApiEnvelope<CodexConnectionResetResult>>>;
+  openCodexPairing(pairingCode: string): Promise<void>;
+  openGitHubProject(): Promise<void>;
+  pairCreativeApplication(
+    applicationId: string,
+    confirmPairing: boolean,
+  ): Promise<TransportResponse<ApiEnvelope<CreativeApplicationConnection>>>;
+  reconnectCreativeApplication(
+    applicationId: string,
+    confirmReconnect: boolean,
+  ): Promise<TransportResponse<ApiEnvelope<CreativeApplicationConnection>>>;
+  disconnectCreativeApplication(
+    applicationId: string,
+    confirmDisconnect: boolean,
+  ): Promise<TransportResponse<ApiEnvelope<CreativeApplicationConnection>>>;
   getVersion(): Promise<VersionInfo>;
   getUpdateStatus(): Promise<SoftwareUpdateStatus>;
   checkForUpdate(): Promise<SoftwareUpdateStatus>;
