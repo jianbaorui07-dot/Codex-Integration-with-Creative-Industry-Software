@@ -94,6 +94,7 @@ class PackageScriptsTest(unittest.TestCase):
                 "preflight:json",
                 "security:check",
                 "product:facts:check",
+                "text:encoding:check",
                 "canvas:dev",
                 "canvas:build",
                 "canvas:mcp",
