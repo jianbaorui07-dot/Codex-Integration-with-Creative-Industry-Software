@@ -53,6 +53,12 @@ from starbridge_mcp.workflows.comfyui_generation_pipeline import (
     register_comfyui_generation_workflow,
 )
 from starbridge_mcp.workflows.engine import WorkflowEngine
+from starbridge_mcp.workflows.photoshop_production_pipeline import (
+    WORKFLOW_ID as PHOTOSHOP_PRODUCTION_WORKFLOW_ID,
+)
+from starbridge_mcp.workflows.photoshop_production_pipeline import (
+    register_photoshop_production_workflow,
+)
 from starbridge_mcp.workflows.registry import WorkflowRegistry
 from starbridge_mcp.workflows.vector_delivery_pipeline import (
     WORKFLOW_ID as VECTOR_DELIVERY_WORKFLOW_ID,
@@ -214,6 +220,7 @@ class StarBridgeBackend:
         self.workflow_registry = WorkflowRegistry()
         register_vector_delivery_workflow(self.workflow_registry)
         register_comfyui_generation_workflow(self.workflow_registry)
+        register_photoshop_production_workflow(self.workflow_registry)
         self.workflow_engine = WorkflowEngine(
             registry=self.workflow_registry,
             project_store=self.project_store,
@@ -787,6 +794,16 @@ class StarBridgeBackend:
                             "drawingModes": [],
                             "imageTraceFallback": False,
                         },
+                        {
+                            "workflowId": PHOTOSHOP_PRODUCTION_WORKFLOW_ID,
+                            "name": "项目图片 → Photoshop 受控副本 → PNG / JPEG / PSD",
+                            "capabilityStatus": "experimental",
+                            "recommended": False,
+                            "ordinaryCustomerRoute": True,
+                            "requiresConfirmation": True,
+                            "drawingModes": [],
+                            "imageTraceFallback": False,
+                        },
                     ]
                 },
             },
@@ -900,6 +917,36 @@ class StarBridgeBackend:
                         if "waitSeconds" in body
                         else body.get("wait_seconds")
                     ),
+                }
+            elif workflow_id == PHOTOSHOP_PRODUCTION_WORKFLOW_ID:
+                asset_id = body.get("sourceAssetId") or body.get("source_asset_id")
+                parameters = body.get("parameters") or {}
+                if not isinstance(asset_id, str):
+                    return self._error(
+                        400, "source_asset_required", "Photoshop 工作流需要一个已导入的源素材。"
+                    )
+                if not isinstance(parameters, dict):
+                    return self._error(400, "invalid_parameters", "任务参数格式无效。")
+                source_asset = next(
+                    (asset for asset in project.source_assets if asset.asset_id == asset_id), None
+                )
+                if source_asset is None:
+                    return self._error(404, "source_asset_not_found", "项目中没有这个源素材。")
+
+                def photoshop_value(key: str, default: Any = None) -> Any:
+                    return body.get(key) if key in body else parameters.get(key, default)
+
+                workflow_inputs = {
+                    "sourceAssetRelativePath": source_asset.relative_path,
+                    "sourceAssetSha256": source_asset.sha256,
+                    "outputFormats": photoshop_value("outputFormats", ["png", "jpeg", "psd"]),
+                    "resizeCanvas": photoshop_value("resizeCanvas", False),
+                    "canvasWidth": photoshop_value("canvasWidth", 1920),
+                    "canvasHeight": photoshop_value("canvasHeight", 1080),
+                    "brightness": photoshop_value("brightness", 0),
+                    "contrast": photoshop_value("contrast", 0),
+                    "saturation": photoshop_value("saturation", 0),
+                    "exportSubject": photoshop_value("exportSubject", False),
                 }
             else:
                 return self._error(400, "workflow_not_available", "这个工作流当前不可用。")
@@ -1734,6 +1781,7 @@ class StarBridgeHttpServer:
         self._thread: Thread | None = None
         self._started = Event()
         self._stopped = Event()
+        self._stop_lock = RLock()
         self.backend.register_shutdown(self.stop)
 
     @property
@@ -1753,8 +1801,6 @@ class StarBridgeHttpServer:
             self._server.serve_forever(poll_interval=0.1)
         except BaseException as exc:  # pragma: no cover - process boundary
             self.backend.record_crash(exc)
-        finally:
-            self._stopped.set()
 
     def start(self) -> None:
         if self._started.is_set():
@@ -1774,15 +1820,16 @@ class StarBridgeHttpServer:
         return not self._thread.is_alive()
 
     def stop(self) -> None:
-        if self._stopped.is_set() and not self.running:
-            return
-        if self._started.is_set() and self.running:
-            self._server.shutdown()
-        self._server.server_close()
-        if self._thread is not None and self._thread is not current_thread():
-            self._thread.join(timeout=5)
-        self._stopped.set()
-        self.backend.record_runtime_event("server_stopped", {"pid": os.getpid()})
+        with self._stop_lock:
+            if self._stopped.is_set():
+                return
+            if self._started.is_set() and self.running:
+                self._server.shutdown()
+            self._server.server_close()
+            if self._thread is not None and self._thread is not current_thread():
+                self._thread.join(timeout=5)
+            self.backend.record_runtime_event("server_stopped", {"pid": os.getpid()})
+            self._stopped.set()
 
     def ready_payload(self) -> JsonObject:
         return {
