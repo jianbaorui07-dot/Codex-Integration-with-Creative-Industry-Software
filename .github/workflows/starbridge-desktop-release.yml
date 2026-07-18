@@ -212,7 +212,7 @@ jobs:
           "STARBRIDGE_RELEASE_DIRECTORY=$releaseDirectory" >> $env:GITHUB_ENV
 
       - name: Upload verified release evidence
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: StarBridge-Desktop-${{ env.STARBRIDGE_RELEASE_VERSION }}-verified
           path: ${{ env.STARBRIDGE_RELEASE_DIRECTORY }}
