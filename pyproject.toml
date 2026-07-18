@@ -63,7 +63,7 @@ image-to-psd = [
 ]
 illustrator-trace = [
   "numpy>=2,<3",
-  "opencv-python-headless>=4.10,<5",
+  "opencv-python-headless>=4.10,<6",
   "Pillow>=10,<13",
 ]
 illustrator-vector = [
