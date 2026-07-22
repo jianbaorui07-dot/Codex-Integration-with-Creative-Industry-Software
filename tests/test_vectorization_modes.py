@@ -80,10 +80,38 @@ class VectorizationModeTests(unittest.TestCase):
     def test_default_cli_mode_is_smart_and_balanced_is_an_alias(self) -> None:
         parsed = cli.parse_args(["--input", "placeholder.png"])
         self.assertEqual(parsed.mode, "smart")
+        self.assertFalse(parsed.auto_enhance)
+        self.assertIsNone(parsed.scene_preset)
         self.assertFalse(parsed.compact)
         self.assertEqual(
             engine._configured(RunConfig("placeholder.png", mode="balanced")).mode, "smart"
         )
+
+    def test_vector60_cli_options_are_optional_and_artisan_only(self) -> None:
+        parsed = cli.parse_args(
+            [
+                "--input",
+                "placeholder.png",
+                "--mode",
+                "artisan",
+                "--auto-enhance",
+                "--scene-preset",
+                "lineart",
+            ]
+        )
+        config = cli.config_from_args(parsed)
+
+        self.assertTrue(config.auto_enhance)
+        self.assertEqual(config.scene_preset, "lineart")
+        self.assertEqual(engine._configured(config).mode, "artisan")
+
+        with self.assertRaises(VectorizationError) as non_artisan:
+            engine._configured(RunConfig("placeholder.png", mode="smart", auto_enhance=True))
+        self.assertEqual(non_artisan.exception.code, "invalid_parameters")
+
+        with self.assertRaises(VectorizationError) as preset_without_enhancement:
+            engine._configured(RunConfig("placeholder.png", mode="artisan", scene_preset="lineart"))
+        self.assertEqual(preset_without_enhancement.exception.code, "invalid_parameters")
 
     def test_svg_verifier_accepts_safe_cubic_paths_and_counts_real_anchors(self) -> None:
         path = self.root / "safe-curves.svg"

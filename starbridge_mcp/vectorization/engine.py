@@ -65,6 +65,8 @@ class RunConfig:
     resource_budget: str = "auto"
     detail_protection: float = 0.75
     auto_minimize_anchors: bool = True
+    auto_enhance: bool = False
+    scene_preset: str | None = None
     compact: bool = False
 
 
@@ -180,7 +182,7 @@ def load_source(path_value: str, max_pixels: int) -> tuple[Image.Image, dict[str
 
 def _configured(config: RunConfig) -> VectorPreset:
     try:
-        return configured_preset(
+        preset = configured_preset(
             config.mode,
             colors=config.colors,
             max_dimension=config.max_dimension,
@@ -193,6 +195,17 @@ def _configured(config: RunConfig) -> VectorPreset:
         )
     except ValueError as exc:
         raise VectorizationError("invalid_parameters", str(exc)) from exc
+    if (config.auto_enhance or config.scene_preset is not None) and preset.mode != "artisan":
+        raise VectorizationError(
+            "invalid_parameters",
+            "Vector60 auto enhancement options are available only in artisan mode.",
+        )
+    if config.scene_preset is not None and not config.auto_enhance:
+        raise VectorizationError(
+            "invalid_parameters",
+            "A scene preset requires artisan auto enhancement.",
+        )
+    return preset
 
 
 def _opacity(alpha: int) -> str:
