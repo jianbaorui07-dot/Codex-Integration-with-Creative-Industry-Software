@@ -34,7 +34,7 @@ class Vector60ReportTests(unittest.TestCase):
             scene="logo",
             status="selected",
             candidate_count=4,
-            selected_candidate="vtracer-logo-01",
+            selected_candidate="vtracer_logo_crisp",
             metrics=metrics(),
             safety_verified=True,
             final_render_scored=True,
@@ -77,7 +77,13 @@ class Vector60ReportTests(unittest.TestCase):
             )
 
     def test_report_rejects_private_path_or_secret_shaped_reason_text(self) -> None:
-        for unsafe in ("C:/private/source.png", "token=secret", "customer material"):
+        for unsafe in (
+            "C:/private/source.png",
+            "token_secret",
+            "cookie_session_active",
+            "customer_material",
+            "ghp_secret",
+        ):
             with self.subTest(unsafe=unsafe), self.assertRaises(ValueError):
                 Vector60Report(
                     scene="unsupported_photo",
@@ -88,6 +94,19 @@ class Vector60ReportTests(unittest.TestCase):
                     final_render_scored=False,
                 )
 
+    def test_original_resolution_flag_requires_formal_scoring(self) -> None:
+        with self.assertRaises(ValueError):
+            Vector60Report(
+                scene="unsupported_photo",
+                status="unsupported_photo_fallback",
+                candidate_count=1,
+                selected_candidate="artisan_baseline",
+                metrics=metrics(),
+                fallback_reason="unsupported_photo",
+                safety_verified=True,
+                final_render_scored=False,
+            )
+
     def test_written_report_contains_no_output_path(self) -> None:
         report = Vector60Report(
             scene="unsupported_photo",
@@ -96,7 +115,7 @@ class Vector60ReportTests(unittest.TestCase):
             fallback_reason="unsupported_photo",
             safety_verified=True,
             final_render_scored=False,
-            warning_codes=("artisan_baseline_retained",),
+            warning_codes=("high_quality_not_claimed",),
         )
         with tempfile.TemporaryDirectory(prefix="private-account-material-") as temporary:
             output = Path(temporary) / "customer-token-cookie"

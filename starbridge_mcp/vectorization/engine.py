@@ -205,6 +205,17 @@ def _configured(config: RunConfig) -> VectorPreset:
             "invalid_parameters",
             "A scene preset requires artisan auto enhancement.",
         )
+    if config.scene_preset is not None and config.scene_preset not in {
+        "logo",
+        "lineart",
+        "flat",
+        "illustration",
+        "unsupported_photo",
+    }:
+        raise VectorizationError(
+            "invalid_parameters",
+            "Scene preset must be a supported Vector60 scene.",
+        )
     return preset
 
 

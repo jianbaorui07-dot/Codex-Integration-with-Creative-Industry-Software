@@ -113,6 +113,17 @@ class VectorizationModeTests(unittest.TestCase):
             engine._configured(RunConfig("placeholder.png", mode="artisan", scene_preset="lineart"))
         self.assertEqual(preset_without_enhancement.exception.code, "invalid_parameters")
 
+        with self.assertRaises(VectorizationError) as invalid_scene:
+            engine._configured(
+                RunConfig(
+                    "placeholder.png",
+                    mode="artisan",
+                    auto_enhance=True,
+                    scene_preset="token_secret",
+                )
+            )
+        self.assertEqual(invalid_scene.exception.code, "invalid_parameters")
+
     def test_svg_verifier_accepts_safe_cubic_paths_and_counts_real_anchors(self) -> None:
         path = self.root / "safe-curves.svg"
         path.write_text(

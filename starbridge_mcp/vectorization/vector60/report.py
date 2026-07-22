@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import math
-import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -11,8 +10,40 @@ SCENES = frozenset({"logo", "lineart", "flat", "illustration", "unsupported_phot
 STATUSES = frozenset(
     {"selected", "artisan_baseline_fallback", "unsupported_photo_fallback", "failed"}
 )
-SAFE_CODE = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,95}$")
 MAX_CANDIDATES = 12
+APPROVED_CANDIDATE_IDS = frozenset(
+    {
+        "artisan_baseline",
+        "vtracer_balanced",
+        "vtracer_cutout",
+        "vtracer_logo_crisp",
+        "vtracer_logo_smooth",
+        "vtracer_lineart_fine",
+        "vtracer_lineart_polygon",
+        "vtracer_flat_precise",
+        "vtracer_flat_compact",
+        "vtracer_illustration_detail",
+        "vtracer_illustration_compact",
+    }
+)
+FALLBACK_REASONS = frozenset(
+    {
+        "unsupported_photo",
+        "enhancement_not_allowed",
+        "pareto_retained_baseline",
+        "post_svgo_quality_gate",
+        "pipeline_stage_failed",
+    }
+)
+WARNING_CODES = frozenset(
+    {
+        "high_quality_not_claimed",
+        "baseline_render_unverified",
+        "primitive_fit.no_safe_proposal",
+        "seam_repair.no_safe_proposal",
+        *(f"candidate_failed.{candidate_id}" for candidate_id in APPROVED_CANDIDATE_IDS),
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -30,9 +61,11 @@ class RenderMetrics:
     rendered_height: int
 
     def __post_init__(self) -> None:
-        unit_metrics = (self.ssim, self.normalized_mae, self.edge_dice)
+        if not math.isfinite(self.ssim) or not -1.0 <= self.ssim <= 1.0:
+            raise ValueError("SSIM must be a finite value from minus one to one.")
+        unit_metrics = (self.normalized_mae, self.edge_dice)
         if not all(math.isfinite(value) and 0.0 <= value <= 1.0 for value in unit_metrics):
-            raise ValueError("Render similarity metrics must be finite values from zero to one.")
+            raise ValueError("MAE and Edge Dice must be finite values from zero to one.")
         if not math.isfinite(self.elapsed_seconds) or self.elapsed_seconds < 0.0:
             raise ValueError("Render elapsed time must be finite and non-negative.")
         counts = (
@@ -74,13 +107,15 @@ class Vector60Report:
             raise ValueError("Vector60 report status is not supported.")
         if not 0 <= self.candidate_count <= MAX_CANDIDATES:
             raise ValueError("Vector60 report candidate count exceeds the hard limit.")
-        safe_codes = (
-            *(self.warning_codes or ()),
-            *((self.selected_candidate,) if self.selected_candidate is not None else ()),
-            *((self.fallback_reason,) if self.fallback_reason is not None else ()),
-        )
-        if any(SAFE_CODE.fullmatch(value) is None for value in safe_codes):
-            raise ValueError("Vector60 reports accept only redaction-safe identifiers.")
+        if (
+            self.selected_candidate is not None
+            and self.selected_candidate not in APPROVED_CANDIDATE_IDS
+        ):
+            raise ValueError("Vector60 reports accept only approved candidate identifiers.")
+        if self.fallback_reason is not None and self.fallback_reason not in FALLBACK_REASONS:
+            raise ValueError("Vector60 reports accept only approved fallback reasons.")
+        if any(value not in WARNING_CODES for value in self.warning_codes):
+            raise ValueError("Vector60 reports accept only approved warning codes.")
         if self.status == "selected":
             if self.metrics is None or not self.final_render_scored or not self.safety_verified:
                 raise ValueError(
@@ -90,6 +125,10 @@ class Vector60Report:
                 raise ValueError("Selected results require a candidate identifier.")
         if self.final_render_scored and self.metrics is None:
             raise ValueError("Final-render scoring requires render metrics.")
+        if self.metrics is not None and not self.final_render_scored:
+            raise ValueError(
+                "Render metrics cannot be reported without formal final-render scoring."
+            )
         if self.status != "selected" and self.fallback_reason is None:
             raise ValueError("Fallback and failure reports require a safe reason code.")
 
@@ -105,7 +144,8 @@ class Vector60Report:
                 "safety_verified": self.safety_verified,
                 "final_render_scored": self.final_render_scored,
                 "original_resolution_render": bool(
-                    self.metrics is not None
+                    self.final_render_scored
+                    and self.metrics is not None
                     and self.metrics.reference_width == self.metrics.rendered_width
                     and self.metrics.reference_height == self.metrics.rendered_height
                 ),
