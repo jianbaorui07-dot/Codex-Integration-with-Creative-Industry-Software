@@ -41,6 +41,16 @@ DesktopTransport ── Tauri invoke ── Rust 受限代理
 
 ## 前端开发与测试
 
+macOS、Linux 和不受 PowerShell 执行策略影响的 Windows 终端统一使用裸 `npm`：
+
+```bash
+npm install --prefix apps/starbridge-desktop
+npm test --prefix apps/starbridge-desktop
+npm run build --prefix apps/starbridge-desktop
+```
+
+若 Windows PowerShell 拦截 `npm.ps1`，仍可使用原有 `npm.cmd` 入口：
+
 ```powershell
 npm.cmd install --prefix apps\starbridge-desktop
 npm.cmd test --prefix apps\starbridge-desktop
@@ -75,15 +85,23 @@ powershell -ExecutionPolicy Bypass -File apps\starbridge-desktop\scripts\Check-P
 
 依赖齐全后：
 
-```powershell
-npm.cmd run tauri:dev --prefix apps\starbridge-desktop
+```bash
+npm run tauri:dev --prefix apps/starbridge-desktop
 ```
 
 P1 的无安装器本地构建命令为：
 
-```powershell
-npm.cmd run tauri:build --prefix apps\starbridge-desktop
+```bash
+npm run tauri:build --prefix apps/starbridge-desktop
 ```
+
+Tauri 的前端 hooks 使用跨平台的 `npm run dev` / `npm run build`。通用
+`tauri.conf.json` 不再装载 Windows sidecar；Tauri 在 Windows 上会自动合并
+`tauri.windows.conf.json`，恢复 one-folder sidecar、资源目录和 NSIS 配置。macOS
+的 Darwin sidecar 与打包配置尚未加入，不能据此宣称桌面后端已可在 macOS 运行。
+`npm test` 还会使用当前 lockfile 安装的 Tauri v2 schema 校验通用配置和 Windows
+合并结果，并以隔离 fixture 对照当前 Tauri CLI 的 URI 与范围解析；未知 schema
+format、无效 JSON、缺失平台 patch 和未知平台均按失败处理。
 
 P2 增加了仅用于本地验收的当前用户 NSIS 构建入口：
 

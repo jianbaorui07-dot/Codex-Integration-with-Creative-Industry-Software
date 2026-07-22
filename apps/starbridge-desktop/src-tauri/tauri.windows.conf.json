@@ -1,0 +1,15 @@
+{
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "externalBin": ["binaries/starbridge-sidecar"],
+    "resources": {
+      "binaries/_internal/": "_internal/"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
