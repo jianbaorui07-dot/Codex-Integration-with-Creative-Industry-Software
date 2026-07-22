@@ -51,6 +51,7 @@ function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): CreNexusCli
     }),
     resetCodexConnection: vi.fn().mockResolvedValue({ reset: true, pairing_code: "WXYZ6789" }),
     openCodexPairing: vi.fn().mockResolvedValue(undefined),
+    openCodexTask: vi.fn().mockResolvedValue(undefined),
     openGitHubProject: vi.fn().mockResolvedValue(undefined),
     pairCreativeApplication: vi.fn(),
     reconnectCreativeApplication: vi.fn(),

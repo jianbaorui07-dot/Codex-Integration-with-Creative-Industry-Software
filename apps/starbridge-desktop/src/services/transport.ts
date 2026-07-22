@@ -43,6 +43,7 @@ export interface CreNexusTransport {
     confirmReset: boolean,
   ): Promise<TransportResponse<ApiEnvelope<CodexConnectionResetResult>>>;
   openCodexPairing(pairingCode: string): Promise<void>;
+  openCodexTask(prompt: string, confirmOpen: boolean): Promise<void>;
   openGitHubProject(): Promise<void>;
   pairCreativeApplication(
     applicationId: string,

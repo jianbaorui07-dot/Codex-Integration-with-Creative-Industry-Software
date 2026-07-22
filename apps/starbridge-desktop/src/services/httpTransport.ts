@@ -137,6 +137,13 @@ export class HttpTransport implements CreNexusTransport {
     );
   }
 
+  async openCodexTask(_prompt: string, _confirmOpen: boolean): Promise<void> {
+    throw new TransportError(
+      "desktop_required",
+      "浏览器开发模式不能打开本机 Codex 对话。",
+    );
+  }
+
   async openGitHubProject(): Promise<void> {
     throw new TransportError(
       "desktop_required",

@@ -114,6 +114,10 @@ export class DesktopTransport implements CreNexusTransport {
     return this.call("open_codex_pairing", { pairingCode });
   }
 
+  openCodexTask(prompt: string, confirmOpen: boolean): Promise<void> {
+    return this.call("open_codex_task", { prompt, confirmOpen });
+  }
+
   openGitHubProject(): Promise<void> {
     return this.call("open_github_project");
   }

@@ -21,6 +21,7 @@ function transportReturning(status: number, body: Record<string, unknown>): CreN
     installCodexConnector: async () => ({ status: 200, body: { ok: true } }),
     resetCodexConnection: async () => ({ status: 200, body: { ok: true } }),
     openCodexPairing: async () => undefined,
+    openCodexTask: async () => undefined,
     openGitHubProject: async () => undefined,
     pairCreativeApplication: async () => ({ status: 200, body: { ok: true } }),
     reconnectCreativeApplication: async () => ({ status: 200, body: { ok: true } }),

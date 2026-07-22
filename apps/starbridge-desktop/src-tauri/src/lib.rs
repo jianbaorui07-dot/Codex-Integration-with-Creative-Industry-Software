@@ -609,6 +609,29 @@ fn open_codex_pairing(pairing_code: String) -> Result<(), String> {
     })
 }
 
+fn valid_codex_prompt(prompt: &str) -> bool {
+    let trimmed = prompt.trim();
+    !trimmed.is_empty()
+        && trimmed.len() <= 4000
+        && !trimmed.chars().any(|character| character == '\0')
+}
+
+#[tauri::command]
+fn open_codex_task(prompt: String, confirm_open: bool) -> Result<(), String> {
+    if !confirm_open {
+        return Err("打开 Codex 对话前需要明确确认。".into());
+    }
+    if !valid_codex_prompt(&prompt) {
+        return Err("Codex 指令不能为空，且不能超过 4000 字节。".into());
+    }
+    let mut link =
+        url::Url::parse("codex://new").map_err(|_| "无法创建 Codex 对话链接。".to_string())?;
+    link.query_pairs_mut().append_pair("prompt", prompt.trim());
+    open::that(link.as_str()).map_err(|_| {
+        "无法打开 Codex；请确认 Codex 已安装，并从连接中心完成本次会话关联。".to_string()
+    })
+}
+
 const GITHUB_PROJECT_URL: &str = "https://github.com/jianbaorui07-dot/CreNexus";
 
 #[tauri::command]
@@ -926,6 +949,7 @@ pub fn run() {
             reconnect_creative_application,
             disconnect_creative_application,
             open_codex_pairing,
+            open_codex_task,
             open_github_project,
             choose_vector_input,
             import_project_asset,
@@ -1039,6 +1063,14 @@ mod tests {
         }
         assert!(!valid_creative_application_id("../../private"));
         assert!(!valid_creative_application_id("unknown"));
+    }
+
+    #[test]
+    fn codex_prompt_requires_bounded_visible_text() {
+        assert!(valid_codex_prompt("继续客户验收"));
+        assert!(!valid_codex_prompt("   "));
+        assert!(!valid_codex_prompt("包含\0控制字符"));
+        assert!(!valid_codex_prompt(&"x".repeat(4001)));
     }
 
     #[test]
