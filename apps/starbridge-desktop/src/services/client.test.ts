@@ -74,6 +74,7 @@ function transportReturning(status: number, body: Record<string, unknown>): CreN
       body: { ok: true, data: { eventCount: 0, events: [] } },
     }),
     openVectorOutput: async () => ({ status: 200, body: { ok: true, data: { opened: true } } }),
+    openProjectArtifacts: async () => "artifacts",
   } as CreNexusTransport;
 }
 

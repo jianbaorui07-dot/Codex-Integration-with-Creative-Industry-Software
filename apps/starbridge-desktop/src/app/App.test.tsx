@@ -38,6 +38,9 @@ function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): CreNexusCli
       recoveryAttempts: 1,
     }),
     openLogsDirectory: vi.fn().mockResolvedValue("<LOCAL_APP_DATA>/CreNexus/logs"),
+    openProjectArtifacts: vi
+      .fn()
+      .mockResolvedValue("<LOCAL_APP_DATA>/CreNexus/artifacts/project-test"),
     getConnections: vi.fn().mockResolvedValue(PAIRED_CONNECTIONS),
     installCodexConnector: vi.fn().mockResolvedValue({
       installed: true,
@@ -460,7 +463,8 @@ describe("desktop runtime status", () => {
       expect.objectContaining({
         projectId: "project-test",
         sourceAssetId: "asset-test",
-        drawingMode: "artisan",
+        drawingMode: "smart",
+        parameters: { exact: { maxDimension: 1024, maxSvgSizeMb: 128 } },
       }),
     ));
     expect((await screen.findAllByText("等待开始")).length).toBeGreaterThan(0);

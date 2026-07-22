@@ -305,7 +305,7 @@ export function App({ client: providedClient }: AppProps) {
       case "tasks":
         return <TasksPage tasks={tasks} onStart={() => openWorkflow()} onOpenJob={openJob} />;
       case "job-detail":
-        return <JobDetailPage client={client} jobId={selectedJobId} onOpenDelivery={openDelivery} onBack={() => setPage("tasks")} onJobChanged={() => void refreshTasks()} />;
+        return <JobDetailPage client={client} jobId={selectedJobId} onOpenDelivery={openDelivery} onRetryVector={(projectId) => openWorkflow(projectId)} onBack={() => setPage("tasks")} onJobChanged={() => void refreshTasks()} />;
       case "delivery":
         return <DeliveryPage client={client} initialProjectId={selectedProjectId} />;
       case "license":

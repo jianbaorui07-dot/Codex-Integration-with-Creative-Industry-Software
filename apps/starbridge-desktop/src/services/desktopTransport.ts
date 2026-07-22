@@ -94,6 +94,10 @@ export class DesktopTransport implements CreNexusTransport {
     return this.call<string>("open_logs_directory");
   }
 
+  openProjectArtifacts(projectId: string): Promise<string> {
+    return this.call<string>("open_project_artifacts", { projectId });
+  }
+
   installCodexConnector(
     confirmInstall: boolean,
   ): Promise<TransportResponse<ApiEnvelope<CodexConnectorInstallResult>>> {

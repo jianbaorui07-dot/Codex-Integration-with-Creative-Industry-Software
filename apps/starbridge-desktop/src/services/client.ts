@@ -45,6 +45,7 @@ export interface CreNexusClient {
   getBootstrap(): Promise<ApiEnvelope<unknown>>;
   restartBackend(): Promise<RuntimeStatus>;
   openLogsDirectory(): Promise<string>;
+  openProjectArtifacts(projectId: string): Promise<string>;
   getConnections(): Promise<ConnectionOverview>;
   installCodexConnector(confirmInstall: boolean): Promise<CodexConnectorInstallResult>;
   resetCodexConnection(confirmReset: boolean): Promise<CodexConnectionResetResult>;
@@ -182,6 +183,10 @@ export class CreNexusApiClient implements CreNexusClient {
 
   openLogsDirectory(): Promise<string> {
     return this.transport.openLogsDirectory();
+  }
+
+  openProjectArtifacts(projectId: string): Promise<string> {
+    return this.execute(() => this.transport.openProjectArtifacts(projectId));
   }
 
   getConnections(): Promise<ConnectionOverview> {
