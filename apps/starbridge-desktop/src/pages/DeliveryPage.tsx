@@ -11,8 +11,10 @@ interface DeliveryPageProps {
 
 export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectId, setProjectId] = useState(initialProjectId ?? "");
   const [delivery, setDelivery] = useState<ProjectDelivery | null>(null);
+  const [deliveryLoading, setDeliveryLoading] = useState(false);
   const [error, setError] = useState("");
   const [openMessage, setOpenMessage] = useState("");
   const [exportFormat, setExportFormat] = useState<AdobeExportFormat>("ai");
@@ -20,6 +22,7 @@ export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
   const [confirmExport, setConfirmExport] = useState(false);
   const [exportBusy, setExportBusy] = useState(false);
   const [exportHistory, setExportHistory] = useState<AdobeExportReceipt[]>([]);
+  const [exportHistoryLoading, setExportHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
 
   const compatibleArtifacts = useMemo(() => {
@@ -32,26 +35,64 @@ export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
     });
   }, [delivery, exportFormat]);
 
+  const chooseProject = (nextProjectId: string) => {
+    setProjectId(nextProjectId);
+    setDelivery(null);
+    setDeliveryLoading(Boolean(nextProjectId));
+    setExportHistory([]);
+    setExportHistoryLoading(Boolean(nextProjectId));
+    setError("");
+    setHistoryError("");
+  };
+
   const loadProjects = useCallback(async () => {
+    setProjectsLoading(true);
+    setError("");
     try {
       const next = await client.getProjects();
       setProjects(next);
       setProjectId((current) => current || initialProjectId || next[0]?.projectId || "");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "项目列表暂时无法读取。");
+    } finally {
+      setProjectsLoading(false);
     }
   }, [client, initialProjectId]);
 
   useEffect(() => { void loadProjects(); }, [loadProjects]);
   useEffect(() => {
-    if (!projectId) { setDelivery(null); setExportHistory([]); return; }
+    let active = true;
+    if (!projectId) {
+      setDelivery(null);
+      setDeliveryLoading(false);
+      setExportHistory([]);
+      setExportHistoryLoading(false);
+      return () => { active = false; };
+    }
+    setDelivery(null);
+    setDeliveryLoading(true);
+    setExportHistory([]);
+    setExportHistoryLoading(true);
     setError("");
     setHistoryError("");
-    void client.getProjectDelivery(projectId).then(setDelivery).catch((reason) => setError(reason instanceof Error ? reason.message : "交付记录暂时无法读取。"));
-    void client.listAdobeExports(projectId).then(setExportHistory).catch((reason) => {
-      setExportHistory([]);
-      setHistoryError(reason instanceof Error ? reason.message : "Adobe 导出历史暂时无法读取。");
+    void client.getProjectDelivery(projectId).then((next) => {
+      if (active) setDelivery(next);
+    }).catch((reason) => {
+      if (active) setError(reason instanceof Error ? reason.message : "交付记录暂时无法读取。");
+    }).finally(() => {
+      if (active) setDeliveryLoading(false);
     });
+    void client.listAdobeExports(projectId).then((next) => {
+      if (active) setExportHistory(next);
+    }).catch((reason) => {
+      if (active) {
+        setExportHistory([]);
+        setHistoryError(reason instanceof Error ? reason.message : "Adobe 导出历史暂时无法读取。");
+      }
+    }).finally(() => {
+      if (active) setExportHistoryLoading(false);
+    });
+    return () => { active = false; };
   }, [client, projectId]);
   useEffect(() => {
     setExportSource((current) => compatibleArtifacts.some((artifact) => artifact.relativePath === current)
@@ -107,8 +148,17 @@ export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
       <header className="page-intro"><div><span className="page-kicker">从实际产物生成</span><h2>交付与证据</h2><p>这里不会预先声称存在 PDF、AI 或其他格式。只有已经注册、具有文件哈希的真实产物才会列出。</p></div><span className="local-badge">不伪造格式</span></header>
       {error ? <div className="error-state" role="alert"><strong>读取未完成</strong><p>{error}</p></div> : null}
       {openMessage ? <div className="success-state" role="status"><strong>{openMessage}</strong></div> : null}
-      <section className="record-panel delivery-selector"><label>项目<select value={projectId} onChange={(event) => setProjectId(event.target.value)}><option value="">请选择项目</option>{projects.map((project) => <option key={project.projectId} value={project.projectId}>{project.projectName}</option>)}</select></label></section>
-      {delivery && delivery.artifacts.length > 0 ? <>
+      <section className="record-panel delivery-selector"><label>项目<select value={projectId} disabled={projectsLoading} onChange={(event) => chooseProject(event.target.value)}><option value="">{projectsLoading ? "正在读取项目…" : "请选择项目"}</option>{projects.map((project) => <option key={project.projectId} value={project.projectId}>{project.projectName}</option>)}</select></label></section>
+      {projectsLoading ? (
+        <EmptyState title="正在读取本机项目" description="正在加载项目列表，不会把尚未载入的数据显示为不存在。" />
+      ) : error && !delivery ? (
+        <EmptyState
+          title={projectId ? "交付记录没有载入" : "项目列表没有载入"}
+          description="没有把读取失败显示成空项目；恢复本地服务后可重新进入本页。"
+        />
+      ) : deliveryLoading || (Boolean(projectId) && delivery === null) ? (
+        <EmptyState title="正在读取交付记录" description="正在核对这个项目登记的真实产物、哈希和证据。" />
+      ) : delivery && delivery.artifacts.length > 0 ? <>
         <div className="delivery-summary"><div><span>实际格式</span><strong>{delivery.formats.join(" · ") || "无扩展名"}</strong></div><div><span>产物</span><strong>{delivery.artifacts.length}</strong></div><div><span>证据</span><strong>{delivery.evidenceIds.length}</strong></div></div>
         <div className="button-row"><button type="button" className="primary" onClick={() => void openArtifacts()}>打开项目交付目录</button></div>
         <section className="record-panel adobe-export-panel">
@@ -127,7 +177,7 @@ export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
         <section className="record-panel adobe-export-history">
           <div className="section-heading"><div><span>可追溯交付</span><h3>Adobe 导出历史</h3></div><span className="state-label neutral">不保存绝对路径</span></div>
           {historyError ? <p className="truth-note" role="status">{historyError}</p> : null}
-          {exportHistory.length > 0 ? <div className="adobe-history-list">{exportHistory.map((receipt) => <article key={receipt.receiptId}>
+          {exportHistoryLoading ? <p className="truth-note" role="status">正在读取 Adobe 导出历史…</p> : exportHistory.length > 0 ? <div className="adobe-history-list">{exportHistory.map((receipt) => <article key={receipt.receiptId}>
             <div><span className="task-kind">{receipt.format.toUpperCase()}</span><strong>{receipt.fileName}</strong><p>{Math.ceil(receipt.sizeBytes / 1024)} KB · 来源 {receipt.sourceBasename}</p></div>
             <dl><div><dt>导出时间</dt><dd>{new Date(receipt.createdAtUnixSeconds * 1000).toLocaleString("zh-CN", { hour12: false })}</dd></div><div><dt>SHA-256</dt><dd>{receipt.sha256}</dd></div><div><dt>验证</dt><dd>{receipt.nativeReopenValidated ? "Adobe 原生重开通过" : "未验证"} · 保存路径未记录</dd></div></dl>
           </article>)}</div> : !historyError ? <p className="truth-note">还没有 PSD/AI 导出记录。成功导出后，重启软件仍可核对文件名、大小、校验值与原生验证结果。</p> : null}

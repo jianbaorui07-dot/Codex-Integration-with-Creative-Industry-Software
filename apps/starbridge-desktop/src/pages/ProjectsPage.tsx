@@ -15,6 +15,7 @@ const usesImportedAsset = (workflowId: string) =>
 
 export function ProjectsPage({ client, runtimeReady, onOpenWorkflow }: ProjectsPageProps) {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [workflowId, setWorkflowId] = useState("vector-delivery-v1");
@@ -23,11 +24,18 @@ export function ProjectsPage({ client, runtimeReady, onOpenWorkflow }: ProjectsP
   const [importConfirmations, setImportConfirmations] = useState<Record<string, boolean>>({});
 
   const refresh = useCallback(async () => {
-    if (!runtimeReady) return;
+    if (!runtimeReady) {
+      setLoading(true);
+      return;
+    }
+    setLoading(true);
+    setError("");
     try {
       setProjects(await client.getProjects());
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "项目列表暂时无法读取。");
+    } finally {
+      setLoading(false);
     }
   }, [client, runtimeReady]);
 
@@ -97,7 +105,11 @@ export function ProjectsPage({ client, runtimeReady, onOpenWorkflow }: ProjectsP
         <button type="button" className="primary" disabled={!runtimeReady || busy || !projectName.trim()} onClick={() => void createProject()}>创建项目</button>
       </section>
 
-      {projects.length === 0 ? (
+      {loading ? (
+        <EmptyState title="正在读取本机项目" description="CreNexus 正在加载仅保存在这台电脑上的项目和素材记录。" />
+      ) : error && projects.length === 0 ? (
+        <EmptyState title="项目列表没有载入" description="本机项目数据仍保留；请先恢复本地服务，再重新打开项目页。" />
+      ) : projects.length === 0 ? (
         <EmptyState title="还没有项目" description="创建第一个项目后，再从系统文件选择器导入一张 PNG 或 JPEG 图片。" />
       ) : (
         <div className="record-list">

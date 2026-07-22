@@ -118,6 +118,16 @@ function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): CreNexusCli
   };
 }
 
+function deferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((nextResolve, nextReject) => {
+    resolve = nextResolve;
+    reject = nextReject;
+  });
+  return { promise, resolve, reject };
+}
+
 describe("desktop runtime status", () => {
   it("shows the product home while the runtime starts", () => {
     const pending = new Promise<RuntimeStatus>(() => undefined);
@@ -143,6 +153,84 @@ describe("desktop runtime status", () => {
     expect(await screen.findByText("运行正常 · 仅本机")).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: "新建或打开项目" })).toBeEnabled();
     expect(screen.queryByText(/49152/)).not.toBeInTheDocument();
+  });
+
+  it("does not report that projects are empty while the local project list is still loading", async () => {
+    const client = makeClient({
+      state: "connected",
+      message: "安全本地服务已经就绪。",
+      recoveryAttempts: 0,
+    });
+    const projectsRequest = deferred<Awaited<ReturnType<CreNexusClient["getProjects"]>>>();
+    client.getProjects = vi.fn().mockReturnValue(projectsRequest.promise);
+
+    render(<App client={client} />);
+    fireEvent.click(await screen.findByRole("button", { name: "项目" }));
+
+    expect(await screen.findByText("正在读取本机项目")).toBeInTheDocument();
+    expect(screen.queryByText("还没有项目")).not.toBeInTheDocument();
+
+    projectsRequest.resolve([]);
+    expect(await screen.findByText("还没有项目")).toBeInTheDocument();
+  });
+
+  it("does not present a failed project read as an empty customer account", async () => {
+    const client = makeClient({
+      state: "connected",
+      message: "安全本地服务已经就绪。",
+      recoveryAttempts: 0,
+    });
+    client.getProjects = vi.fn().mockRejectedValue(new Error("本机服务暂时没有响应。"));
+
+    render(<App client={client} />);
+    fireEvent.click(await screen.findByRole("button", { name: "项目" }));
+
+    expect(await screen.findByText("项目列表没有载入")).toBeInTheDocument();
+    expect(screen.getByText("本机服务暂时没有响应。")).toBeInTheDocument();
+    expect(screen.queryByText("还没有项目")).not.toBeInTheDocument();
+  });
+
+  it("keeps delivery in a loading state until the selected project's records arrive", async () => {
+    const client = makeClient({
+      state: "connected",
+      message: "安全本地服务已经就绪。",
+      recoveryAttempts: 0,
+    });
+    const project = {
+      schemaVersion: 1,
+      projectId: "project-delivery-loading",
+      projectName: "客户交付加载测试",
+      workflowId: "vector-delivery-v1",
+      description: "",
+      sourceAssets: [],
+      currentJob: null,
+      jobHistory: [],
+      artifacts: [],
+      qualityReports: [],
+      evidence: [],
+      createdAt: "2026-07-22T08:00:00Z",
+      updatedAt: "2026-07-22T08:00:00Z",
+    } as const;
+    const deliveryRequest = deferred<Awaited<ReturnType<CreNexusClient["getProjectDelivery"]>>>();
+    client.getProjects = vi.fn().mockResolvedValue([project]);
+    client.getProjectDelivery = vi.fn().mockReturnValue(deliveryRequest.promise);
+    client.listAdobeExports = vi.fn().mockResolvedValue([]);
+
+    render(<App client={client} />);
+    fireEvent.click(await screen.findByRole("button", { name: "交付与证据" }));
+
+    expect(await screen.findByText("正在读取交付记录")).toBeInTheDocument();
+    expect(screen.queryByText("这个项目还没有可交付产物")).not.toBeInTheDocument();
+
+    deliveryRequest.resolve({
+      projectId: project.projectId,
+      projectName: project.projectName,
+      artifacts: [],
+      evidenceIds: [],
+      formats: [],
+      fabricatedOutputs: false,
+    });
+    expect(await screen.findByText("这个项目还没有可交付产物")).toBeInTheDocument();
   });
 
   it("opens the fixed GitHub project from the top bar", async () => {
