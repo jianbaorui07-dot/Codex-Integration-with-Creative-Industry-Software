@@ -75,6 +75,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Keep final-render quality gates but skip the minimum-anchor search.",
     )
     parser.add_argument(
+        "--auto-enhance",
+        action="store_true",
+        help="Run the optional Vector60 enhancement pass in artisan mode.",
+    )
+    parser.add_argument(
+        "--scene-preset",
+        choices=("logo", "lineart", "flat", "illustration", "unsupported_photo"),
+        default=None,
+        help="Override Vector60 scene classification when --auto-enhance is enabled.",
+    )
+    parser.add_argument(
         "--compact",
         action="store_true",
         help="Print an agent-friendly summary; the full report is still saved to disk.",
@@ -102,6 +113,8 @@ def config_from_args(args: argparse.Namespace) -> RunConfig:
         resource_budget=args.resource_budget,
         detail_protection=args.detail_protection,
         auto_minimize_anchors=not args.no_auto_minimize_anchors,
+        auto_enhance=args.auto_enhance,
+        scene_preset=args.scene_preset,
         compact=args.compact,
     )
 

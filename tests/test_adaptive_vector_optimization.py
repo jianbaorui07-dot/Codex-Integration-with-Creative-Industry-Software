@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
-from starbridge_mcp.vectorization import RunConfig, VectorizationError, cli, engine
+from starbridge_mcp.vectorization import RunConfig, cli, engine
 from starbridge_mcp.vectorization.adaptive_optimize import (
     QUALITY_PRESETS,
     AdaptiveOptimizationError,
@@ -358,28 +358,29 @@ class AdaptiveEngineIntegrationTests(unittest.TestCase):
         self.assertRegex(result["optimization"]["quality_ref"], r"^quality:")
         self.assertLessEqual(len(result["optimization"]["error_hotspots"]), 5)
 
-    def test_resource_limit_stops_without_overwriting_an_existing_result(self) -> None:
+    def test_resource_limit_publishes_verified_artisan_baseline_fallback(self) -> None:
         target = self.output_root / "resource-case" / "artisan"
         target.mkdir(parents=True)
         old_svg = target / "vector.svg"
         old_svg.write_text("old-result", encoding="utf-8")
-        with (
-            mock.patch(
-                "starbridge_mcp.vectorization.adaptive_optimize.resource_limit_bytes",
-                return_value=1,
-            ),
-            self.assertRaises(VectorizationError) as raised,
+        with mock.patch(
+            "starbridge_mcp.vectorization.adaptive_optimize.resource_limit_bytes",
+            return_value=1,
         ):
-            engine.run_vectorization(
+            result = engine.run_vectorization(
                 RunConfig(
                     input_path=str(self.source),
                     mode="artisan",
                     reference_id="resource-case",
                 )
             )
-        self.assertEqual(raised.exception.code, "resource_limit")
-        self.assertEqual(old_svg.read_text(encoding="utf-8"), "old-result")
-        self.assertEqual(list(target.iterdir()), [old_svg])
+        self.assertTrue(result["ok"])
+        self.assertEqual(old_svg.read_bytes(), (target / "artisan_baseline.svg").read_bytes())
+        self.assertFalse((target / "adaptive_optimization.json").exists())
+        self.assertTrue(result["validation"]["svg_verified"])
+        self.assertFalse(result["validation"]["image_trace_used"])
+        report_text = (target / "vector_report.json").read_text(encoding="utf-8")
+        self.assertNotIn(self.source.name, report_text)
 
     def test_exact_output_is_unchanged_by_artisan_only_options(self) -> None:
         first = engine.run_vectorization(

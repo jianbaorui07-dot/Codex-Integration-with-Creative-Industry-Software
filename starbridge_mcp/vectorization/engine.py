@@ -65,6 +65,8 @@ class RunConfig:
     resource_budget: str = "auto"
     detail_protection: float = 0.75
     auto_minimize_anchors: bool = True
+    auto_enhance: bool = False
+    scene_preset: str | None = None
     compact: bool = False
 
 
@@ -180,7 +182,7 @@ def load_source(path_value: str, max_pixels: int) -> tuple[Image.Image, dict[str
 
 def _configured(config: RunConfig) -> VectorPreset:
     try:
-        return configured_preset(
+        preset = configured_preset(
             config.mode,
             colors=config.colors,
             max_dimension=config.max_dimension,
@@ -193,6 +195,28 @@ def _configured(config: RunConfig) -> VectorPreset:
         )
     except ValueError as exc:
         raise VectorizationError("invalid_parameters", str(exc)) from exc
+    if (config.auto_enhance or config.scene_preset is not None) and preset.mode != "artisan":
+        raise VectorizationError(
+            "invalid_parameters",
+            "Vector60 auto enhancement options are available only in artisan mode.",
+        )
+    if config.scene_preset is not None and not config.auto_enhance:
+        raise VectorizationError(
+            "invalid_parameters",
+            "A scene preset requires artisan auto enhancement.",
+        )
+    if config.scene_preset is not None and config.scene_preset not in {
+        "logo",
+        "lineart",
+        "flat",
+        "illustration",
+        "unsupported_photo",
+    }:
+        raise VectorizationError(
+            "invalid_parameters",
+            "Scene preset must be a supported Vector60 scene.",
+        )
+    return preset
 
 
 def _opacity(alpha: int) -> str:
@@ -976,6 +1000,7 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
         artisan_edit_index: dict[str, Any] | None = None
         artisan_scene: Any | None = None
         adaptive_report: dict[str, Any] | None = None
+        vector60_run_report: dict[str, Any] | None = None
 
         if preset.mode == "exact":
             work_image = (
@@ -1033,73 +1058,126 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                 )
                 baseline_svg = staging / "artisan_baseline.svg"
                 _write_artisan_svg(baseline_svg, artisan_scene, paints, shape_names)
-                from .adaptive_optimize import (
-                    AdaptiveOptimizationError,
-                    AdaptiveOptions,
-                    optimize_artisan_scene,
-                )
+                final_uses_artisan_scene = True
+                if config.auto_enhance:
+                    from .vector60.pipeline import (
+                        fallback_to_artisan_baseline,
+                        run_vector60_pipeline,
+                    )
 
-                try:
-                    optimized = optimize_artisan_scene(
-                        labels=labels,
-                        baseline_scene=artisan_scene,
-                        baseline_metrics=vector_metrics,
-                        baseline_svg=baseline_svg,
-                        reference=source_image,
-                        source_sha256=str(source["source_sha256"]),
-                        preset=preset,
-                        options=AdaptiveOptions(
-                            quality_preset=config.quality_preset,
-                            target_difference=config.target_difference,
-                            anchor_budget=config.anchor_budget,
-                            resource_budget=config.resource_budget,
+                    try:
+                        vector60_result = run_vector60_pipeline(
+                            reference=source_image,
+                            candidate_source=work_image,
+                            baseline_svg=baseline_svg,
+                            staging_dir=staging,
+                            scene_preset=config.scene_preset,
                             detail_protection=config.detail_protection,
-                            auto_minimize_anchors=config.auto_minimize_anchors,
-                        ),
-                        staging_dir=staging,
-                        cache_dir=OUTPUT_ROOT / ".adaptive-cache",
-                        write_scene=lambda candidate_path, candidate_scene: _write_artisan_svg(
-                            candidate_path, candidate_scene, paints, shape_names
-                        ),
+                        )
+                    except Exception:
+                        vector60_result = fallback_to_artisan_baseline(
+                            reference=source_image,
+                            candidate_source=work_image,
+                            baseline_svg=baseline_svg,
+                            staging_dir=staging,
+                            scene_preset=config.scene_preset,
+                            detail_protection=config.detail_protection,
+                        )
+                    vector60_run_report = vector60_result.report.as_public_dict()
+                    shutil.copyfile(vector60_result.svg_path, svg_path)
+                    if vector60_result.render_path is not None:
+                        shutil.copyfile(
+                            vector60_result.render_path,
+                            staging / "svg_render.png",
+                        )
+                    if not vector60_result.fallback_used:
+                        final_uses_artisan_scene = False
+                        vector_metrics = {"external_ai_calls": 0}
+                else:
+                    from .adaptive_optimize import (
+                        AdaptiveOptions,
+                        optimize_artisan_scene,
                     )
-                except AdaptiveOptimizationError as exc:
-                    raise VectorizationError(exc.code, str(exc)) from exc
-                artisan_scene = optimized.scene
-                vector_metrics = optimized.vector_metrics
-                adaptive_report = optimized.report
-                shutil.copyfile(optimized.svg_path, svg_path)
-                shutil.copyfile(optimized.render_path, staging / "svg_render.png")
-                (staging / "adaptive_optimization.json").write_text(
-                    json.dumps(adaptive_report, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                artisan_structure = _artisan_structure_manifest(
-                    artisan_scene,
-                    paints,
-                    shape_names,
-                )
-                artisan_edit_index = _artisan_edit_index(
-                    artisan_structure,
-                    file_sha256(svg_path),
-                )
-                (staging / "artisan_structure.json").write_text(
-                    json.dumps(
+
+                    try:
+                        optimized = optimize_artisan_scene(
+                            labels=labels,
+                            baseline_scene=artisan_scene,
+                            baseline_metrics=vector_metrics,
+                            baseline_svg=baseline_svg,
+                            reference=source_image,
+                            source_sha256=str(source["source_sha256"]),
+                            preset=preset,
+                            options=AdaptiveOptions(
+                                quality_preset=config.quality_preset,
+                                target_difference=config.target_difference,
+                                anchor_budget=config.anchor_budget,
+                                resource_budget=config.resource_budget,
+                                detail_protection=config.detail_protection,
+                                auto_minimize_anchors=config.auto_minimize_anchors,
+                            ),
+                            staging_dir=staging,
+                            cache_dir=OUTPUT_ROOT / ".adaptive-cache",
+                            write_scene=lambda candidate_path, candidate_scene: _write_artisan_svg(
+                                candidate_path, candidate_scene, paints, shape_names
+                            ),
+                        )
+                    except Exception:
+                        shutil.copyfile(baseline_svg, svg_path)
+                        warnings_list.append(
+                            "Artisan optimization failed; artisan_baseline.svg was retained."
+                        )
+                        try:
+                            from .svg_render import render_verified_svg
+
+                            render_verified_svg(
+                                baseline_svg,
+                                staging / "svg_render.png",
+                                expected_width=work_image.width,
+                                expected_height=work_image.height,
+                                output_width=source_image.width,
+                                output_height=source_image.height,
+                            )
+                        except Exception:
+                            pass
+                    else:
+                        artisan_scene = optimized.scene
+                        vector_metrics = optimized.vector_metrics
+                        adaptive_report = optimized.report
+                        shutil.copyfile(optimized.svg_path, svg_path)
+                        shutil.copyfile(optimized.render_path, staging / "svg_render.png")
+                        (staging / "adaptive_optimization.json").write_text(
+                            json.dumps(adaptive_report, ensure_ascii=False, indent=2) + "\n",
+                            encoding="utf-8",
+                        )
+                if final_uses_artisan_scene:
+                    artisan_structure = _artisan_structure_manifest(
+                        artisan_scene,
+                        paints,
+                        shape_names,
+                    )
+                    artisan_edit_index = _artisan_edit_index(
                         artisan_structure,
-                        ensure_ascii=False,
-                        separators=(",", ":"),
+                        file_sha256(svg_path),
                     )
-                    + "\n",
-                    encoding="utf-8",
-                )
-                (staging / "artisan_edit_index.json").write_text(
-                    json.dumps(
-                        artisan_edit_index,
-                        ensure_ascii=False,
-                        separators=(",", ":"),
+                    (staging / "artisan_structure.json").write_text(
+                        json.dumps(
+                            artisan_structure,
+                            ensure_ascii=False,
+                            separators=(",", ":"),
+                        )
+                        + "\n",
+                        encoding="utf-8",
                     )
-                    + "\n",
-                    encoding="utf-8",
-                )
+                    (staging / "artisan_edit_index.json").write_text(
+                        json.dumps(
+                            artisan_edit_index,
+                            ensure_ascii=False,
+                            separators=(",", ":"),
+                        )
+                        + "\n",
+                        encoding="utf-8",
+                    )
             else:
                 paths, vector_metrics = _trace_design_paths(labels, paints, preset)
                 _write_design_svg(svg_path, work_image.width, work_image.height, paths)
@@ -1136,7 +1214,7 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
             )
         except SvgArtifactError as exc:
             raise VectorizationError(exc.code, str(exc)) from exc
-        if preset.mode == "artisan" and (
+        if artisan_structure is not None and (
             evidence["layer_count"] != vector_metrics["layer_count"]
             or evidence["structured_path_count"] != vector_metrics["shape_count"]
             or evidence["nested_path_count"] != vector_metrics["nested_shape_count"]
@@ -1162,6 +1240,8 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                 "resource_budget": config.resource_budget,
                 "detail_protection": config.detail_protection,
                 "auto_minimize_anchors": config.auto_minimize_anchors,
+                "auto_enhance": config.auto_enhance,
+                "scene_preset": config.scene_preset,
             }
         parameters_path.write_text(
             json.dumps(public_parameters, ensure_ascii=False, indent=2) + "\n",
@@ -1325,6 +1405,7 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                 else None
             ),
             "adaptive_optimization": adaptive_report,
+            "vector60": vector60_run_report,
             "parameters": public_parameters,
             "output_dir": repo_relative(output_dir),
             "artifacts": [
@@ -1359,6 +1440,17 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
                     ),
                 }
             )
+        if vector60_run_report is None:
+            report.pop("vector60")
+        else:
+            report["validation"].update(
+                {
+                    "final_render_quality_gate_passed": (
+                        vector60_run_report["status"] == "selected"
+                    ),
+                    "formal_result": vector60_run_report["status"],
+                }
+            )
         publish_filenames = [
             "vector.svg",
             "preview.png",
@@ -1366,43 +1458,65 @@ def run_vectorization(config: RunConfig) -> dict[str, Any]:
             "vector_report.json",
             "vector_report.md",
         ]
+        baseline_stage = staging / "artisan_baseline.svg"
+        if baseline_stage.is_file():
+            final_baseline = output_dir / "artisan_baseline.svg"
+            report["artifacts"].append(
+                {
+                    **_artifact(
+                        baseline_stage,
+                        "artisan_rollback_baseline",
+                        "image/svg+xml",
+                    ),
+                    "path": repo_relative(final_baseline),
+                }
+            )
+            publish_filenames.append("artisan_baseline.svg")
+        render_stage = staging / "svg_render.png"
+        if render_stage.is_file():
+            final_render = output_dir / "svg_render.png"
+            report["artifacts"].append(
+                {
+                    **_artifact(
+                        render_stage,
+                        "final_svg_render_proof",
+                        "image/png",
+                    ),
+                    "path": repo_relative(final_render),
+                }
+            )
+            publish_filenames.append("svg_render.png")
+        optimization_stage = staging / "adaptive_optimization.json"
+        if optimization_stage.is_file():
+            final_optimization = output_dir / "adaptive_optimization.json"
+            report["artifacts"].append(
+                {
+                    **_artifact(
+                        optimization_stage,
+                        "adaptive_optimization_report",
+                        "application/json",
+                    ),
+                    "path": repo_relative(final_optimization),
+                }
+            )
+            publish_filenames.append("adaptive_optimization.json")
+        if vector60_run_report is not None:
+            for filename, role, media_type in (
+                ("vector60_report.json", "vector60_run_report", "application/json"),
+                ("vector60_report.md", "vector60_run_summary", "text/markdown"),
+            ):
+                stage_path = staging / filename
+                final_path = output_dir / filename
+                report["artifacts"].append(
+                    {
+                        **_artifact(stage_path, role, media_type),
+                        "path": repo_relative(final_path),
+                    }
+                )
+                publish_filenames.append(filename)
         if artisan_structure is not None:
             final_structure = output_dir / "artisan_structure.json"
             final_edit_index = output_dir / "artisan_edit_index.json"
-            final_baseline = output_dir / "artisan_baseline.svg"
-            final_render = output_dir / "svg_render.png"
-            final_optimization = output_dir / "adaptive_optimization.json"
-            report["artifacts"].extend(
-                [
-                    {
-                        **_artifact(
-                            staging / "artisan_baseline.svg",
-                            "artisan_rollback_baseline",
-                            "image/svg+xml",
-                        ),
-                        "path": repo_relative(final_baseline),
-                    },
-                    {
-                        **_artifact(
-                            staging / "svg_render.png",
-                            "final_svg_render_proof",
-                            "image/png",
-                        ),
-                        "path": repo_relative(final_render),
-                    },
-                    {
-                        **_artifact(
-                            staging / "adaptive_optimization.json",
-                            "adaptive_optimization_report",
-                            "application/json",
-                        ),
-                        "path": repo_relative(final_optimization),
-                    },
-                ]
-            )
-            publish_filenames.extend(
-                ["artisan_baseline.svg", "svg_render.png", "adaptive_optimization.json"]
-            )
             report["artifacts"].append(
                 {
                     **_artifact(

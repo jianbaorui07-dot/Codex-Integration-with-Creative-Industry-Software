@@ -87,6 +87,9 @@ class EvidenceManifestTests(unittest.TestCase):
                 "///private///var///tmp/secret.png",
                 "/tmp//secret.png",
                 "/private//var///folders//ab/T/secret.png",
+                r"\tmp",
+                r"\\tmp\secret.png",
+                r"\private\var\tmp",
             )
         )
         for path in temporary_paths:
@@ -118,6 +121,7 @@ class EvidenceManifestTests(unittest.TestCase):
             "file://local／host/tmp/secret.png",
             "https://e.test/?local=%252Ftmp%252Fsecret",
             "file:///tmp%252Fsecret",
+            r"\tmpfile\public.json",
         )
         for path in similar_roots:
             with self.subTest(path=path):
