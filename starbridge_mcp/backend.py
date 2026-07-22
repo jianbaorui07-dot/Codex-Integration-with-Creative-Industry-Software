@@ -388,5 +388,1644 @@ class CreNexusBackend:
                 404,
                 {
                     "ok": False,
-   ×Î¸ÖÚ$z{-®éÜj×WGW&â&6¶VæE&W7öç6RƒCBÂ²&ö²#¢fÇ6RÂ&W'&÷"#¢b'Væ¶æ÷vâ&÷WFS¢¶ÖWF†öGÒ·F‡Ò'ÒÐ Ð Ð¦FVb÷6VæB€Ð¢†æFÆW#¢&6T…EE&WVW7D†æFÆW"ÀÐ¢&W7öç6S¢&6¶VæE&W7öç6RÀÐ¢&6¶VæC¢7&TæW‡W4&6¶VæBÀÐ¢¢ÀÐ¢w&—FUö&öG“¢&ööÂÒG'VRÀÐ¢’ÓâæöæS Ð¢&öG’Ò€Ð¢"" Ð¢–b&W7öç6Rç7FGW2ÓÒ#@Ð¢VÇ6R&W7öç6Ræ&öGÐ¢–b—6–ç7Fæ6R‡&W7öç6Ræ&öG’Â'—FW2Ð¢VÇ6R§6öâæGV×2†&6¶VæBç&÷FV7B‡&W7öç6Ræ&öG’’ÂVç7W&Uö66–“ÔfÇ6RÂ–æFVçCÓ"’æVæ6öFR€Ð¢'WFbÓ‚ Ð¢Ð¢Ð¢†æFÆW"ç6VæE÷&W7öç6R‡&W7öç6Rç7FGW2Ð¢†æFÆW"ç6VæEö†VFW"‚$6öçFVçBÕG—R"Â&W7öç6Ræ6öçFVçE÷G—RÐ¢†æFÆW"ç6VæEö†VFW"‚$6öçFVçBÔÆVæwF‚"Â7G"†ÆVâ†&öG’’’Ð¢†æFÆW"ç6VæEö†VFW"‚$66†RÔ6öçG&öÂ"Â&æò×7F÷&R"Ð¢†æFÆW"ç6VæEö†VFW"‚%‚Ô6öçFVçBÕG—RÔ÷F–öç2"Â&æ÷6æ–fb"Ð¢÷&–v–âÒ†æFÆW"æ†VFW'2ævWB‚$÷&–v–â"Ð¢–b÷&–v–ã Ð¢6fUö÷&–v–âÒ÷&–v–âç&WÆ6R‚%Ç""Â""’ç&WÆ6R‚%Æâ"Â""’ç'7G&—‚"ò"Ð¢–b6fUö÷&–v–âæB&6¶VæBæ÷&–v–åöÆÆ÷vVB‡6fUö÷&–v–â“ Ð¢†æFÆW"ç6VæEö†VFW"‚$66W72Ô6öçG&öÂÔÆÆ÷rÔ÷&–v–â"Â6fUö÷&–v–âÐ¢†æFÆW"ç6VæEö†VFW"‚%f'’"Â$÷&–v–â"Ð¢†æFÆW"ç6VæEö†VFW"‚$66W72Ô6öçG&öÂÔÆÆ÷rÔÖWF†öG2"Â$tUBÂõ5BÂDTÄUDRÂõD”ôå2"Ð¢†æFÆW"ç6VæEö†VFW"‚$66W72Ô6öçG&öÂÔÆÆ÷rÔ†VFW'2"Âb$6öçFVçBÕG—RÂµ4U54”ôåô„TDU'Ò"Ð¢f÷"æÖRÂfÇVR–â&W7öç6Ræ†VFW'2æ—FV×2‚“ Ð¢†æFÆW"ç6VæEö†VFW"†æÖRÂfÇVRÐ¢†æFÆW"æVæEö†VFW'2‚Ð¢–bw&—FUö&öG’æB&W7öç6Rç7FGW2Ò#C Ð¢†æFÆW"çvf–ÆRçw&—FR†&öG’Ð Ð Ð¦FVbÖ¶Uö†æFÆW"†&6¶VæC¢7&TæW‡W4&6¶VæB’ÓâG—U´&6T…EE&WVW7D†æFÆW%Ó Ð¢6Æ72†æFÆW"„&6T…EE&WVW7D†æFÆW"“ Ð¢FVb÷&÷WFR‡6VÆbÂÖWF†öC¢7G"Â&uö&öG“¢'—FW2Ò"""Â¢Âw&—FUö&öG“¢&ööÂÒG'VR’ÓâæöæS Ð¢G'“ Ð¢&W7öç6RÒ&6¶VæBç&÷WFR€Ð¢ÖWF†öBÀÐ¢6VÆbçF‚ÀÐ¢&uö&öG’ÀÐ¢†VFW'3×6VÆbæ†VFW'2ÀÐ¢÷&–v–ã×6VÆbæ†VFW'2ævWB‚$÷&–v–â"’ÀÐ¢Ð¢W†6WBW†6WF–öâ2W†3¢2&vÖ¢æò6÷fW"ÒFVfVç6—fR&ö6W72&÷VæF'Ð¢&6¶VæBç&V6÷&Eö7&6‚†W†2Ð¢&W7öç6RÒ&6¶VæBåöW'&÷"€Ð¢SÀÐ¢'&WVW7Eöf–ÆVB"ÀÐ¢$7&TæW‡W2iÊÎYËiÈÞXªizk9^ZèÎh‰Šú^Šû~k.8""ÀÐ¢æW‡E÷7FW3Õ².Šû~iú^yÈ¾Šø®ijÞ[›n˜xÞikY
-þXªŽiÊÎYËiÈÞXª8"%ÒÀÐ¢Ð¢÷6VæB‡6VÆbÂ&W7öç6RÂ&6¶VæBÂw&—FUö&öG“×w&—FUö&öG’Ð Ð¢FVb÷&VEö&öG’‡6VÆb’ÓâGWÆU¶'—FW2Â&6¶VæE&W7öç6RÂæöæUÓ Ð¢&uöÆVæwF‚Ò6VÆbæ†VFW'2ævWB‚$6öçFVçBÔÆVæwF‚"Ð¢–b&uöÆVæwF‚—2æöæS Ð¢&WGW&â"""ÂæöæPÐ¢G'“ Ð¢ÆVæwF‚Ò–çB‡&uöÆVæwF‚Ð¢W†6WBfÇVTW'&÷# Ð¢6VÆbæ6Æ÷6Uö6öææV7F–öâÒG'VPÐ¢&WGW&â"""Â&6¶VæBåöW'&÷"€Ð¢CÀÐ¢&–çfÆ–Eö6öçFVçEöÆVæwF‚"ÀÐ¢.Šû~k.y¨B6öçFVçBÔÆVæwF‚iziXŽ8""ÀÐ¢Ð¢–bÆVæwF‚Â Ð¢6VÆbæ6Æ÷6Uö6öææV7F–öâÒG'VPÐ¢&WGW&â"""Â&6¶VæBåöW'&÷"€Ð¢CÀÐ¢&–çfÆ–Eö6öçFVçEöÆVæwF‚"ÀÐ¢.Šû~k.y¨B6öçFVçBÔÆVæwF‚KˆÞˆ;ÞK‹®‹Iþi[8""ÀÐ¢Ð¢–bÆVæwF‚â&6¶VæBæÖ…÷&WVW7Eö&öG•ö'—FW3 Ð¢6VÆbæ6Æ÷6Uö6öææV7F–öâÒG'VPÐ¢&WGW&â"""Â&6¶VæBåöW'&÷"€Ð¢C2ÀÐ¢'&WVW7E÷FöõöÆ&vR"ÀÐ¢.Šû~k.Xh^Zëž‹h^‹ør7&TæW‡W2iÊÎYËiÈÞXªXXŠëŽy¨NZJ~[þ8""ÀÐ¢Ð¢–bÆVæwFƒ Ð¢ÖVF–÷G—RÒ‡6VÆbæ†VFW'2ævWB‚$6öçFVçBÕG—R"’÷"""’ç7Æ—B‚#²"Â•³Òç7G&—‚Ð¢–bÖVF–÷G—RæÆ÷vW"‚’Ò&Æ–6F–öâö§6öâ# Ð¢6VÆbæ6Æ÷6Uö6öææV7F–öâÒG'VPÐ¢&WGW&â"""Â&6¶VæBåöW'&÷"€Ð¢CRÀÐ¢'Vç7W÷'FVEö6öçFVçE÷G—R"ÀÐ¢.[ŠnŠû~k.Xh^Zëžy¨B’‹>yJŽXú®hê^XùrÆ–6F–öâö§6öî8""ÀÐ¢Ð¢&öG’Ò6VÆbç&f–ÆRç&VB†ÆVæwF‚Ð¢–bÆVâ†&öG’’ÒÆVæwFƒ Ð¢6VÆbæ6Æ÷6Uö6öææV7F–öâÒG'VPÐ¢&WGW&â"""Â&6¶VæBåöW'&÷"€Ð¢CÀÐ¢&–æ6ö×ÆWFU÷&WVW7Eö&öG’"ÀÐ¢.Šû~k.Xh^ZëžiÊ®ZèÎi[NKÊ‹é>8""ÀÐ¢Ð¢&WGW&â&öG’ÂæöæPÐ Ð¢FVbFõôõD”ôå2‡6VÆb’ÓâæöæS¢2æ÷¢ãƒ Ð¢6VÆbå÷&÷WFR‚$õD”ôå2"Ð Ð¢FVbFõôtUB‡6VÆb’ÓâæöæS¢2æ÷¢ãƒ Ð¢6VÆbå÷&÷WFR‚$tUB"Ð Ð¢FVbFõô„TB‡6VÆb’ÓâæöæS¢2æ÷¢ãƒ Ð¢6VÆbå÷&÷WFR‚$tUB"Âw&—FUö&öG“ÔfÇ6RÐ Ð¢FVbFõõõ5B‡6VÆb’ÓâæöæS¢2æ÷¢ãƒ Ð¢F‚ÒW&Ç'6R‡6VÆbçF‚’çF‚ç'7G&—‚"ò"’÷""ò Ð¢–bF‚ç7F'G7v—F‚‚"ö’ò"“ Ð¢–bWF†÷&—¦F–öåöW'&÷"£Ò&6¶VæBåöWF†÷&—¦F–öåöW'&÷"‡F‚Â6VÆbæ†VFW'2“ Ð¢÷6VæB‡6VÆbÂWF†÷&—¦F–öåöW'&÷"Â&6¶VæBÐ¢&WGW&àÐ¢&öG’ÂW'&÷"Ò6VÆbå÷&VEö&öG’‚Ð¢–bW'&÷"—2æ÷BæöæS Ð¢÷6VæB‡6VÆbÂW'&÷"Â&6¶VæBÐ¢&WGW&àÐ¢6VÆbå÷&÷WFR‚%õ5B"Â&öG’Ð Ð¢FVbFõôDTÄUDR‡6VÆb’ÓâæöæS¢2æ÷¢ãƒ Ð¢6VÆbå÷&÷WFR‚$DTÄUDR"Ð Ð¢FVbÆöuöÖW76vR‡6VÆbÂf÷&ÖC¢7G"Â¦&w3¢ç’’ÓâæöæS Ð¢&WGW&àÐ Ð¢&WGW&â†æFÆW Ð Ð Ð¦FVb÷&WV—&UöÆö÷&6²††÷7C¢7G"’ÓâæöæS Ð¢–b†÷7BæÆ÷vW"‚’ÓÒ&Æö6Æ†÷7B# Ð¢&WGW&àÐ¢G'“ Ð¢FG&W72Ò—FG&W72æ—öFG&W72††÷7BÐ¢W†6WBfÇVTW'&÷"2W†3 Ð¢&—6RfÇVTW'&÷"‚$7&TæW‡W2&6¶VæB†÷7B×W7B&RÆö÷&6²FG&W72"’g&öÒW†0Ð¢–bæ÷BFG&W72æ—5öÆö÷&6³ Ð¢&—6RfÇVTW'&÷"‚$7&TæW‡W2&6¶VæBÖ’öæÇ’&–æBFòÆö÷&6²FG&W72"Ð Ð Ð¦6Æ72ôÆö6ÅF‡&VF–æt‡GG6W'fW"…F‡&VF–æt…EE6W'fW"“ Ð¢FVÖöå÷F‡&VG2ÒG'VPÐ Ð Ð¦6Æ727&TæW‡W4‡GG6W'fW# Ð¢FVbõö–æ—Eõò€Ð¢6VÆbÀÐ¢&6¶VæC¢7&TæW‡W4&6¶VæBÀÐ¢¢ÀÐ¢†÷7C¢7G"Ò##rããã"ÀÐ¢÷'C¢–çBÒÀÐ¢’ÓâæöæS Ð¢÷&WV—&UöÆö÷&6²††÷7BÐ¢6VÆbæ&6¶VæBÒ&6¶Væ@Ð¢6VÆbå÷6W'fW"ÒôÆö6ÅF‡&VF–æt‡GG6W'fW"‚††÷7BÂ÷'B’ÂÖ¶Uö†æFÆW"†&6¶VæB’Ð¢6VÆbå÷F‡&VC¢F‡&VBÂæöæRÒæöæPÐ¢6VÆbå÷7F'FVBÒWfVçB‚Ð¢6VÆbå÷7F÷VBÒWfVçB‚Ð¢6VÆbå÷7F÷öÆö6²Ò$Æö6²‚Ð¢6VÆbæ&6¶VæBç&Vv—7FW%÷6‡WFF÷vâ‡6VÆbç7F÷Ð Ð¢&÷W'GÐ¢FVb†÷7B‡6VÆb’Óâ7G# Ð¢&WGW&â7G"‡6VÆbå÷6W'fW"ç6W'fW%öFG&W75³ÒÐ Ð¢&÷W'GÐ¢FVb÷'B‡6VÆb’Óâ–çC Ð¢&WGW&â–çB‡6VÆbå÷6W'fW"ç6W'fW%öFG&W75³ÒÐ Ð¢&÷W'GÐ¢FVb'Vææ–ær‡6VÆb’Óâ&ööÃ Ð¢&WGW&â&ööÂ‡6VÆbå÷F‡&VBæB6VÆbå÷F‡&VBæ—5öÆ—fR‚’Ð Ð¢FVb÷6W'fR‡6VÆb’ÓâæöæS Ð¢G'“ Ð¢6VÆbå÷6W'fW"ç6W'fUöf÷&WfW"‡öÆÅö–çFW'fÃÓãÐ¢W†6WB&6TW†6WF–öâ2W†3¢2&vÖ¢æò6÷fW"Ò&ö6W72&÷VæF'Ð¢6VÆbæ&6¶VæBç&V6÷&Eö7&6‚†W†2Ð Ð¢FVb7F'B‡6VÆb’ÓâæöæS Ð¢–b6VÆbå÷7F'FVBæ—5÷6WB‚“ Ð¢&WGW&àÐ¢6VÆbå÷F‡&VBÒF‡&VB‡F&vWC×6VÆbå÷6W'fRÂæÖSÒ'7F&'&–FvRÖ‡GG"ÂFVÖöãÔfÇ6RÐ¢6VÆbå÷F‡&VBç7F'B‚Ð¢6VÆbå÷7F'FVBç6WB‚Ð¢6VÆbæ&6¶VæBç&V6÷&E÷'VçF–ÖUöWfVçB€Ð¢'6W'fW%÷7F'FVB"ÀÐ¢²&†÷7B#¢&Æö÷&6²"Â'÷'B#¢6VÆbç÷'BÂ'–B#¢÷2ævWG–B‚’Â&ÖöFR#¢6VÆbæ&6¶VæBæÖöFWÒÀÐ¢Ð Ð¢FVbv—B‡6VÆbÂF–ÖV÷WC¢fÆöBÂæöæRÒæöæR’Óâ&ööÃ Ð¢–b6VÆbå÷F‡&VB—2æöæS Ð¢&WGW&âG'VPÐ¢6VÆbå÷F‡&VBæ¦ö–â‡F–ÖV÷WBÐ¢&WGW&âæ÷B6VÆbå÷F‡&VBæ—5öÆ—fR‚Ð Ð¢FVb7F÷‡6VÆb’ÓâæöæS Ð¢v—F‚6VÆbå÷7F÷öÆö6³ Ð¢–b6VÆbå÷7F÷VBæ—5÷6WB‚“ Ð¢&WGW&àÐ¢–b6VÆbå÷7F'FVBæ—5÷6WB‚’æB6VÆbç'Vææ–æs Ð¢6VÆbå÷6W'fW"ç6‡WFF÷vâ‚Ð¢6VÆbå÷6W'fW"ç6W'fW%ö6Æ÷6R‚Ð¢–b6VÆbå÷F‡&VB—2æ÷BæöæRæB6VÆbå÷F‡&VB—2æ÷B7W'&VçE÷F‡&VB‚“ Ð¢6VÆbå÷F‡&VBæ¦ö–â‡F–ÖV÷WCÓRÐ¢6VÆbæ&6¶VæBç&V6÷&E÷'VçF–ÖUöWfVçB‚'6W'fW%÷7F÷VB"Â²'–B#¢÷2ævWG–B‚—ÒÐ¢6VÆbå÷7F÷VBç6WB‚Ð Ð¢FVb&VG•÷–ÆöB‡6VÆb’Óâ§6öäö&¦V7C Ð¢&WGW&â°Ð¢&WfVçB#¢'&VG’"ÀÐ¢&†÷7B#¢##rããã"ÀÐ¢'÷'B#¢6VÆbç÷'BÀÐ¢'–B#¢÷2ævWG–B‚’ÀÐ¢&ÖöFR#¢6VÆbæ&6¶VæBæÖöFRÀÐ¢'6W76–öå÷&WV—&VB#¢6VÆbæ&6¶VæBæWF…÷&WV—&VBÀÐ¢ÐÐ Ð Ð¢2&W6W'fRF†RV&Æ–26Æ72æÖW2W6VB'’öÆFW"Æö6Â–çFVw&F–öç2v†–ÆRF†PÐ¢2f—6–&ÆR&öGV7B'&æBÖ÷fW2Fò7&TæW‡W2àÐ¥7F$'&–FvT&6¶VæBÒ7&TæW‡W4&6¶Væ@Ð¥7F$'&–FvT‡GG6W'fW"Ò7&TæW‡W4‡GG6W'fW Ð Ð Ð¦FVb&ö6W75ö—5÷'Vææ–ær‡–C¢–çB’Óâ&ööÃ Ð¢–b–BÃÒ Ð¢&WGW&âfÇ6PÐ¢–b–BÓÒ÷2ævWG–B‚“ Ð¢&WGW&âG'VPÐ¢–b÷2ææÖRÓÒ&çB# Ð¢–×÷'B7G—W0Ð¢g&öÒ7G—W2–×÷'Bv–çG—W0Ð Ð¢&ö6W75÷VW'•öÆ–Ö—FVEö–æf÷&ÖF–öâÒƒ Ð¢7F–ÆÅö7F—fRÒ#SÐ¢¶W&æVÃ3"Ò7G—W2åv–äDÄÂ‚&¶W&æVÃ3""ÂW6UöÆ7EöW'&÷#ÕG'VRÐ¢¶W&æVÃ3"ä÷Vå&ö6W72æ&wG—W2Ò·v–çG—W2äEtõ$BÂv–çG—W2ä$ôôÂÂv–çG—W2äEtõ$EÐÐ¢¶W&æVÃ3"ä÷Vå&ö6W72ç&W7G—RÒv–çG—W2ä„äDÄPÐ¢¶W&æVÃ3"ävWDW†—D6öFU&ö6W72æ&wG—W2Ò·v–çG—W2ä„äDÄRÂv–çG—W2äÅEtõ$EÐÐ¢¶W&æVÃ3"ävWDW†—D6öFU&ö6W72ç&W7G—RÒv–çG—W2ä$ôôÀÐ¢¶W&æVÃ3"ä6Æ÷6T†æFÆRæ&wG—W2Ò·v–çG—W2ä„äDÄUÐÐ¢¶W&æVÃ3"ä6Æ÷6T†æFÆRç&W7G—RÒv–çG—W2ä$ôôÀÐ¢†æFÆRÒ¶W&æVÃ3"ä÷Vå&ö6W72‡&ö6W75÷VW'•öÆ–Ö—FVEö–æf÷&ÖF–öâÂfÇ6RÂ–BÐ¢–bæ÷B†æFÆS Ð¢&WGW&âfÇ6PÐ¢G'“ Ð¢W†—Eö6öFRÒv–çG—W2äEtõ$B‚Ð¢–bæ÷B¶W&æVÃ3"ävWDW†—D6öFU&ö6W72††æFÆRÂ7G—W2æ'—&Vb†W†—Eö6öFR’“ Ð¢&WGW&âfÇ6PÐ¢&WGW&âW†—Eö6öFRçfÇVRÓÒ7F–ÆÅö7F—fPÐ¢f–æÆÇ“ Ð¢¶W&æVÃ3"ä6Æ÷6T†æFÆR††æFÆRÐ¢G'“ Ð¢÷2æ¶–ÆÂ‡–BÂÐ¢W†6WB&ö6W74Æöö·WW'&÷# Ð¢&WGW&âfÇ6PÐ¢W†6WBW&Ö—76–öäW'&÷# Ð¢&WGW&âG'VPÐ¢&WGW&âG'VPÐ Ð Ð¦6Æ72&VçE&ö6W74Ööæ—F÷# Ð¢FVbõö–æ—Eõò€Ð¢6VÆbÀÐ¢&VçE÷–C¢–çBÀÐ¢öå÷&VçEöW†—C¢6ÆÆ&ÆUµµÒÂæöæUÒÀÐ¢¢ÀÐ¢öÆÅö–çFW'fÃ¢fÆöBÒãÀÐ¢’ÓâæöæS Ð¢6VÆbç&VçE÷–BÒ&VçE÷–@Ð¢6VÆbæöå÷&VçEöW†—BÒöå÷&VçEöW†—@Ð¢6VÆbçöÆÅö–çFW'fÂÒöÆÅö–çFW'fÀÐ¢6VÆbå÷7F÷ÒWfVçB‚Ð¢6VÆbå÷F‡&VC¢F‡&VBÂæöæRÒæöæPÐ Ð¢FVb7F'B‡6VÆb’ÓâæöæS Ð¢–b6VÆbå÷F‡&VB—2æ÷BæöæS Ð¢&WGW&àÐ¢6VÆbå÷F‡&VBÒF‡&VB‡F&vWC×6VÆbå÷'VâÂæÖSÒ'7F&'&–FvR×&VçBÖÖöæ—F÷""ÂFVÖöãÕG'VRÐ¢6VÆbå÷F‡&VBç7F'B‚Ð Ð¢FVb÷'Vâ‡6VÆb’ÓâæöæS Ð¢v†–ÆRæ÷B6VÆbå÷7F÷çv—B‡6VÆbçöÆÅö–çFW'fÂ“ Ð¢–bæ÷B&ö6W75ö—5÷'Vææ–ær‡6VÆbç&VçE÷–B“ Ð¢6VÆbæöå÷&VçEöW†—B‚Ð¢&WGW&àÐ Ð¢FVb7F÷‡6VÆb’ÓâæöæS Ð¢6VÆbå÷7F÷ç6WB‚Ð¢–b6VÆbå÷F‡&VB—2æ÷BæöæRæB6VÆbå÷F‡&VB—2æ÷B7W'&VçE÷F‡&VB‚“ Ð¢6VÆbå÷F‡&VBæ¦ö–â‡F–ÖV÷WCÖÖ‚ƒãÂ6VÆbçöÆÅö–çFW'fÂ¢"’Ð Ð Ð¦FVb6W'fR€Ð¢¢ÀÐ¢&6¶VæC¢7&TæW‡W4&6¶VæBÂæöæRÒæöæRÀÐ¢†÷7C¢7G"Ò##rããã"ÀÐ¢÷'C¢–çBÒƒscRÀÐ¢&VçE÷–C¢–çBÂæöæRÒæöæRÀÐ¢’Óâ–çC Ð¢7F—fUö&6¶VæBÒ&6¶VæB÷"7&TæW‡W4&6¶VæB‚Ð¢6W'fW"Ò7&TæW‡W4‡GG6W'fW"†7F—fUö&6¶VæBÂ†÷7CÖ†÷7BÂ÷'C×÷'BÐ¢7F÷÷&WVW7FVBÒWfVçB‚Ð¢Ööæ—F÷"Ò&VçE&ö6W74Ööæ—F÷"‡&VçE÷–BÂ6W'fW"ç7F÷’–b&VçE÷–B—2æ÷BæöæRVÇ6RæöæPÐ Ð¢FVb&WVW7E÷7F÷…÷6–vçVÓ¢–çBÂög&ÖS¢ç’’ÓâæöæS Ð¢7F÷÷&WVW7FVBç6WB‚Ð Ð¢&Wf–÷W5ö†æFÆW'3¢F–7E¶–çBÂç•ÒÒ·ÐÐ¢f÷"6–væÅöæÖR–â‚%4”t”åB"Â%4”uDU$Ò"“ Ð¢–b†6GG"‡6–væÂÂ6–væÅöæÖR“ Ð¢6–væÅ÷fÇVRÒvWFGG"‡6–væÂÂ6–væÅöæÖRÐ¢&Wf–÷W5ö†æFÆW'5·6–væÅ÷fÇVUÒÒ6–væÂævWG6–væÂ‡6–væÅ÷fÇVRÐ¢6–væÂç6–væÂ‡6–væÅ÷fÇVRÂ&WVW7E÷7F÷Ð Ð¢G'“ Ð¢6W'fW"ç7F'B‚Ð¢–bÖöæ—F÷"—2æ÷BæöæS Ð¢Ööæ—F÷"ç7F'B‚Ð¢&–çB€Ð¢$TE•õ$Td•‚²§6öâæGV×2‡6W'fW"ç&VG•÷–ÆöB‚’Â6W&F÷'3Ò‚"Â"Â#¢"’’ÀÐ¢fÇW6ƒÕG'VRÀÐ¢Ð¢v†–ÆR6W'fW"ç'Vææ–æræBæ÷B7F÷÷&WVW7FVBçv—Bƒã"“ Ð¢70Ð¢f–æÆÇ“ Ð¢–bÖöæ—F÷"—2æ÷BæöæS Ð¢Ööæ—F÷"ç7F÷‚Ð¢6W'fW"ç7F÷‚Ð¢f÷"6–væÅ÷fÇVRÂ†æFÆW"–â&Wf–÷W5ö†æFÆW'2æ—FV×2‚“ Ð¢6–væÂç6–væÂ‡6–væÅ÷fÇVRÂ†æFÆW"Ð¢&WGW&â6W'fW"ç÷'@Ð Ð Ð¦FVbÖ–â‚’ÓâæöæS Ð¢'6W"Ò&w'6Rä&wVÖVçE'6W"†FW67&—F–öãÒ%'VâF†R7&TæW‡W2Æö6Â…EE&6¶VæBâ"Ð¢'6W"æFEö&wVÖVçB‚"ÒÖ†÷7B"ÂFVfVÇCÒ##rããã"Ð¢'6W"æFEö&wVÖVçB‚"Ò×÷'B"ÂG—SÖ–çBÐ¢'6W"æFEö&wVÖVçB‚"ÒÖFW6·F÷"Â7F–öãÒ'7F÷&U÷G'VR"Ð¢'6W"æFEö&wVÖVçB‚"ÒÖÖFFÖF—""Ð¢'6W"æFEö&wVÖVçB‚"ÒÖ†—7F÷'’×F‚"Ð¢'6W"æFEö&wVÖVçB‚"Ò×&VçB×–B"ÂG—SÖ–çBÐ¢'6W"æFEö&wVÖVçB‚"ÒÖ6÷'2Ö÷&–v–â"Â7F–öãÒ&VæB"ÂFVfVÇCÔæöæRÐ¢'6W"æFEö&wVÖVçB‚"ÒÖÖ‚×&WVW7BÖ&öG’Ö'—FW2"ÂG—SÖ–çBÂFVfVÇCÔÔ…õ$UTU5Eô$ôE•ô%•DU2Ð¢'6W"æFEö&wVÖVçB‚"Ò×6W76–öâ×Fö¶VâÖVçb"ÂFVfVÇCÕ4U54”ôåõDô´TåôTåbÐ¢&w2Ò'6W"ç'6Uö&w2‚Ð¢ÖöFRÒ&FW6·F÷"–b&w2æFW6·F÷VÇ6R&FWfVÆ÷ÖVçB Ð¢7&VFVçF–ÂÒ÷2æVçf—&öâævWB†&w2ç6W76–öå÷Fö¶VåöVçb’–b&w2æFW6·F÷VÇ6RæöæPÐ¢–b&w2æFW6·F÷æBæ÷B7&VFVçF–Ã Ð¢'6W"æW'&÷"†b&FW6·F÷ÖöFR&WV—&W26W76–öâFö¶Vâ–â¶&w2ç6W76–öå÷Fö¶VåöVçgÒ"Ð¢–b&w2æFW6·F÷æB&w2æ6÷'5ö÷&–v–ã Ð¢'6W"æW'&÷"‚&FW6·F÷ÖöFRW6W2F†RFW&’&÷‡’æBFöW2æ÷B66WB'&÷w6W"4õ%2÷&–v–ç2"Ð Ð¢&VçE÷–BÒ&w2ç&VçE÷–@Ð¢–b&VçE÷–B—2æöæRæB÷2æVçf—&öâævWB…$TåEõ”EôTåb“ Ð¢G'“ Ð¢&VçE÷–BÒ–çB†÷2æVçf—&öåµ$TåEõ”EôTåeÒÐ¢W†6WBfÇVTW'&÷# Ð¢'6W"æW'&÷"†b'µ$TåEõ”EôTågÒ×W7B&Râ–çFVvW""Ð¢–b&w2æFW6·F÷æB&VçE÷–B—2æöæS Ð¢'6W"æW'&÷"‚&FW6·F÷ÖöFR&WV—&W2Ò×&VçB×–B÷"5D$%$”DtUõ$TåEõ”B"Ð Ð¢÷'BÒ&w2ç÷'B–b&w2ç÷'B—2æ÷BæöæRVÇ6Rƒ–b&w2æFW6·F÷VÇ6RƒscRÐ¢†—7F÷'•÷F‚ÒF‚†&w2æ†—7F÷'•÷F‚’–b&w2æ†—7F÷'•÷F‚VÇ6RæöæPÐ¢&6¶VæBÒ7&TæW‡W4&6¶VæB€Ð¢†—7F÷'•÷FƒÖ†—7F÷'•÷F‚ÀÐ¢öFFöF—#Ö&w2æöFFöF—"ÀÐ¢6W76–öåö7&VFVçF–ÃÖ7&VFVçF–ÂÀÐ¢ÖöFSÖÖöFRÀÐ¢6÷'5öÆÆ÷vVEö÷&–v–ç3Ö&w2æ6÷'5ö÷&–v–âÀÐ¢Ö…÷&WVW7Eö&öG•ö'—FW3Ö&w2æÖ…÷&WVW7Eö&öG•ö'—FW2ÀÐ¢Ð¢G'“ Ð¢6W'fR†&6¶VæCÖ&6¶VæBÂ†÷7CÖ&w2æ†÷7BÂ÷'C×÷'BÂ&VçE÷–C×&VçE÷–BÐ¢W†6WBW†6WF–öâ2W†3 Ð¢&6¶VæBç&V6÷&Eö7&6‚†W†2Ð¢&–çB€Ð¢%5D$%$”DtUôU%$õ" Ð¢²§6öâæGV×2€Ð¢°Ð¢&WfVçB#¢'7F'GWöf–ÆVB"ÀÐ¢&W'&÷%÷G—R#¢G—R†W†2’åõöæÖUõòÀÐ¢&ÖW76vR#¢$7&TæW‡W2Æö6Â&6¶VæB6÷VÆBæ÷B7F'Bâ"ÀÐ¢ÒÀÐ¢6W&F÷'3Ò‚"Â"Â#¢"’ÀÐ¢’ÀÐ¢fÇW6ƒÕG'VRÀÐ¢Ð¢&—6R7—7FVÔW†—Bƒ’g&öÒæöæPÐ Ð Ð¦–bõöæÖUõòÓÒ%õöÖ–åõò# Ð¢Ö–â‚Ð
+                    "error": "frontend build not found",
+                    "next_steps": [
+                        "Run `npm.cmd --prefix examples\\starbridge_frontend run build`."
+                    ],
+                },
+            )
+
+        relative = unquote(path.lstrip("/")) or "index.html"
+        target = (static_root / relative).resolve()
+        if target == static_root or target.is_dir():
+            target = target / "index.html"
+        if static_root not in (target, *target.parents):
+            return BackendResponse(403, {"ok": False, "error": "static path escapes frontend root"})
+        if not target.exists():
+            target = static_root / "index.html"
+        if not target.exists():
+            return BackendResponse(404, {"ok": False, "error": "frontend index.html not found"})
+
+        content_type = mimetypes.guess_type(target.name)[0] or "application/octet-stream"
+        if content_type.startswith("text/") or target.suffix in {".js", ".css", ".svg"}:
+            content_type = f"{content_type}; charset=utf-8"
+        return BackendResponse(200, target.read_bytes(), content_type=content_type)
+
+    def _load_history(self) -> list[JsonObject]:
+        with self._history_lock:
+            if not self.history_path.exists():
+                return []
+            try:
+                payload = json.loads(self.history_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return []
+            if not isinstance(payload, list):
+                return []
+            return [item for item in payload if isinstance(item, dict)]
+
+    def _save_history(self, events: list[JsonObject]) -> None:
+        with self._history_lock:
+            self.history_path.parent.mkdir(parents=True, exist_ok=True)
+            temporary = self.history_path.with_suffix(self.history_path.suffix + ".tmp")
+            temporary.write_text(
+                json.dumps(self.protect(events[-100:]), ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            os.replace(temporary, self.history_path)
+
+    @staticmethod
+    def _image_preview_data_url(path: Path) -> tuple[str, int, int]:
+        try:
+            with Image.open(path) as opened:
+                if opened.format not in {"PNG", "JPEG"}:
+                    raise ValueError("unsupported_image")
+                oriented = ImageOps.exif_transpose(opened).convert("RGBA")
+                width, height = oriented.size
+                oriented.thumbnail((720, 540), Image.Resampling.LANCZOS)
+                payload = io.BytesIO()
+                oriented.save(payload, format="PNG", optimize=False, compress_level=9)
+        except (OSError, UnidentifiedImageError, ValueError) as exc:
+            raise VectorizationError(
+                "unsupported_input", "è¯·é€‰æ‹©å¯è¯»å–çš„ PNG æˆ– JPEG å›¾ç‰‡ã€‚"
+            ) from exc
+        encoded = base64.b64encode(payload.getvalue()).decode("ascii")
+        return f"data:image/png;base64,{encoded}", width, height
+
+    def _create_vector_selection(self, body: JsonObject) -> BackendResponse:
+        value = body.get("input_path")
+        if not isinstance(value, str) or not value.strip():
+            return self._error(
+                400,
+                "input_required",
+                "è¯·é€‰æ‹©ä¸€å¼  PNG æˆ– JPEG å›¾ç‰‡ã€‚",
+                next_steps=["ç‚¹å‡»â€œé€‰æ‹©å›¾ç‰‡â€å¹¶åªé€‰æ‹©æœ¬æ¬¡è¦å¤„ç†çš„ä¸€å¼ å›¾ç‰‡ã€‚"],
+            )
+        path = Path(value)
+        if path.suffix.lower() not in {".png", ".jpg", ".jpeg"} or not path.is_file():
+            return self._error(
+                400,
+                "unsupported_input",
+                "æ‰€é€‰æ–‡ä»¶ä¸æ˜¯å¯è¯»å–çš„ PNG æˆ– JPEG å›¾ç‰‡ã€‚",
+                next_steps=["é‡æ–°é€‰æ‹© PNG æˆ– JPEG å›¾ç‰‡ã€‚"],
+            )
+        try:
+            if path.stat().st_size > VECTOR_INPUT_MAX_BYTES:
+                return self._error(
+                    413,
+                    "input_too_large",
+                    "å›¾ç‰‡æ–‡ä»¶è¶…è¿‡ 128 MBï¼Œæœªè½½å…¥ã€‚",
+                    next_steps=["ç¼©å°å›¾ç‰‡æ–‡ä»¶åŽé‡æ–°é€‰æ‹©ã€‚"],
+                )
+            preview, width, height = self._image_preview_data_url(path)
+            digest = file_sha256(path)
+        except (OSError, VectorizationError) as error:
+            code = error.code if isinstance(error, VectorizationError) else "input_unreadable"
+            message = str(error) if isinstance(error, VectorizationError) else "å›¾ç‰‡å½“å‰æ— æ³•è¯»å–ã€‚"
+            return self._error(
+                400,
+                code,
+                message,
+                next_steps=["ç¡®è®¤å›¾ç‰‡æœªè¢«ç§»åŠ¨æˆ–é”å®šï¼Œç„¶åŽé‡æ–°é€‰æ‹©ã€‚"],
+            )
+
+        selection_id = f"selection-{uuid4().hex[:16]}"
+        selection: JsonObject = {
+            "selection_id": selection_id,
+            "path": path.resolve(),
+            "file_name": path.name,
+            "source_sha256": digest,
+            "preview_data_url": preview,
+            "width": width,
+            "height": height,
+            "created_at": time.time(),
+        }
+        with self._vector_lock:
+            self._vector_selections[selection_id] = selection
+            if len(self._vector_selections) > 12:
+                oldest = min(
+                    self._vector_selections,
+                    key=lambda key: float(self._vector_selections[key]["created_at"]),
+                )
+                self._vector_selections.pop(oldest, None)
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "selectionId": selection_id,
+                    "fileName": path.name,
+                    "width": width,
+                    "height": height,
+                    "sourceHash": digest[:12],
+                    "previewDataUrl": preview,
+                },
+            },
+        )
+
+    @staticmethod
+    def _vector_job_public(job: JsonObject) -> JsonObject:
+        response: JsonObject = {
+            "jobId": job["job_id"],
+            "projectId": "legacy-vectorization",
+            "workflowId": "legacy-vectorization-v1",
+            "status": job["status"],
+            "progress": job["progress"],
+            "stage": job["stage"],
+            "currentStep": job["stage"],
+            "mode": job["mode"],
+            "createdAt": job["created_at"],
+            "artifacts": [],
+            "warnings": [],
+            "evidenceId": None,
+        }
+        for key in ("completed_at", "result", "error"):
+            if job.get(key) is not None:
+                public_key = {
+                    "completed_at": "completedAt",
+                    "result": "result",
+                    "error": "error",
+                }[key]
+                response[public_key] = job[key]
+        if isinstance(job.get("result"), dict):
+            response["warnings"] = list(job["result"].get("warnings") or [])
+        return response
+
+    def _record_vector_event(self, job: JsonObject, result: JsonObject) -> None:
+        event = {
+            "event_id": f"evt_{uuid4().hex[:12]}",
+            "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "kind": "vectorization",
+            "action": "local_vectorization",
+            "ok": True,
+            "status": "completed",
+            "mode": job["mode"],
+            "source_hash": result["sourceHash"],
+            "summary": f"{result['modeLabel']}å·²åœ¨æœ¬æœºå®Œæˆã€‚",
+            "metrics": result["metrics"],
+            "output_available": True,
+        }
+        events = self._load_history()
+        events.append(event)
+        self._save_history(events)
+
+    def _run_vector_job(
+        self,
+        job_id: str,
+        selection: JsonObject,
+        parameters: JsonObject,
+    ) -> None:
+        with self._vector_lock:
+            job = self._vector_jobs[job_id]
+            job.update(status="running", progress=18, stage="æ­£åœ¨æœ¬æœºå¤„ç†å›¾ç‰‡")
+
+        mode = str(job["mode"])
+        reference_id = f"desktop-{str(selection['source_sha256'])[:10]}-{job_id[-6:]}"
+        output_root = (self.app_paths.data / "vectorization").resolve()
+        output_dir = output_root / reference_id / mode
+
+        def optional_int(key: str) -> int | None:
+            value = parameters.get(key)
+            return int(value) if isinstance(value, int | float) else None
+
+        def optional_float(key: str) -> float | None:
+            value = parameters.get(key)
+            return float(value) if isinstance(value, int | float) else None
+
+        try:
+            report = run_vectorization(
+                RunConfig(
+                    input_path=str(selection["path"]),
+                    mode=mode,
+                    reference_id=reference_id,
+                    output_dir=str(output_dir),
+                    output_root=str(output_root),
+                    colors=optional_int("colors"),
+                    max_dimension=optional_int("maxDimension"),
+                    simplify_ratio=optional_float("simplifyRatio"),
+                    min_region_area=optional_int("minRegionArea"),
+                    alpha_threshold=optional_int("alphaThreshold"),
+                )
+            )
+            result_preview, _, _ = self._image_preview_data_url(output_dir / "preview.png")
+            vector = report["vector"]
+            result: JsonObject = {
+                "modeLabel": report["mode"]["label_zh"],
+                "sourceHash": str(selection["source_sha256"])[:12],
+                "sourcePreviewDataUrl": selection["preview_data_url"],
+                "resultPreviewDataUrl": result_preview,
+                "metrics": {
+                    "colors": vector["color_count"],
+                    "subpaths": vector["subpaths"],
+                    "points": vector["points"],
+                    "svgBytes": vector["svg_bytes"],
+                    "elapsedSeconds": report["elapsed_seconds"],
+                    "pixelMatch": (
+                        report["exact_validation"]["pixel_match"]
+                        if report.get("exact_validation")
+                        else None
+                    ),
+                    "anchorReductionRatio": vector.get("anchor_reduction_ratio"),
+                },
+                "warnings": report["warnings"],
+                "outputAvailable": True,
+            }
+            with self._vector_lock:
+                job = self._vector_jobs[job_id]
+                job.update(
+                    status="completed",
+                    progress=100,
+                    stage="å¤„ç†å®Œæˆ",
+                    completed_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    result=result,
+                    output_dir=output_dir,
+                )
+            self._record_vector_event(job, result)
+        except (OSError, VectorizationError, ValueError) as error:
+            code = error.code if isinstance(error, VectorizationError) else "vectorization_failed"
+            message = str(error) if isinstance(error, VectorizationError) else "å›¾ç‰‡å¤„ç†æœªå®Œæˆã€‚"
+            with self._vector_lock:
+                self._vector_jobs[job_id].update(
+                    status="failed",
+                    progress=100,
+                    stage="éœ€è¦å¤„ç†",
+                    completed_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    error={
+                        "code": code,
+                        "message": message,
+                        "nextSteps": ["æ£€æŸ¥å›¾ç‰‡å’Œå‚æ•°åŽé‡æ–°è¿è¡Œï¼›åŽŸå›¾æ²¡æœ‰è¢«ä¿®æ”¹ã€‚"],
+                    },
+                )
+
+    def _start_vector_job(self, body: JsonObject) -> BackendResponse:
+        if self.mode == "desktop" and not self.connections.drawing_enabled():
+            return self._error(
+                409,
+                "codex_association_required",
+                "å½“å‰ CreNexus Desktop ä¼šè¯å°šæœªä¸Ž Codex å…³è”ï¼Œåˆ¶å›¾ä»»åŠ¡æœªå¯åŠ¨ã€‚",
+                next_steps=["æ‰“å¼€è½¯ä»¶è”åŠ¨ä¸­çš„è¿žæŽ¥ä¸­å¿ƒï¼Œå®Œæˆæœ¬æ¬¡ Codex é…å¯¹åŽé‡è¯•ã€‚"],
+            )
+        required = ("confirm_run", "confirm_write", "confirm_export")
+        if any(body.get(key) is not True for key in required):
+            return self._error(
+                400,
+                "confirmation_required",
+                "å¼€å§‹æœ¬æœºå¤„ç†å‰éœ€è¦ç¡®è®¤æ‰§è¡Œã€å†™å…¥å’Œå¯¼å‡ºã€‚",
+                next_steps=["æ£€æŸ¥å‚æ•°å’Œè¾“å‡ºè¯´æ˜Žï¼Œå†å‹¾é€‰æœ¬æ¬¡æ‰§è¡Œç¡®è®¤ã€‚"],
+            )
+        selection_id = body.get("selection_id")
+        mode = body.get("mode")
+        parameters = body.get("parameters") or {}
+        if not isinstance(selection_id, str):
+            return self._error(400, "selection_required", "è¯·å…ˆé€‰æ‹©ä¸€å¼ å›¾ç‰‡ã€‚")
+        if mode not in VECTOR_MODES:
+            return self._error(400, "invalid_mode", "è¯·é€‰æ‹©å¯ç”¨çš„ Community çŸ¢é‡æ¨¡å¼ã€‚")
+        if not isinstance(parameters, dict):
+            return self._error(400, "invalid_parameters", "å¤„ç†å‚æ•°æ ¼å¼æ— æ•ˆã€‚")
+        with self._vector_lock:
+            selection = self._vector_selections.get(selection_id)
+        if selection is None:
+            return self._error(
+                404,
+                "selection_expired",
+                "æ‰€é€‰å›¾ç‰‡ä¼šè¯å·²å¤±æ•ˆã€‚",
+                next_steps=["é‡æ–°é€‰æ‹©å›¾ç‰‡åŽå†è¿è¡Œã€‚"],
+            )
+        job_id = f"vector-{uuid4().hex[:16]}"
+        job: JsonObject = {
+            "job_id": job_id,
+            "status": "queued",
+            "progress": 6,
+            "stage": "å·²ç¡®è®¤ï¼Œæ­£åœ¨å‡†å¤‡",
+            "mode": mode,
+            "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "completed_at": None,
+            "result": None,
+            "error": None,
+            "output_dir": None,
+        }
+        with self._vector_lock:
+            self._vector_jobs[job_id] = job
+        worker = Thread(
+            target=self._run_vector_job,
+            args=(job_id, selection, parameters),
+            daemon=True,
+            name=f"starbridge-{job_id}",
+        )
+        worker.start()
+        return BackendResponse(202, {"ok": True, "data": self._vector_job_public(job)})
+
+    def _vector_job_status(self, job_id: str) -> BackendResponse:
+        with self._vector_lock:
+            job = self._vector_jobs.get(job_id)
+            if job is None:
+                return self._error(404, "job_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™é¡¹æœ¬æœºä»»åŠ¡ã€‚")
+            public = self._vector_job_public(dict(job))
+        return BackendResponse(200, {"ok": True, "data": public})
+
+    def _open_vector_output(self, job_id: str) -> BackendResponse:
+        with self._vector_lock:
+            job = self._vector_jobs.get(job_id)
+            output_dir = job.get("output_dir") if job else None
+        if not isinstance(output_dir, Path) or not output_dir.is_dir():
+            return self._error(
+                409,
+                "output_not_ready",
+                "è¾“å‡ºæ–‡ä»¶å¤¹å°šæœªå‡†å¤‡å¥½ã€‚",
+                next_steps=["ç­‰å¾…ä»»åŠ¡å®ŒæˆåŽå†æ‰“å¼€è¾“å‡ºæ–‡ä»¶å¤¹ã€‚"],
+            )
+        allowed_root = (self.app_paths.data / "vectorization").resolve()
+        resolved = output_dir.resolve()
+        if allowed_root not in resolved.parents:
+            return self._error(403, "output_outside_safe_root", "è¾“å‡ºç›®å½•ä¸åœ¨å®‰å…¨èŒƒå›´å†…ã€‚")
+        try:
+            if os.name != "nt":
+                raise OSError("unsupported_platform")
+            os.startfile(resolved)  # type: ignore[attr-defined]
+        except OSError:
+            return self._error(
+                500,
+                "output_open_failed",
+                "æ— æ³•æ‰“å¼€è¾“å‡ºæ–‡ä»¶å¤¹ã€‚",
+                next_steps=["ç¨åŽé‡è¯•ï¼Œæˆ–åœ¨è®¾ç½®ä¸Žè¯Šæ–­ä¸­æ£€æŸ¥åº”ç”¨æ•°æ®ç›®å½•ã€‚"],
+            )
+        return BackendResponse(200, {"ok": True, "data": {"opened": True}})
+
+    def _vector_history(self) -> BackendResponse:
+        stored = [
+            event
+            for event in reversed(self._load_history())
+            if event.get("kind") == "vectorization"
+        ][:20]
+        events = [
+            {
+                "eventId": event.get("event_id"),
+                "createdAt": event.get("created_at"),
+                "mode": event.get("mode"),
+                "summary": event.get("summary"),
+                "sourceHash": event.get("source_hash"),
+                "metrics": event.get("metrics", {}),
+                "outputAvailable": event.get("output_available") is True,
+            }
+            for event in stored
+        ]
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "eventCount": len(events),
+                    "events": events,
+                },
+            },
+        )
+
+    def _workflow_catalog(self) -> BackendResponse:
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "workflows": [
+                        {
+                            "workflowId": VECTOR_DELIVERY_WORKFLOW_ID,
+                            "name": "å›¾ç‰‡ â†’ ç²¾ç¡®é‡å»º â†’ ç»˜åˆ¶åž‹çŸ¢é‡ â†’ äº¤ä»˜",
+                            "capabilityStatus": "experimental",
+                            "recommended": True,
+                            "ordinaryCustomerRoute": True,
+                            "requiresConfirmation": True,
+                            "drawingModes": ["artisan", "smart", "lightweight"],
+                            "imageTraceFallback": False,
+                        },
+                        {
+                            "workflowId": COMFYUI_GENERATION_WORKFLOW_ID,
+                            "name": "æç¤ºè¯ â†’ æ ¡éªŒ â†’ æœ¬æœº ComfyUI â†’ ç»“æžœè¯æ®",
+                            "capabilityStatus": "experimental",
+                            "recommended": False,
+                            "ordinaryCustomerRoute": True,
+                            "requiresConfirmation": True,
+                            "drawingModes": [],
+                            "imageTraceFallback": False,
+                        },
+                        {
+                            "workflowId": PHOTOSHOP_PRODUCTION_WORKFLOW_ID,
+                            "name": "é¡¹ç›®å›¾ç‰‡ â†’ Photoshop å—æŽ§å‰¯æœ¬ â†’ PNG / JPEG / PSD",
+                            "capabilityStatus": "experimental",
+                            "recommended": False,
+                            "ordinaryCustomerRoute": True,
+                            "requiresConfirmation": True,
+                            "drawingModes": [],
+                            "imageTraceFallback": False,
+                        },
+                    ]
+                },
+            },
+        )
+
+    def _create_project(self, body: JsonObject) -> BackendResponse:
+        project_name = body.get("projectName") or body.get("project_name")
+        workflow_id = body.get("workflowId") or body.get("workflow_id")
+        description = body.get("description") or ""
+        if not isinstance(project_name, str) or not project_name.strip():
+            return self._error(400, "project_name_required", "è¯·è¾“å…¥é¡¹ç›®åç§°ã€‚")
+        if workflow_id not in self.workflow_registry.workflow_ids():
+            return self._error(400, "workflow_not_available", "è¯·é€‰æ‹©å½“å‰å¯ç”¨çš„åˆ›æ„å·¥ä½œæµã€‚")
+        if not isinstance(description, str):
+            return self._error(400, "invalid_description", "é¡¹ç›®æè¿°æ ¼å¼æ— æ•ˆã€‚")
+        try:
+            project = self.project_store.create(
+                project_name.strip(), str(workflow_id), description.strip()
+            )
+        except DomainValidationError as exc:
+            return self._error(400, "invalid_project", str(exc))
+        return BackendResponse(201, {"ok": True, "data": project.to_dict()})
+
+    def _list_projects(self) -> BackendResponse:
+        projects = [project.to_dict() for project in self.project_store.list()]
+        return BackendResponse(
+            200, {"ok": True, "data": {"projectCount": len(projects), "projects": projects}}
+        )
+
+    def _get_project(self, project_id: str) -> BackendResponse:
+        try:
+            project = self.project_store.get(project_id)
+        except (DomainValidationError, RecordNotFoundError):
+            return self._error(404, "project_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™ä¸ªé¡¹ç›®ã€‚")
+        return BackendResponse(200, {"ok": True, "data": project.to_dict()})
+
+    def _import_project_asset(self, project_id: str, body: JsonObject) -> BackendResponse:
+        if body.get("confirmImport") is not True and body.get("confirm_import") is not True:
+            return self._error(
+                400,
+                "confirmation_required",
+                "æŠŠç´ æå¤åˆ¶åˆ° CreNexus é¡¹ç›®ç›®å½•å‰éœ€è¦æ˜Žç¡®ç¡®è®¤ã€‚",
+            )
+        source_path = body.get("inputPath") or body.get("input_path")
+        if not isinstance(source_path, str) or not source_path.strip():
+            return self._error(400, "input_required", "è¯·é€‰æ‹©ä¸€ä¸ªè¦å¯¼å…¥çš„æ–‡ä»¶ã€‚")
+        try:
+            project = self.project_store.get(project_id)
+            asset = self.asset_store.import_source(project_id, source_path, confirm_import=True)
+            updated = self.project_store.save(
+                replace(project, source_assets=(*project.source_assets, asset))
+            )
+        except RecordNotFoundError:
+            return self._error(404, "project_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™ä¸ªé¡¹ç›®ã€‚")
+        except (ConfirmationRequiredError, DomainValidationError, OSError) as exc:
+            return self._error(400, "asset_import_failed", str(exc))
+        return BackendResponse(
+            201,
+            {
+                "ok": True,
+                "data": {"asset": asset.to_dict(), "project": updated.to_dict()},
+            },
+        )
+
+    def _create_creative_job(self, body: JsonObject) -> BackendResponse:
+        project_id = body.get("projectId") or body.get("project_id")
+        workflow_id = body.get("workflowId") or body.get("workflow_id")
+        if not all(isinstance(value, str) for value in (project_id, workflow_id)):
+            return self._error(
+                400,
+                "job_fields_required",
+                "åˆ›å»ºä»»åŠ¡éœ€è¦é¡¹ç›®å’Œå·¥ä½œæµã€‚",
+            )
+        try:
+            project = self.project_store.get(str(project_id))
+            if workflow_id == VECTOR_DELIVERY_WORKFLOW_ID:
+                asset_id = body.get("sourceAssetId") or body.get("source_asset_id")
+                drawing_mode = body.get("drawingMode") or body.get("drawing_mode") or "artisan"
+                parameters = body.get("parameters") or {}
+                if not isinstance(asset_id, str):
+                    return self._error(
+                        400, "source_asset_required", "å›¾ç‰‡çŸ¢é‡å·¥ä½œæµéœ€è¦ä¸€ä¸ªå·²å¯¼å…¥çš„æºç´ æã€‚"
+                    )
+                if not isinstance(parameters, dict):
+                    return self._error(400, "invalid_parameters", "ä»»åŠ¡å‚æ•°æ ¼å¼æ— æ•ˆã€‚")
+                source_asset = next(
+                    (asset for asset in project.source_assets if asset.asset_id == asset_id), None
+                )
+                if source_asset is None:
+                    return self._error(404, "source_asset_not_found", "é¡¹ç›®ä¸­æ²¡æœ‰è¿™ä¸ªæºç´ æã€‚")
+                workflow_inputs = {
+                    "sourceAssetRelativePath": source_asset.relative_path,
+                    "drawingMode": drawing_mode,
+                    "parameters": parameters,
+                }
+            elif workflow_id == COMFYUI_GENERATION_WORKFLOW_ID:
+                workflow_inputs = {
+                    "prompt": body.get("prompt"),
+                    "negativePrompt": body.get("negativePrompt") or body.get("negative_prompt"),
+                    "checkpointName": body.get("checkpointName") or body.get("checkpoint_name"),
+                    "width": body.get("width"),
+                    "height": body.get("height"),
+                    "seed": body.get("seed"),
+                    "steps": body.get("steps"),
+                    "cfg": body.get("cfg"),
+                    "sampler": body.get("sampler"),
+                    "scheduler": body.get("scheduler"),
+                    "timeout": body.get("timeout"),
+                    "waitSeconds": (
+                        body.get("waitSeconds")
+                        if "waitSeconds" in body
+                        else body.get("wait_seconds")
+                    ),
+                }
+            elif workflow_id == PHOTOSHOP_PRODUCTION_WORKFLOW_ID:
+                asset_id = body.get("sourceAssetId") or body.get("source_asset_id")
+                parameters = body.get("parameters") or {}
+                if not isinstance(asset_id, str):
+                    return self._error(
+                        400, "source_asset_required", "Photoshop å·¥ä½œæµéœ€è¦ä¸€ä¸ªå·²å¯¼å…¥çš„æºç´ æã€‚"
+                    )
+                if not isinstance(parameters, dict):
+                    return self._error(400, "invalid_parameters", "ä»»åŠ¡å‚æ•°æ ¼å¼æ— æ•ˆã€‚")
+                source_asset = next(
+                    (asset for asset in project.source_assets if asset.asset_id == asset_id), None
+                )
+                if source_asset is None:
+                    return self._error(404, "source_asset_not_found", "é¡¹ç›®ä¸­æ²¡æœ‰è¿™ä¸ªæºç´ æã€‚")
+
+                def photoshop_value(key: str, default: Any = None) -> Any:
+                    return body.get(key) if key in body else parameters.get(key, default)
+
+                workflow_inputs = {
+                    "sourceAssetRelativePath": source_asset.relative_path,
+                    "sourceAssetSha256": source_asset.sha256,
+                    "outputFormats": photoshop_value("outputFormats", ["png", "jpeg", "psd"]),
+                    "resizeCanvas": photoshop_value("resizeCanvas", False),
+                    "canvasWidth": photoshop_value("canvasWidth", 1920),
+                    "canvasHeight": photoshop_value("canvasHeight", 1080),
+                    "brightness": photoshop_value("brightness", 0),
+                    "contrast": photoshop_value("contrast", 0),
+                    "saturation": photoshop_value("saturation", 0),
+                    "exportSubject": photoshop_value("exportSubject", False),
+                }
+            else:
+                return self._error(400, "workflow_not_available", "è¿™ä¸ªå·¥ä½œæµå½“å‰ä¸å¯ç”¨ã€‚")
+            job = self.workflow_engine.create_job(
+                str(project_id),
+                str(workflow_id),
+                workflow_inputs,
+            )
+        except RecordNotFoundError:
+            return self._error(404, "project_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™ä¸ªé¡¹ç›®ã€‚")
+        except (DomainValidationError, KeyError, ValueError) as exc:
+            return self._error(400, "job_plan_invalid", str(exc))
+        return BackendResponse(201, {"ok": True, "data": job.to_dict()})
+
+    def _list_creative_jobs(self) -> BackendResponse:
+        jobs = [job.to_dict() for job in self.job_store.list()]
+        with self._vector_lock:
+            legacy = [self._vector_job_public(dict(job)) for job in self._vector_jobs.values()]
+        combined = [*jobs, *legacy]
+        return BackendResponse(
+            200, {"ok": True, "data": {"jobCount": len(combined), "jobs": combined}}
+        )
+
+    def _get_creative_job(self, job_id: str) -> BackendResponse:
+        try:
+            job = self.job_store.get(job_id)
+        except (DomainValidationError, RecordNotFoundError):
+            with self._vector_lock:
+                legacy = self._vector_jobs.get(job_id)
+            if legacy is None:
+                return self._error(404, "job_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™é¡¹ä»»åŠ¡ã€‚")
+            return BackendResponse(200, {"ok": True, "data": self._vector_job_public(dict(legacy))})
+        return BackendResponse(200, {"ok": True, "data": job.to_dict()})
+
+    def _run_creative_job(self, job_id: str, body: JsonObject) -> BackendResponse:
+        approval_ref = body.get("approvalRef") or body.get("approval_ref")
+        confirm_execute = body.get("confirmExecute") is True or body.get("confirm_execute") is True
+        try:
+            result = self.workflow_engine.run(
+                job_id,
+                approval_ref=str(approval_ref) if isinstance(approval_ref, str) else None,
+                confirm_execute=confirm_execute,
+            )
+        except RecordNotFoundError:
+            return self._error(404, "job_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™é¡¹ä»»åŠ¡ã€‚")
+        except DomainValidationError as exc:
+            return self._error(409, "job_state_invalid", str(exc))
+        status_code = 202 if result.job.status == "needs_user" else 200
+        return BackendResponse(status_code, {"ok": True, "data": result.to_dict()})
+
+    def _cancel_creative_job(self, job_id: str, body: JsonObject) -> BackendResponse:
+        if body.get("confirmCancel") is not True and body.get("confirm_cancel") is not True:
+            return self._error(400, "confirmation_required", "å–æ¶ˆä»»åŠ¡å‰éœ€è¦æ˜Žç¡®ç¡®è®¤ã€‚")
+        try:
+            job = self.workflow_engine.cancel(job_id)
+        except RecordNotFoundError:
+            return self._error(404, "job_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™é¡¹ä»»åŠ¡ã€‚")
+        return BackendResponse(200, {"ok": True, "data": job.to_dict()})
+
+    def _creative_job_events(self, job_id: str) -> BackendResponse:
+        try:
+            self.job_store.get(job_id)
+        except (DomainValidationError, RecordNotFoundError):
+            return self._error(404, "job_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™é¡¹ä»»åŠ¡ã€‚")
+        events = [event.to_dict() for event in self.job_store.events(job_id)]
+        return BackendResponse(
+            200, {"ok": True, "data": {"eventCount": len(events), "events": events}}
+        )
+
+    def _project_delivery(self, project_id: str) -> BackendResponse:
+        try:
+            project = self.project_store.get(project_id)
+        except (DomainValidationError, RecordNotFoundError):
+            return self._error(404, "project_not_found", "æ²¡æœ‰æ‰¾åˆ°è¿™ä¸ªé¡¹ç›®ã€‚")
+        artifacts = [artifact.to_dict() for artifact in project.artifacts]
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "projectId": project.project_id,
+                    "projectName": project.project_name,
+                    "artifacts": artifacts,
+                    "evidenceIds": list(project.evidence),
+                    "formats": sorted(
+                        {
+                            Path(artifact.basename).suffix.lower().lstrip(".").upper()
+                            for artifact in project.artifacts
+                            if Path(artifact.basename).suffix
+                        }
+                    ),
+                    "fabricatedOutputs": False,
+                },
+            },
+        )
+
+    def _record_recipe_event(
+        self, *, recipe_id: str, action: str, result: JsonObject
+    ) -> JsonObject:
+        quality_gates = (
+            result.get("plan", {}).get("quality_gates", [])
+            if isinstance(result.get("plan"), dict)
+            else result.get("manifest", {}).get("quality_gates", [])
+            if isinstance(result.get("manifest"), dict)
+            else result.get("quality_gates", [])
+            if isinstance(result.get("quality_gates"), list)
+            else []
+        )
+        event = sanitize(
+            {
+                "event_id": f"evt_{uuid4().hex[:12]}",
+                "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "kind": "recipe_action",
+                "recipe_id": recipe_id,
+                "bridge": result.get("bridge"),
+                "action": action,
+                "ok": bool(result.get("ok", False)),
+                "status": "completed" if result.get("ok") else "failed",
+                "evidence_ready": action in {"evidence", "run"} or "manifest" in result,
+                "quality_gate_count": len(quality_gates),
+                "execution_target": result.get("execution_target"),
+                "summary": result.get("result_summary"),
+            }
+        )
+        events = self._load_history()
+        events.append(event)
+        self._save_history(events)
+        return event
+
+    @staticmethod
+    def _catalog_card(recipe: JsonObject) -> JsonObject:
+        bridge = str(recipe.get("bridge") or "unknown")
+        tier = CATALOG_BRIDGE_TIERS.get(
+            bridge,
+            {
+                "tier": "Core",
+                "price_signal": "Included workflow",
+                "buyer": "Creative operators",
+            },
+        )
+        gates = recipe.get("quality_gates", [])
+        return sanitize(
+            {
+                "sku": f"starbridge.recipe.{recipe.get('recipe_id')}",
+                "recipe_id": recipe.get("recipe_id"),
+                "bridge": bridge,
+                "title": str(recipe.get("recipe_id") or "recipe").replace("_", " ").title(),
+                "goal": recipe.get("goal"),
+                "tier": tier["tier"],
+                "price_signal": tier["price_signal"],
+                "buyer": tier["buyer"],
+                "safe_default": bool(recipe.get("safe_default", True)),
+                "writes": bool(recipe.get("writes", False)),
+                "quality_gates": gates if isinstance(gates, list) else [],
+                "install_state": "bundled",
+            }
+        )
+
+    def _catalog(self) -> BackendResponse:
+        response = self._tool("starbridge.recipe_list", {"bridge": "all"})
+        if response.status != 200:
+            return response
+        data = response.body.get("data", {})
+        recipes = data.get("recipes", []) if isinstance(data, dict) else []
+        cards = [self._catalog_card(recipe) for recipe in recipes if isinstance(recipe, dict)]
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "catalog_version": "starbridge.catalog.v1",
+                    "item_count": len(cards),
+                    "items": cards,
+                    "monetization_model": [
+                        "Published recipe implementations remain Community / MIT capabilities.",
+                        "Future Pro value must come from new private production workflow enhancements.",
+                        "No cloud execution or metered compute billing is provided.",
+                    ],
+                },
+            },
+        )
+
+    @staticmethod
+    def _tiers() -> BackendResponse:
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": {
+                    "tiers_version": "starbridge.tiers.v1",
+                    "tiers": PRODUCT_TIERS,
+                },
+            },
+        )
+
+    @staticmethod
+    def _hybrid() -> BackendResponse:
+        return BackendResponse(
+            200,
+            {
+                "ok": True,
+                "data": HYBRID_EXECUTION,
+            },
+        )
+
+    @staticmethod
+    def _lane_for_bridge(bridge: str, execution_target: str) -> JsonObject | None:
+        for lane in HYBRID_EXECUTION["lanes"]:
+            if execution_target == lane["execution_target"] and bridge in lane["bridges"]:
+                return lane
+        return None
+
+    def _run_recipe(self, recipe_id: str, body: JsonObject) -> BackendResponse:
+        if not bool(body.get("confirm_run", False)):
+            return BackendResponse(
+                400,
+                {
+                    "ok": False,
+                    "error": "confirm_run=true is required before a recipe run can be recorded",
+                    "required_sequence": ["plan", "evidence", "confirm_run", "run"],
+                },
+            )
+
+        plan_response = self._tool(
+            "starbridge.recipe_plan", {"recipe_id": recipe_id, "dry_run": True}
+        )
+        if plan_response.status != 200:
+            return plan_response
+        plan_data = plan_response.body.get("data", {})
+        if not isinstance(plan_data, dict) or not plan_data.get("ok"):
+            return BackendResponse(404, {"ok": False, "error": "unknown recipe_id"})
+
+        bridge = str(plan_data.get("bridge") or "unknown")
+        requested_target = str(body.get("execution_target") or "local")
+        lane = self._lane_for_bridge(bridge, requested_target)
+        if lane is None:
+            return BackendResponse(
+                400,
+                {
+                    "ok": False,
+                    "error": f"{bridge} does not support execution_target={requested_target}",
+                    "hybrid": HYBRID_EXECUTION,
+                },
+            )
+
+        plan = plan_data.get("plan", {}) if isinstance(plan_data.get("plan"), dict) else {}
+        quality_gates = (
+            plan.get("quality_gates", []) if isinstance(plan.get("quality_gates"), list) else []
+        )
+        result = sanitize(
+            {
+                "ok": True,
+                "bridge": bridge,
+                "action": "recipe_run",
+                "recipe_id": recipe_id,
+                "status": "completed",
+                "dry_run": True,
+                "confirm_run": True,
+                "execution_target": requested_target,
+                "execution_lane": lane["id"],
+                "result_summary": "Confirmed run recorded as a safe dry-run execution request.",
+                "tool_sequence": plan.get("action_plan", {}).get("tool_sequence", []),
+                "quality_gates": quality_gates,
+                "outputs": [
+                    {
+                        "label": "execution_report",
+                        "materialized": False,
+                        "reason": "Backend does not launch desktop software from this product UI.",
+                    }
+                ],
+                "billing_preview": {
+                    "unit": lane["billing_unit"],
+                    "billable": False,
+                    "metered_quantity": 0,
+                },
+                "next_steps": [
+                    "Review the recorded event in Audit.",
+                    "Use bridge-specific confirmed tools for real sandbox output.",
+                ],
+            }
+        )
+        event = self._record_recipe_event(recipe_id=recipe_id, action="run", result=result)
+        return BackendResponse(200, {"ok": True, "data": result, "event": event})
+
+    def route(
+        self,
+        method: str,
+        target: str,
+        raw_body: bytes = b"",
+        *,
+        headers: Mapping[str, str] | None = None,
+        origin: str | None = None,
+    ) -> BackendResponse:
+        parsed = urlparse(target)
+        path = parsed.path.rstrip("/") or "/"
+        query = parse_qs(parsed.query)
+        method = method.upper()
+
+        if path.startswith("/api/") and not self.origin_allowed(origin):
+            return self._error(
+                403,
+                "origin_not_allowed",
+                "è¯¥é¡µé¢æ¥æºä¸èƒ½ç›´æŽ¥è®¿é—® CreNexus æœ¬åœ°æœåŠ¡ã€‚",
+                next_steps=["è¯·ä½¿ç”¨ CreNexus Desktop æˆ–å·²é…ç½®çš„æœ¬åœ°å¼€å‘åœ°å€ã€‚"],
+            )
+
+        if method == "GET" and path == "/api/health":
+            return BackendResponse(
+                200,
+                {
+                    "ok": True,
+                    "service": "starbridge-backend",
+                    "server": SERVER_INFO,
+                    "mode": self.mode,
+                    "session_required": self.auth_required,
+                },
+            )
+
+        if path.startswith("/api/"):
+            if authorization_error := self._authorization_error(path, headers):
+                return authorization_error
+
+        if method == "OPTIONS":
+            return BackendResponse(204, {"ok": True})
+
+        if len(raw_body) > self.max_request_body_bytes:
+            return self._error(
+                413,
+                "request_too_large",
+                "è¯·æ±‚å†…å®¹è¶…è¿‡ CreNexus æœ¬åœ°æœåŠ¡å…è®¸çš„å¤§å°ã€‚",
+            )
+
+        try:
+            body = self._json_body(raw_body)
+        except ValueError:
+            return self._error(
+                400,
+                "invalid_json_body",
+                "è¯·æ±‚å†…å®¹å¿…é¡»æ˜¯æœ‰æ•ˆçš„ JSON å¯¹è±¡ã€‚",
+            )
+
+        if method == "POST" and path == "/api/lifecycle/shutdown":
+            self.record_runtime_event("shutdown_requested")
+            self.request_shutdown()
+            return BackendResponse(
+                202,
+                {
+                    "ok": True,
+                    "data": {
+                        "status": "stopping",
+                        "message": "CreNexus æœ¬åœ°æœåŠ¡æ­£åœ¨å®‰å…¨åœæ­¢ã€‚",
+                    },
+                },
+            )
+
+        if method == "GET" and path == "/api/connections":
+            return BackendResponse(200, {"ok": True, "data": self.connections.overview()})
+
+        if method == "POST" and path == "/api/connections/codex/install":
+            if self.mode != "desktop":
+                return self._error(
+                    409,
+                    "desktop_required",
+                    "åªèƒ½åœ¨å®‰è£…åŽçš„ CreNexus Desktop ä¸­é…ç½® Codex è¿žæŽ¥å™¨ã€‚",
+                )
+            try:
+                installed = self.connections.install_codex_connector(
+                    confirm_install=body.get("confirm_install") is True
+                )
+            except ConnectionSetupError as error:
+                return self._error(
+                    409,
+                    error.code,
+                    str(error),
+                    next_steps=error.next_steps,
+                )
+            return BackendResponse(200, {"ok": True, "data": installed})
+
+        if method == "POST" and path == "/api/connections/codex/reset":
+            if body.get("confirm_reset") is not True:
+                return self._error(
+                    400,
+                    "confirmation_required",
+                    "é‡æ–°å…³è”å‰éœ€è¦æ˜Žç¡®ç¡®è®¤ã€‚",
+                )
+            reset = self.connections.reset_pairing()
+            self.record_runtime_event("codex_pairing_reset")
+            return BackendResponse(200, {"ok": True, "data": reset})
+
+        if method == "POST" and path == "/api/connections/applications/pair":
+            try:
+                paired = self.connections.pair_application(
+                    str(body.get("application_id") or ""),
+                    confirm_pairing=body.get("confirm_pairing") is True,
+                )
+            except ConnectionSetupError as error:
+                return self._error(
+                    409,
+                    error.code,
+                    str(error),
+                    next_steps=error.next_steps,
+                )
+            self.record_runtime_event(
+                "creative_application_paired", {"application_id": paired["id"]}
+            )
+            return BackendResponse(200, {"ok": True, "data": paired})
+
+        if method == "POST" and path == "/api/connections/applications/reconnect":
+            try:
+                reconnected = self.connections.reconnect_application(
+                    str(body.get("application_id") or ""),
+                    confirm_reconnect=body.get("confirm_reconnect") is True,
+                )
+            except ConnectionSetupError as error:
+                return self._error(
+                    409,
+                    error.code,
+                    str(error),
+                    next_steps=error.next_steps,
+                )
+            self.record_runtime_event(
+                "creative_application_reconnected",
+                {"application_id": reconnected["id"]},
+            )
+            return BackendResponse(200, {"ok": True, "data": reconnected})
+
+        if method == "POST" and path == "/api/connections/applications/disconnect":
+            try:
+                disconnected = self.connections.disconnect_application(
+                    str(body.get("application_id") or ""),
+                    confirm_disconnect=body.get("confirm_disconnect") is True,
+                )
+            except ConnectionSetupError as error:
+                return self._error(
+                    409,
+                    error.code,
+                    str(error),
+                    next_steps=error.next_steps,
+                )
+            self.record_runtime_event(
+                "creative_application_disconnected",
+                {"application_id": disconnected["id"]},
+            )
+            return BackendResponse(200, {"ok": True, "data": disconnected})
+
+        if method == "GET" and path == "/api/status":
+            arguments: JsonObject = {
+                "bridge": self._one(query, "bridge", "all"),
+                "probe_executables": self._bool(query, "probe_executables", False),
+            }
+            if timeout := self._one(query, "timeout"):
+                try:
+                    arguments["timeout"] = int(timeout)
+                except ValueError:
+                    return BackendResponse(
+                        400, {"ok": False, "error": "timeout must be an integer"}
+                    )
+            return self._tool("starbridge.status", arguments)
+
+        if method == "GET" and path == "/api/capabilities":
+            return self._tool(
+                "starbridge.tools",
+                {
+                    "bridge": self._one(query, "bridge", "all"),
+                    "safe_only": self._bool(query, "safe_only", False),
+                },
+            )
+
+        if method == "GET" and path == "/api/tools":
+            return self._mcp("tools/list")
+
+        if method == "GET" and path == "/api/resources":
+            return self._mcp("resources/list")
+
+        if method == "GET" and path == "/api/resource":
+            uri = self._one(query, "uri")
+            if not uri:
+                return BackendResponse(
+                    400, {"ok": False, "error": "query parameter uri is required"}
+                )
+            return self._mcp("resources/read", {"uri": uri})
+
+        if method == "GET" and path == "/api/recipes":
+            return self._tool(
+                "starbridge.recipe_list", {"bridge": self._one(query, "bridge", "all")}
+            )
+
+        if method == "GET" and path == "/api/catalog":
+            return self._catalog()
+
+        if method == "GET" and path == "/api/tiers":
+            return self._tiers()
+
+        if method == "GET" and path == "/api/hybrid":
+            return self._hybrid()
+
+        if method == "GET" and path == "/api/audit/history":
+            events = list(reversed(self._load_history()))
+            limit = self._one(query, "limit")
+            if limit:
+                try:
+                    events = events[: max(0, int(limit))]
+                except ValueError:
+                    return BackendResponse(400, {"ok": False, "error": "limit must be an integer"})
+            return BackendResponse(
+                200,
+                {
+                    "ok": True,
+                    "data": {
+                        "history_version": "starbridge.audit.v1",
+                        "event_count": len(events),
+                        "events": events,
+                    },
+                },
+            )
+
+        if method == "DELETE" and path == "/api/audit/history":
+            self._save_history([])
+            return BackendResponse(
+                200,
+                {
+                    "ok": True,
+                    "data": {
+                        "history_version": "starbridge.audit.v1",
+                        "event_count": 0,
+                        "events": [],
+                    },
+                },
+            )
+
+        if method == "GET" and path == "/api/bootstrap":
+            capabilities = self._tool("starbridge.tools", {"safe_only": True})
+            recipes = self._tool("starbridge.recipe_list", {"bridge": "all"})
+            catalog = self._catalog()
+            tiers = self._tiers()
+            hybrid = self._hybrid()
+            safe_roots = self._tool("starbridge.safe_roots", {"bridge": "all"})
+            resources = self._mcp("resources/list")
+            responses = [capabilities, recipes, catalog, tiers, hybrid, safe_roots, resources]
+            if any(response.status != 200 for response in responses):
+                return BackendResponse(
+                    500,
+                    {
+                        "ok": False,
+                        "error": "bootstrap failed",
+                        "responses": [response.body for response in responses],
+                    },
+                )
+            history = self._load_history()
+            return BackendResponse(
+                200,
+                {
+                    "ok": True,
+                    "data": {
+                        "server": SERVER_INFO,
+                        "capabilities": capabilities.body["data"],
+                        "recipes": recipes.body["data"],
+                        "catalog": catalog.body["data"],
+                        "tiers": tiers.body["data"],
+                        "hybrid": hybrid.body["data"],
+                        "history": {
+                            "history_version": "starbridge.audit.v1",
+                            "event_count": len(history),
+                            "events": list(reversed(history)),
+                        },
+                        "safe_roots": safe_roots.body["data"],
+                        "resources": resources.body["data"],
+                    },
+                },
+            )
+
+        if method == "GET" and path == "/api/workflows":
+            return self._workflow_catalog()
+
+        if path == "/api/projects":
+            if method == "GET":
+                return self._list_projects()
+            if method == "POST":
+                return self._create_project(body)
+
+        if path.startswith("/api/projects/"):
+            parts = [unquote(part) for part in path.split("/") if part]
+            if len(parts) == 3 and parts[:2] == ["api", "projects"] and method == "GET":
+                return self._get_project(parts[2])
+            if len(parts) == 4 and parts[:2] == ["api", "projects"]:
+                if parts[3] == "assets" and method == "POST":
+                    return self._import_project_asset(parts[2], body)
+                if parts[3] == "delivery" and method == "GET":
+                    return self._project_delivery(parts[2])
+
+        if path == "/api/jobs":
+            if method == "GET":
+                return self._list_creative_jobs()
+            if method == "POST":
+                return self._create_creative_job(body)
+
+        if path.startswith("/api/jobs/"):
+            parts = [unquote(part) for part in path.split("/") if part]
+            if len(parts) == 3 and parts[:2] == ["api", "jobs"] and method == "GET":
+                return self._get_creative_job(parts[2])
+            if len(parts) == 4 and parts[:2] == ["api", "jobs"]:
+                if parts[3] == "run" and method == "POST":
+                    return self._run_creative_job(parts[2], body)
+                if parts[3] == "cancel" and method == "POST":
+                    return self._cancel_creative_job(parts[2], body)
+                if parts[3] == "events" and method == "GET":
+                    return self._creative_job_events(parts[2])
+
+        if method == "POST" and path == "/api/vectorization/selections":
+            return self._create_vector_selection(body)
+
+        if method == "POST" and path == "/api/vectorization/jobs":
+            return self._start_vector_job(body)
+
+        if method == "GET" and path == "/api/vectorization/history":
+            return self._vector_history()
+
+        if path.startswith("/api/vectorization/jobs/"):
+            parts = [unquote(part) for part in path.split("/") if part]
+            if len(parts) == 4 and parts[:3] == ["api", "vectorization", "jobs"]:
+                if method == "GET":
+                    return self._vector_job_status(parts[3])
+            if (
+                len(parts) == 5
+                and parts[:3] == ["api", "vectorization", "jobs"]
+                and parts[4] == "open-output"
+                and method == "POST"
+            ):
+                return self._open_vector_output(parts[3])
+
+        if path.startswith("/api/recipes/"):
+            parts = [unquote(part) for part in path.split("/") if part]
+            if len(parts) == 4 and parts[0] == "api" and parts[1] == "recipes":
+                recipe_id, action = parts[2], parts[3]
+                arguments = dict(body)
+                arguments["recipe_id"] = recipe_id
+                if action == "plan" and method in {"GET", "POST"}:
+                    response = self._tool("starbridge.recipe_plan", arguments)
+                    if response.status == 200 and isinstance(response.body.get("data"), dict):
+                        event = self._record_recipe_event(
+                            recipe_id=recipe_id, action="plan", result=response.body["data"]
+                        )
+                        response.body["event"] = event
+                    return response
+                if action == "evidence" and method in {"GET", "POST"}:
+                    response = self._tool("starbridge.recipe_evidence", arguments)
+                    if response.status == 200 and isinstance(response.body.get("data"), dict):
+                        event = self._record_recipe_event(
+                            recipe_id=recipe_id, action="evidence", result=response.body["data"]
+                        )
+                        response.body["event"] = event
+                    return response
+                if action == "run" and method == "POST":
+                    return self._run_recipe(recipe_id, body)
+
+        if method == "POST" and path == "/api/tools/call":
+            name = body.get("name")
+            arguments = body.get("arguments") or {}
+            if not isinstance(name, str):
+                return BackendResponse(400, {"ok": False, "error": "body.name must be a string"})
+            if not isinstance(arguments, dict):
+                return BackendResponse(
+                    400, {"ok": False, "error": "body.arguments must be an object"}
+                )
+            return self._tool(name, arguments)
+
+        if method == "GET" and not path.startswith("/api/"):
+            return self._static(path)
+
+        return BackendResponse(404, {"ok": False, "error": f"unknown route: {method} {path}"})
+
+
+def _send(
+    handler: BaseHTTPRequestHandler,
+    response: BackendResponse,
+    backend: CreNexusBackend,
+    *,
+    write_body: bool = True,
+) -> None:
+    body = (
+        b""
+        if response.status == 204
+        else response.body
+        if isinstance(response.body, bytes)
+        else json.dumps(backend.protect(response.body), ensure_ascii=False, indent=2).encode(
+            "utf-8"
+        )
+    )
+    handler.send_response(response.status)
+    handler.send_header("Content-Type", response.content_type)
+    handler.send_header("Content-Length", str(len(body)))
+    handler.send_header("Cache-Control", "no-store")
+    handler.send_header("X-Content-Type-Options", "nosniff")
+    origin = handler.headers.get("Origin")
+    if origin:
+        safe_origin = origin.replace("\r", "").replace("\n", "").rstrip("/")
+        if safe_origin and backend.origin_allowed(safe_origin):
+            handler.send_header("Access-Control-Allow-Origin", safe_origin)
+            handler.send_header("Vary", "Origin")
+            handler.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+            handler.send_header("Access-Control-Allow-Headers", f"Content-Type, {SESSION_HEADER}")
+    for name, value in response.headers.items():
+        handler.send_header(name, value)
+    handler.end_headers()
+    if write_body and response.status != 204:
+        handler.wfile.write(body)
+
+
+def make_handler(backend: CreNexusBackend) -> type[BaseHTTPRequestHandler]:
+    class Handler(BaseHTTPRequestHandler):
+        def _route(self, method: str, raw_body: bytes = b"", *, write_body: bool = True) -> None:
+            try:
+                response = backend.route(
+                    method,
+                    self.path,
+                    raw_body,
+                    headers=self.headers,
+                    origin=self.headers.get("Origin"),
+                )
+            except Exception as exc:  # pragma: no cover - defensive process boundary
+                backend.record_crash(exc)
+                response = backend._error(
+                    500,
+                    "request_failed",
+                    "CreNexus æœ¬åœ°æœåŠ¡æ— æ³•å®Œæˆè¯¥è¯·æ±‚ã€‚",
+                    next_steps=["è¯·æŸ¥çœ‹è¯Šæ–­å¹¶é‡æ–°å¯åŠ¨æœ¬åœ°æœåŠ¡ã€‚"],
+                )
+            _send(self, response, backend, write_body=write_body)
+
+        def _read_body(self) -> tuple[bytes, BackendResponse | None]:
+            raw_length = self.headers.get("Content-Length")
+            if raw_length is None:
+                return b"", None
+            try:
+                length = int(raw_length)
+            except ValueError:
+                self.close_connection = True
+                return b"", backend._error(
+                    400,
+                    "invalid_content_length",
+                    "è¯·æ±‚çš„ Content-Length æ— æ•ˆã€‚",
+                )
+            if length < 0:
+                self.close_connection = True
+                return b"", backend._error(
+                    400,
+                    "invalid_content_length",
+                    "è¯·æ±‚çš„ Content-Length ä¸èƒ½ä¸ºè´Ÿæ•°ã€‚",
+                )
+            if length > backend.max_request_body_bytes:
+                self.close_connection = True
+                return b"", backend._error(
+                    413,
+                    "request_too_large",
+                    "è¯·æ±‚å†…å®¹è¶…è¿‡ CreNexus æœ¬åœ°æœåŠ¡å…è®¸çš„å¤§å°ã€‚",
+                )
+            if length:
+                media_type = (self.headers.get("Content-Type") or "").split(";", 1)[0].strip()
+                if media_type.lower() != "application/json":
+                    self.close_connection = True
+                    return b"", backend._error(
+                        415,
+                        "unsupported_content_type",
+                        "å¸¦è¯·æ±‚å†…å®¹çš„ API è°ƒç”¨åªæŽ¥å— application/jsonã€‚",
+                    )
+            body = self.rfile.read(length)
+            if len(body) != length:
+                self.close_connection = True
+                return b"", backend._error(
+                    400,
+                    "incomplete_request_body",
+                    "è¯·æ±‚å†…å®¹æœªå®Œæ•´ä¼ è¾“ã€‚",
+                )
+            return body, None
+
+        def do_OPTIONS(self) -> None:  # noqa: N802
+            self._route("OPTIONS")
+
+        def do_GET(self) -> None:  # noqa: N802
+            self._route("GET")
+
+        def do_HEAD(self) -> None:  # noqa: N802
+            self._route("GET", write_body=False)
+
+        def do_POST(self) -> None:  # noqa: N802
+            path = urlparse(self.path).path.rstrip("/") or "/"
+            if path.startswith("/api/"):
+                if authorization_error := backend._authorization_error(path, self.headers):
+                    _send(self, authorization_error, backend)
+                    return
+            body, error = self._read_body()
+            if error is not None:
+                _send(self, error, backend)
+                return
+            self._route("POST", body)
+
+        def do_DELETE(self) -> None:  # noqa: N802
+            self._route("DELETE")
+
+        def log_message(self, format: str, *args: Any) -> None:
+            return
+
+    return Handler
+
+
+def _require_loopback(host: str) -> None:
+    if host.lower() == "localhost":
+        return
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError as exc:
+        raise ValueError("CreNexus backend host must be a loopback address") from exc
+    if not address.is_loopback:
+        raise ValueError("CreNexus backend may only bind to a loopback address")
+
+
+class _LocalThreadingHttpServer(ThreadingHTTPServer):
+    daemon_threads = True
+
+
+class CreNexusHttpServer:
+    def __init__(
+        self,
+        backend: CreNexusBackend,
+        *,
+        host: str = "127.0.0.1",
+        port: int = 0,
+    ) -> None:
+        _require_loopback(host)
+        self.backend = backend
+        self._server = _LocalThreadingHttpServer((host, port), make_handler(backend))
+        self._thread: Thread | None = None
+        self._started = Event()
+        self._stopped = Event()
+        self._stop_lock = RLock()
+        self.backend.register_shutdown(self.stop)
+
+    @property
+    def host(self) -> str:
+        return str(self._server.server_address[0])
+
+    @property
+    def port(self) -> int:
+        return int(self._server.server_address[1])
+
+    @property
+    def running(self) -> bool:
+        return bool(self._thread and self._thread.is_alive())
+
+    def _serve(self) -> None:
+        try:
+            self._server.serve_forever(poll_interval=0.1)
+        except BaseException as exc:  # pragma: no cover - process boundary
+            self.backend.record_crash(exc)
+
+    def start(self) -> None:
+        if self._started.is_set():
+            return
+        self._thread = Thread(target=self._serve, name="starbridge-http", daemon=False)
+        self._thread.start()
+        self._started.set()
+        self.backend.record_runtime_event(
+            "server_started",
+            {"host": "loopback", "port": self.port, "pid": os.getpid(), "mode": self.backend.mode},
+        )
+
+    def wait(self, timeout: float | None = None) -> bool:
+        if self._thread is None:
+            return True
+        self._thread.join(timeout)
+        return not self._thread.is_alive()
+
+    def stop(self) -> None:
+        with self._stop_lock:
+            if self._stopped.is_set():
+                return
+            if self._started.is_set() and self.running:
+                self._server.shutdown()
+            self._server.server_close()
+            if self._thread is not None and self._thread is not current_thread():
+                self._thread.join(timeout=5)
+            self.backend.record_runtime_event("server_stopped", {"pid": os.getpid()})
+            self._stopped.set()
+
+    def ready_payload(self) -> JsonObject:
+        return {
+            "event": "ready",
+            "host": "127.0.0.1",
+            "port": self.port,
+            "pid": os.getpid(),
+            "mode": self.backend.mode,
+            "session_required": self.backend.auth_required,
+        }
+
+
+# Preserve the public class names used by older local integrations while the
+# visible product brand moves to CreNexus.
+StarBridgeBackend = CreNexusBackend
+StarBridgeHttpServer = CreNexusHttpServer
+
+
+def process_is_running(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    if pid == os.getpid():
+        return True
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+
+        process_query_limited_information = 0x1000
+        still_active = 259
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.GetExitCodeProcess.argtypes = [wintypes.HANDLE, wintypes.LPDWORD]
+        kernel32.GetExitCodeProcess.restype = wintypes.BOOL
+        kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+        kernel32.CloseHandle.restype = wintypes.BOOL
+        handle = kernel32.OpenProcess(process_query_limited_information, False, pid)
+        if not handle:
+            return False
+        try:
+            exit_code = wintypes.DWORD()
+            if not kernel32.GetExitCodeProcess(handle, ctypes.byref(exit_code)):
+                return False
+            return exit_code.value == still_active
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+class ParentProcessMonitor:
+    def __init__(
+        self,
+        parent_pid: int,
+        on_parent_exit: Callable[[], None],
+        *,
+        poll_interval: float = 1.0,
+    ) -> None:
+        self.parent_pid = parent_pid
+        self.on_parent_exit = on_parent_exit
+        self.poll_interval = poll_interval
+        self._stop = Event()
+        self._thread: Thread | None = None
+
+    def start(self) -> None:
+        if self._thread is not None:
+            return
+        self._thread = Thread(target=self._run, name="starbridge-parent-monitor", daemon=True)
+        self._thread.start()
+
+    def _run(self) -> None:
+        while not self._stop.wait(self.poll_interval):
+            if not process_is_running(self.parent_pid):
+                self.on_parent_exit()
+                return
+
+    def stop(self) -> None:
+        self._stop.set()
+        if self._thread is not None and self._thread is not current_thread():
+            self._thread.join(timeout=max(1.0, self.poll_interval * 2))
+
+
+def serve(
+    *,
+    backend: CreNexusBackend | None = None,
+    host: str = "127.0.0.1",
+    port: int = 8765,
+    parent_pid: int | None = None,
+) -> int:
+    active_backend = backend or CreNexusBackend()
+    server = CreNexusHttpServer(active_backend, host=host, port=port)
+    stop_requested = Event()
+    monitor = ParentProcessMonitor(parent_pid, server.stop) if parent_pid is not None else None
+
+    def request_stop(_signum: int, _frame: Any) -> None:
+        stop_requested.set()
+
+    previous_handlers: dict[int, Any] = {}
+    for signal_name in ("SIGINT", "SIGTERM"):
+        if hasattr(signal, signal_name):
+            signal_value = getattr(signal, signal_name)
+            previous_handlers[signal_value] = signal.getsignal(signal_value)
+            signal.signal(signal_value, request_stop)
+
+    try:
+        server.start()
+        if monitor is not None:
+            monitor.start()
+        print(
+            READY_PREFIX + json.dumps(server.ready_payload(), separators=(",", ":")),
+            flush=True,
+        )
+        while server.running and not stop_requested.wait(0.2):
+            pass
+    finally:
+        if monitor is not None:
+            monitor.stop()
+        server.stop()
+        for signal_value, handler in previous_handlers.items():
+            signal.signal(signal_value, handler)
+    return server.port
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Run the CreNexus local HTTP backend.")
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", type=int)
+    parser.add_argument("--desktop", action="store_true")
+    parser.add_argument("--app-data-dir")
+    parser.add_argument("--history-path")
+    parser.add_argument("--parent-pid", type=int)
+    parser.add_argument("--cors-origin", action="append", default=None)
+    parser.add_argument("--max-request-body-bytes", type=int, default=MAX_REQUEST_BODY_BYTES)
+    parser.add_argument("--session-token-env", default=SESSION_TOKEN_ENV)
+    args = parser.parse_args()
+    mode = "desktop" if args.desktop else "development"
+    credential = os.environ.get(args.session_token_env) if args.desktop else None
+    if args.desktop and not credential:
+        parser.error(f"desktop mode requires a session token in {args.session_token_env}")
+    if args.desktop and args.cors_origin:
+        parser.error("desktop mode uses the Tauri proxy and does not accept browser CORS origins")
+
+    parent_pid = args.parent_pid
+    if parent_pid is None and os.environ.get(PARENT_PID_ENV):
+        try:
+            parent_pid = int(os.environ[PARENT_PID_ENV])
+        except ValueError:
+            parser.error(f"{PARENT_PID_ENV} must be an integer")
+    if args.desktop and parent_pid is None:
+        parser.error("desktop mode requires --parent-pid or STARBRIDGE_PARENT_PID")
+
+    port = args.port if args.port is not None else (0 if args.desktop else 8765)
+    history_path = Path(args.history_path) if args.history_path else None
+    backend = CreNexusBackend(
+        history_path=history_path,
+        app_data_dir=args.app_data_dir,
+        session_credential=credential,
+        mode=mode,
+        cors_allowed_origins=args.cors_origin,
+        max_request_body_bytes=args.max_request_body_bytes,
+    )
+    try:
+        serve(backend=backend, host=args.host, port=port, parent_pid=parent_pid)
+    except Exception as exc:
+        backend.record_crash(exc)
+        print(
+            "STARBRIDGE_ERROR "
+            + json.dumps(
+                {
+                    "event": "startup_failed",
+                    "error_type": type(exc).__name__,
+                    "message": "CreNexus local backend could not start.",
+                },
+                separators=(",", ":"),
+            ),
+            flush=True,
+        )
+        raise SystemExit(1) from None
+
+
+if __name__ == "__main__":
+    main()
