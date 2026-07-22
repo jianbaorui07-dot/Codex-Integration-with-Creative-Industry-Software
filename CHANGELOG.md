@@ -2,6 +2,12 @@
 
 ## Unreleased / Optimizations
 
+### 2026-07-22 — Client loading-state correction
+
+* Replaced the temporary “no projects” and “no deliverables” flashes with explicit local loading states while project, delivery, and Adobe export history records are still being read.
+* Kept read failures distinct from genuinely empty customer data so a slow or unavailable local bridge is not presented as data loss.
+* Added desktop regression coverage for delayed project and delivery responses.
+
 ### 2026-07-22 — CreNexus 0.1.0-alpha.2 integrated Windows preview
 
 * Exposed the existing exact RGBA-to-SVG engine as the customer-facing Pixel Vector mode while retaining the stable internal `exact` identifier and previous task compatibility.

@@ -80,25 +80,25 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
         fake_python.write_text(
             "#!/usr/bin/env bash\n"
             "set -eu\n"
-            "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"--version\" ]]; then echo 'Python 3.12.1'; exit 0; fi\n"
-            "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-c\" && \"${3:-}\" == *STARBRIDGE_VENV_PREFIX_CHECK* ]]; then\n"
-            "  prefix=$(cd -P \"$(dirname \"$0\")/..\" && pwd -P)\n"
+            'if [[ "${1:-}" == "-I" && "${2:-}" == "--version" ]]; then echo \'Python 3.12.1\'; exit 0; fi\n'
+            'if [[ "${1:-}" == "-I" && "${2:-}" == "-c" && "${3:-}" == *STARBRIDGE_VENV_PREFIX_CHECK* ]]; then\n'
+            '  prefix=$(cd -P "$(dirname "$0")/.." && pwd -P)\n'
             "  base=/fixture/base\n"
             "  printf '%s\\n' \"$prefix\" \"$base\" 'Python 3.12.1' \\\n"
-            "    \"$prefix/bin\" \"$prefix/lib/python3.12/site-packages\" \\\n"
-            "    \"$prefix/lib/python3.12/site-packages\" \"$prefix\" \"$base/include\" \\\n"
-            "    \"$prefix/bin\" \"$prefix/lib/python3.12/site-packages\" \\\n"
-            "    \"$prefix/lib/python3.12/site-packages\" \"$prefix\" \\\n"
-            "    \"$prefix/include/site/python3.12/starbridge-bootstrap-probe\"\n"
+            '    "$prefix/bin" "$prefix/lib/python3.12/site-packages" \\\n'
+            '    "$prefix/lib/python3.12/site-packages" "$prefix" "$base/include" \\\n'
+            '    "$prefix/bin" "$prefix/lib/python3.12/site-packages" \\\n'
+            '    "$prefix/lib/python3.12/site-packages" "$prefix" \\\n'
+            '    "$prefix/include/site/python3.12/starbridge-bootstrap-probe"\n'
             "  exit 0\n"
             "fi\n"
-            "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-\" ]]; then\n"
-            f"  exec {shlex.quote(sys.executable)} \"$@\"\n"
+            'if [[ "${1:-}" == "-I" && "${2:-}" == "-" ]]; then\n'
+            f'  exec {shlex.quote(sys.executable)} "$@"\n'
             "fi\n"
-            "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-m\" && \"${3:-}\" == \"venv\" ]]; then\n"
-            "  mkdir -p \"$4/bin\" \"$4/lib/python3.12/site-packages\"\n"
-            "  cp \"$0\" \"$4/bin/python\"\n"
-            "  chmod +x \"$4/bin/python\"\n"
+            'if [[ "${1:-}" == "-I" && "${2:-}" == "-m" && "${3:-}" == "venv" ]]; then\n'
+            '  mkdir -p "$4/bin" "$4/lib/python3.12/site-packages"\n'
+            '  cp "$0" "$4/bin/python"\n'
+            '  chmod +x "$4/bin/python"\n'
             "  printf 'home = fixture\\n' > \"$4/pyvenv.cfg\"\n"
             "fi\n",
             encoding="utf-8",
@@ -221,8 +221,8 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
         venv_python = venv / "bin/python"
         venv_python.write_text(
             "#!/usr/bin/env bash\n"
-            f"printf '%s:%s\\n' \"${{1:-}}\" \"${{2:-}}\" >> {shlex.quote(str(trace))}\n"
-            "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-c\" && \"${3:-}\" == *STARBRIDGE_VENV_PREFIX_CHECK* ]]; then\n"
+            f'printf \'%s:%s\\n\' "${{1:-}}" "${{2:-}}" >> {shlex.quote(str(trace))}\n'
+            'if [[ "${1:-}" == "-I" && "${2:-}" == "-c" && "${3:-}" == *STARBRIDGE_VENV_PREFIX_CHECK* ]]; then\n'
             f"  printf '%s\\n' {output_arguments}\n"
             "  exit 0\n"
             "fi\n"
@@ -281,9 +281,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             encoding="utf-8",
         )
 
-    def python_injection_environment(
-        self, temporary_root: Path, trace: Path
-    ) -> dict[str, str]:
+    def python_injection_environment(self, temporary_root: Path, trace: Path) -> dict[str, str]:
         attacker = temporary_root / "python-injection"
         (attacker / "venv").mkdir(parents=True)
         tracer_code = (
@@ -393,9 +391,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "other_mcp": b'[mcp_servers.user-managed]\ncommand = "keep"\n',
         }
         for name, original in cases.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(
                     Path(temporary_directory), f'CreNexus {name} with spaces "and quote" \\ path'
                 )
@@ -421,7 +420,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
                     ),
                 )
                 self.assertIn('\\"and quote\\"', config_text)
-                self.assertIn('\\\\ path', config_text)
+                self.assertIn("\\\\ path", config_text)
                 parsed = self.load_toml(codex_config)
                 servers = parsed["mcp_servers"]
                 physical_repo = repo_root.resolve()
@@ -461,9 +460,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
 
     def test_cross_platform_managed_markers_and_crlf_are_byte_stable(self) -> None:
         for name in ("windows_crlf", "posix_crlf", "legacy_crlf"):
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
@@ -479,8 +479,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
                     converted = converted.replace(b"\n", b"\r\n")
                     if name == "legacy_crlf":
                         converted = converted.replace(
-                            b"# BEGIN STARBRIDGE QUICKSTART "
-                            b"(managed by bootstrap.sh; prefix-lf=1)",
+                            b"# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=1)",
                             b"# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh)",
                         )
                     codex_config.write_bytes(converted)
@@ -513,9 +512,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             r"\\server\share",
         )
         for index, root in enumerate(accepted):
-            with self.subTest(root=root), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(root=root),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(
                     Path(temporary_directory), f"windows-good-{index}"
                 )
@@ -549,9 +549,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "C:\\Work\\control\x1f",
         )
         for index, root in enumerate(rejected):
-            with self.subTest(root=root), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(root=root),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(
                     Path(temporary_directory), f"windows-bad-{index}"
                 )
@@ -603,9 +604,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             r"\\server\share\console",
         )
         for index, root in enumerate(rejected):
-            with self.subTest(kind="rejected", root=root), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(kind="rejected", root=root),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(
                     Path(temporary_directory), f"windows-device-bad-{index}"
                 )
@@ -621,9 +623,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
                 self.assert_no_config_temporaries(codex_config)
 
         for index, root in enumerate(accepted):
-            with self.subTest(kind="accepted", root=root), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(kind="accepted", root=root),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(
                     Path(temporary_directory), f"windows-device-good-{index}"
                 )
@@ -644,9 +647,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             )
             codex_config = repo_root / ".codex/config.toml"
             codex_config.parent.mkdir()
-            original = self.windows_managed_config(
-                root=r"C:\CreNexus", pythonpath=r"C:\CreNexus"
-            )
+            original = self.windows_managed_config(root=r"C:\CreNexus", pythonpath=r"C:\CreNexus")
             codex_config.write_bytes(original)
 
             completed = self.run_fixture_bootstrap(repo_root, environment)
@@ -686,12 +687,11 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "coordinator_args": bad_args,
             "coordinator_cwd": bad_coordinator_cwd,
         }.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
-                repo_root, environment = self.make_config_fixture(
-                    Path(temporary_directory), name
-                )
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
+                repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
                 original = text.encode("utf-8")
@@ -705,7 +705,9 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
 
     def test_managed_block_with_unmanaged_toml_data_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
-            repo_root, environment = self.make_config_fixture(Path(temporary_directory), "managed-extra")
+            repo_root, environment = self.make_config_fixture(
+                Path(temporary_directory), "managed-extra"
+            )
             codex_config = repo_root / ".codex/config.toml"
             codex_config.parent.mkdir()
 
@@ -734,9 +736,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "ordinary_string": b'value = "' + begin + b'"\n',
         }
         for name, original in cases.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
@@ -759,9 +762,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "ordinary_exact_marker_comments": begin + end,
         }
         for name, original in cases.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
@@ -782,7 +786,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "coordinator_table": b'[mcp_servers.starbridge-version-coordinator]\ncommand = "user-managed"\n',
         }
         for name, original in cases.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
@@ -798,7 +805,9 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
     def test_invalid_toml_fails_closed(self) -> None:
         original = b"[broken\n"
         with tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
-            repo_root, environment = self.make_config_fixture(Path(temporary_directory), "invalid_toml")
+            repo_root, environment = self.make_config_fixture(
+                Path(temporary_directory), "invalid_toml"
+            )
             codex_config = repo_root / ".codex/config.toml"
             codex_config.parent.mkdir()
             codex_config.write_bytes(original)
@@ -816,9 +825,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             cases.append("fifo")
 
         for name in cases:
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 temporary_root = Path(temporary_directory)
                 repo_root, environment = self.make_config_fixture(temporary_root, name)
                 codex_dir = repo_root / ".codex"
@@ -878,9 +888,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             cases.append("include_fifo")
 
         for name in cases:
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 temporary_root = Path(temporary_directory)
                 repo_root, environment = self.make_config_fixture(temporary_root, name)
                 venv = repo_root / ".venv"
@@ -941,16 +952,15 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "pip_headers",
         )
         for name in cases:
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 temporary_root = Path(temporary_directory)
                 repo_root, environment = self.make_config_fixture(temporary_root, name)
                 outside = temporary_root / f"outside-{name}"
                 trace = temporary_root / "venv-scheme.trace"
-                self.make_fake_existing_venv(
-                    repo_root, trace, overrides={name: str(outside)}
-                )
+                self.make_fake_existing_venv(repo_root, trace, overrides={name: str(outside)})
 
                 completed = self.run_fixture_bootstrap(repo_root, environment)
 
@@ -984,15 +994,15 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             venv_python.write_text(
                 "#!/usr/bin/env bash\n"
                 f"printf 'STARBRIDGE_VENV_PREFIX_CHECK\\n' >> {shlex.quote(str(trace))}\n"
-                "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-c\" && \"${3:-}\" == *STARBRIDGE_VENV_PREFIX_CHECK* ]]; then\n"
+                'if [[ "${1:-}" == "-I" && "${2:-}" == "-c" && "${3:-}" == *STARBRIDGE_VENV_PREFIX_CHECK* ]]; then\n'
                 f"  prefix={shlex.quote(str(outside_prefix.resolve()))}\n"
                 "  base=/fixture/base\n"
                 "  printf '%s\\n' \"$prefix\" \"$base\" 'Python 3.12.1' \\\n"
-                "    \"$prefix/bin\" \"$prefix/lib/python3.12/site-packages\" \\\n"
-                "    \"$prefix/lib/python3.12/site-packages\" \"$prefix\" \"$base/include\" \\\n"
-                "    \"$prefix/bin\" \"$prefix/lib/python3.12/site-packages\" \\\n"
-                "    \"$prefix/lib/python3.12/site-packages\" \"$prefix\" \\\n"
-                "    \"$prefix/include/site/python3.12/starbridge-bootstrap-probe\"\n"
+                '    "$prefix/bin" "$prefix/lib/python3.12/site-packages" \\\n'
+                '    "$prefix/lib/python3.12/site-packages" "$prefix" "$base/include" \\\n'
+                '    "$prefix/bin" "$prefix/lib/python3.12/site-packages" \\\n'
+                '    "$prefix/lib/python3.12/site-packages" "$prefix" \\\n'
+                '    "$prefix/include/site/python3.12/starbridge-bootstrap-probe"\n'
                 "  exit 0\n"
                 "fi\n"
                 "exit 91\n",
@@ -1035,7 +1045,11 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             self.assertFalse((repo_root / ".venv").is_symlink())
             self.assertTrue((repo_root / ".venv/pyvenv.cfg").is_file())
             prefix = subprocess.run(
-                [str(repo_root / ".venv/bin/python"), "-c", "import os,sys; print(os.path.realpath(sys.prefix))"],
+                [
+                    str(repo_root / ".venv/bin/python"),
+                    "-c",
+                    "import os,sys; print(os.path.realpath(sys.prefix))",
+                ],
                 check=True,
                 capture_output=True,
                 text=True,
@@ -1054,11 +1068,11 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             path_python.write_text(
                 "#!/usr/bin/env bash\n"
                 "printf '%s|%s|%s|%s|%s|%s\\n' "
-                "\"${PYTHONPATH-unset}\" \"${PYTHONUSERBASE-unset}\" "
-                "\"${PYTHONHOME-unset}\" \"${PYTHONSTARTUP-unset}\" "
-                "\"${PYTHONWARNINGS-unset}\" \"${__PYVENV_LAUNCHER__-unset}\" "
+                '"${PYTHONPATH-unset}" "${PYTHONUSERBASE-unset}" '
+                '"${PYTHONHOME-unset}" "${PYTHONSTARTUP-unset}" '
+                '"${PYTHONWARNINGS-unset}" "${__PYVENV_LAUNCHER__-unset}" '
                 f">> {shlex.quote(str(environment_trace))}\n"
-                f"exec {shlex.quote(sys.executable)} \"$@\"\n",
+                f'exec {shlex.quote(sys.executable)} "$@"\n',
                 encoding="utf-8",
             )
             path_python.chmod(0o755)
@@ -1124,9 +1138,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             "python_runtime_env",
         )
         for name in cases:
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 temporary_root = Path(temporary_directory)
                 repo_root, environment = self.make_config_fixture(temporary_root, name)
                 self.configure_offline_build_backend(repo_root)
@@ -1158,10 +1173,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
                 elif name == "explicit_config":
                     config = temporary_root / "attacker-pip.conf"
                     config.write_text(
-                        "[install]\n"
-                        f"target = {outside}\n"
-                        f"prefix = {outside}\n"
-                        "user = true\n",
+                        f"[install]\ntarget = {outside}\nprefix = {outside}\nuser = true\n",
                         encoding="utf-8",
                     )
                     environment["PIP_CONFIG_FILE"] = str(config)
@@ -1223,16 +1235,16 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             venv_python = repo_root / ".venv/bin/python"
             venv_python.write_text(
                 "#!/usr/bin/env bash\n"
-                "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-c\" ]]; then\n"
+                'if [[ "${1:-}" == "-I" && "${2:-}" == "-c" ]]; then\n'
                 f"  printf '%s\\n' {output_arguments}\n"
                 "  exit 0\n"
                 "fi\n"
-                "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-m\" && \"${3:-}\" == \"pip\" ]]; then\n"
-                f"  printf '%s|%s|%s|%s|%s|%s|%s\\n' \"${{PIP_TARGET-unset}}\" \"${{PIP_CONFIG_FILE-unset}}\" \"${{HTTPS_PROXY-unset}}\" \"${{PIP_PROXY-unset}}\" \"${{PIP_CERT-unset}}\" \"${{SSL_CERT_FILE-unset}}\" \"${{REQUESTS_CA_BUNDLE-unset}}\" >> {shlex.quote(str(pip_trace))}\n"
+                'if [[ "${1:-}" == "-I" && "${2:-}" == "-m" && "${3:-}" == "pip" ]]; then\n'
+                f'  printf \'%s|%s|%s|%s|%s|%s|%s\\n\' "${{PIP_TARGET-unset}}" "${{PIP_CONFIG_FILE-unset}}" "${{HTTPS_PROXY-unset}}" "${{PIP_PROXY-unset}}" "${{PIP_CERT-unset}}" "${{SSL_CERT_FILE-unset}}" "${{REQUESTS_CA_BUNDLE-unset}}" >> {shlex.quote(str(pip_trace))}\n'
                 "  exit 0\n"
                 "fi\n"
-                "if [[ \"${1:-}\" == \"-I\" && \"${2:-}\" == \"-\" ]]; then\n"
-                f"  exec {shlex.quote(sys.executable)} \"$@\"\n"
+                'if [[ "${1:-}" == "-I" && "${2:-}" == "-" ]]; then\n'
+                f'  exec {shlex.quote(sys.executable)} "$@"\n'
                 "fi\n"
                 "exit 0\n",
                 encoding="utf-8",
@@ -1270,9 +1282,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             cases["fifo"] = ("fifo", None)
 
         for name, (kind, original) in cases.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(name=name),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
@@ -1300,9 +1313,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
 
     def test_control_character_repository_paths_fail_before_config_writes(self) -> None:
         for character in ("\n", "\r", "\x1f"):
-            with self.subTest(character=repr(character)), tempfile.TemporaryDirectory(
-                prefix="cre nexus bootstrap "
-            ) as temporary_directory:
+            with (
+                self.subTest(character=repr(character)),
+                tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
+            ):
                 repo_root, environment = self.make_config_fixture(
                     Path(temporary_directory), f"unsafe{character}checkout"
                 )
