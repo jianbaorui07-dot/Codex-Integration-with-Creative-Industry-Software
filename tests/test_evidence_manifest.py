@@ -74,18 +74,23 @@ class EvidenceManifestTests(unittest.TestCase):
             "/var/folders",
             "/private/var/folders",
         )
-        temporary_paths = temporary_roots + tuple(
-            f"{root}/job/manifest.latest.json" for root in temporary_roots
-        ) + (
-            "/private//tmp/secret.png",
-            "/var//tmp/secret.png",
-            "/private/var//folders/ab/T/secret.png",
-            "//tmp",
-            "//tmp/secret.png",
-            "///private///var///tmp",
-            "///private///var///tmp/secret.png",
-            "/tmp//secret.png",
-            "/private//var///folders//ab/T/secret.png",
+        temporary_paths = (
+            temporary_roots
+            + tuple(f"{root}/job/manifest.latest.json" for root in temporary_roots)
+            + (
+                "/private//tmp/secret.png",
+                "/var//tmp/secret.png",
+                "/private/var//folders/ab/T/secret.png",
+                "//tmp",
+                "//tmp/secret.png",
+                "///private///var///tmp",
+                "///private///var///tmp/secret.png",
+                "/tmp//secret.png",
+                "/private//var///folders//ab/T/secret.png",
+                r"\tmp",
+                r"\\tmp\secret.png",
+                r"\private\var\tmp",
+            )
         )
         for path in temporary_paths:
             with self.subTest(path=path):
@@ -116,6 +121,7 @@ class EvidenceManifestTests(unittest.TestCase):
             "file://local／host/tmp/secret.png",
             "https://e.test/?local=%252Ftmp%252Fsecret",
             "file:///tmp%252Fsecret",
+            r"\tmpfile\public.json",
         )
         for path in similar_roots:
             with self.subTest(path=path):

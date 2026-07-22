@@ -29,8 +29,8 @@ def utc_now_iso() -> str:
 
 
 def sanitize_path_string(value: str) -> str:
-    if value.startswith("/"):
-        normalized = re.sub(r"/+", "/", value).casefold()
+    if value.startswith(("/", "\\")):
+        normalized = re.sub(r"[\\/]+", "/", value).casefold()
         if any(
             normalized == root or normalized.startswith(f"{root}/")
             for root in POSIX_TEMP_PATH_ROOTS

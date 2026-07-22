@@ -321,7 +321,7 @@ def _make_manifest(
 
 class PhotoshopBridgeAdapter(BaseBridge):
     def __init__(self, repo_root: Path) -> None:
-        self._repo_root = repo_root
+        self._repo_root = repo_root.resolve()
 
     @property
     def bridge_id(self) -> str:

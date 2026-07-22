@@ -128,7 +128,9 @@ class PhotoshopRecipeDslTests(unittest.TestCase):
 
     def test_get_state_rejects_mock_fallback_as_live_evidence(self) -> None:
         with TemporaryDirectory() as directory:
-            adapter = PhotoshopBridgeAdapter(Path(directory))
+            repo_root = Path(directory) / "nested" / ".."
+            adapter = PhotoshopBridgeAdapter(repo_root)
+            self.assertEqual(repo_root.resolve(), adapter.repo_root)
             with (
                 patch(
                     "starbridge_mcp.adapters.photoshop.bridge._node_proxy_probe",
