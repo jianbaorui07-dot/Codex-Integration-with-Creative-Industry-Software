@@ -169,13 +169,21 @@ Photoshop, Illustrator, Blender, and CapCut write flows are experimental or plan
 
 ## 3 分钟适配：仓库链接 → Codex → 可运行环境
 
-环境：Windows 优先、Python 3.10+；仅在安装 `standard` / `all` 档位或运行 UXP 本地代理时需要 Node.js。把仓库链接直接交给 Codex 后，让它执行：
+环境：Windows 优先、Python 3.10+；仅在安装 `standard` / `all` 档位或运行 UXP 本地代理时需要 Node.js。Windows 把仓库链接直接交给 Codex 后，让它执行：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1 -Profile auto
 ```
 
 这条命令会创建隔离 `.venv`、安装可复用的 Python/MCP 与矢量依赖；Node.js 可用时还会按桌面 lockfile 安装前端依赖。随后生成项目级 `.codex/config.toml` 并运行安全自检。检测到本机桌面软件线索时会自动选择 `standard`；需要全部可选依赖时使用 `-Profile all`。
+
+macOS / Linux 可运行对应的安全 Python/MCP bootstrap：
+
+```bash
+bash ./bootstrap.sh --profile auto
+```
+
+它以脚本所在仓库动态解析 POSIX 路径，创建 `.venv/bin/python` 并写入项目级 MCP 配置；不会自动安装 Homebrew、Xcode Command Line Tools、Rosetta 或桌面软件，也不启动 Tauri。`standard` / `all` 保持相同的 Python extras，并仅在 Node.js/npm 已存在时安装可选 Node bridge 依赖；没有桌面软件不影响核心 MCP 自检，但桌面能力仍需单独实机验证。
 
 如果仓库已经在本机，也可以直接运行：
 
