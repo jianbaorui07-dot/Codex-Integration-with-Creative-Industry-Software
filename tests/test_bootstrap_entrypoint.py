@@ -4,6 +4,7 @@ import json
 import os
 import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -191,38 +192,147 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             )
             self.assertIn(str(linked_repo), venv_step["detail"])
 
-    def test_config_write_is_idempotent_in_an_isolated_path_with_spaces(self) -> None:
+    def test_config_write_preserves_valid_base_bytes_and_is_idempotent(self) -> None:
+        cases = {
+            "empty": b"",
+            "crlf": b"[existing]\r\nkeep = true\r\n",
+            "no_final_newline": b"[existing]\nkeep = true",
+            "other_mcp": b'[mcp_servers.user-managed]\ncommand = "keep"\n',
+        }
+        for name, original in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory(
+                prefix="cre nexus bootstrap "
+            ) as temporary_directory:
+                repo_root, environment = self.make_config_fixture(
+                    Path(temporary_directory), f'CreNexus {name} with spaces "and quote" \\ path'
+                )
+                codex_config = repo_root / ".codex/config.toml"
+                codex_config.parent.mkdir()
+                codex_config.write_bytes(original)
+
+                snapshots = []
+                for _ in range(3):
+                    completed = self.run_fixture_bootstrap(repo_root, environment)
+                    self.assertEqual(0, completed.returncode, completed.stderr)
+                    self.assertTrue(json.loads(completed.stdout)["ok"])
+                    snapshots.append(codex_config.read_bytes())
+
+                self.assertEqual(snapshots[0], snapshots[1])
+                self.assertEqual(snapshots[1], snapshots[2])
+                self.assertTrue(snapshots[0].startswith(original))
+                config_text = snapshots[0].decode("utf-8")
+                self.assertEqual(
+                    1,
+                    config_text.count(
+                        "# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf="
+                    ),
+                )
+                self.assertIn('\\"and quote\\"', config_text)
+                self.assertIn('\\\\ path', config_text)
+                parsed = self.load_toml(codex_config)
+                servers = parsed["mcp_servers"]
+                self.assertEqual(f"{repo_root}/.venv/bin/python", servers["starbridge"]["command"])
+                self.assertEqual(str(repo_root), servers["starbridge"]["cwd"])
+                if name == "other_mcp":
+                    self.assertEqual("keep", servers["user-managed"]["command"])
+                self.assert_no_config_temporaries(codex_config)
+
+    def test_legacy_exact_managed_block_is_migrated_without_rewriting_user_config(self) -> None:
+        original = b"[existing]\nkeep = true\n"
         with tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
-            temporary_root = Path(temporary_directory)
-            repo_root, environment = self.make_config_fixture(
-                temporary_root, 'CreNexus config with spaces "and quote" \\ path'
-            )
+            repo_root, environment = self.make_config_fixture(Path(temporary_directory), "legacy")
             codex_config = repo_root / ".codex/config.toml"
             codex_config.parent.mkdir()
-            codex_config.write_text(
-                "[existing]\nkeep = true\n\n"
-                "# BEGIN STARBRIDGE QUICKSTART (managed by scripts/quickstart.ps1)\n"
-                "old = true\n"
-                "# END STARBRIDGE QUICKSTART\n",
-                encoding="utf-8",
+            codex_config.write_bytes(original)
+
+            first_run = self.run_fixture_bootstrap(repo_root, environment)
+            self.assertEqual(0, first_run.returncode, first_run.stderr)
+            current = codex_config.read_bytes()
+            legacy = current.replace(
+                b"# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=1)",
+                b"# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh)",
             )
+            self.assertNotEqual(current, legacy)
+            codex_config.write_bytes(legacy)
 
-            for _ in range(2):
-                completed = self.run_fixture_bootstrap(repo_root, environment)
-                self.assertEqual(0, completed.returncode, completed.stderr)
-                self.assertTrue(json.loads(completed.stdout)["ok"])
+            migrated_run = self.run_fixture_bootstrap(repo_root, environment)
 
-            config_text = codex_config.read_text(encoding="utf-8")
-            self.assertIn("[existing]", config_text)
-            self.assertNotIn("old = true", config_text)
-            self.assertEqual(1, config_text.count("# BEGIN STARBRIDGE QUICKSTART"))
-            self.assertIn('\\"and quote\\"', config_text)
-            self.assertIn('\\\\ path', config_text)
-            parsed = self.load_toml(codex_config)
-            servers = parsed["mcp_servers"]
-            self.assertEqual(f"{repo_root}/.venv/bin/python", servers["starbridge"]["command"])
-            self.assertEqual(str(repo_root), servers["starbridge"]["cwd"])
+            self.assertEqual(0, migrated_run.returncode, migrated_run.stderr)
+            self.assertEqual(current, codex_config.read_bytes())
+            self.assertTrue(codex_config.read_bytes().startswith(original))
+            self.load_toml(codex_config)
             self.assert_no_config_temporaries(codex_config)
+
+    def test_managed_block_with_unmanaged_toml_data_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
+            repo_root, environment = self.make_config_fixture(Path(temporary_directory), "managed-extra")
+            codex_config = repo_root / ".codex/config.toml"
+            codex_config.parent.mkdir()
+
+            first_run = self.run_fixture_bootstrap(repo_root, environment)
+            self.assertEqual(0, first_run.returncode, first_run.stderr)
+            original = codex_config.read_bytes().replace(
+                b"# END STARBRIDGE QUICKSTART\n",
+                b"[unmanaged]\nkeep = true\n# END STARBRIDGE QUICKSTART\n",
+            )
+            codex_config.write_bytes(original)
+
+            completed = self.run_fixture_bootstrap(repo_root, environment)
+
+            self.assertNotEqual(0, completed.returncode)
+            self.assertIn("ambiguous managed block", completed.stderr)
+            self.assertEqual(original, codex_config.read_bytes())
+            self.assert_no_config_temporaries(codex_config)
+
+    def test_marker_text_in_toml_strings_and_prefix_comments_is_preserved(self) -> None:
+        begin = b"# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=0)"
+        end = b"# END STARBRIDGE QUICKSTART"
+        cases = {
+            "multiline_basic": b'message = """\n' + begin + b"\n" + end + b'\n"""\n',
+            "multiline_literal": b"message = '''\n" + begin + b"\n" + end + b"\n'''\n",
+            "prefix_comment": begin + b" documentation only\n[existing]\nkeep = true\n",
+            "ordinary_string": b'value = "' + begin + b'"\n',
+        }
+        for name, original in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory(
+                prefix="cre nexus bootstrap "
+            ) as temporary_directory:
+                repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
+                codex_config = repo_root / ".codex/config.toml"
+                codex_config.parent.mkdir()
+                codex_config.write_bytes(original)
+
+                completed = self.run_fixture_bootstrap(repo_root, environment)
+
+                self.assertEqual(0, completed.returncode, completed.stderr)
+                self.assertTrue(codex_config.read_bytes().startswith(original))
+                self.load_toml(codex_config)
+                self.assert_no_config_temporaries(codex_config)
+
+    def test_exact_markers_without_the_expected_schema_fail_closed(self) -> None:
+        begin = b"# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=0)\n"
+        end = b"# END STARBRIDGE QUICKSTART\n"
+        cases = {
+            "unclosed_exact_marker": begin + b"[existing]\nkeep = true\n",
+            "repeated_exact_marker": begin + end + begin + end,
+            "nonmanaged_data_inside_exact_markers": begin + b"[existing]\nkeep = true\n" + end,
+            "ordinary_exact_marker_comments": begin + end,
+        }
+        for name, original in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory(
+                prefix="cre nexus bootstrap "
+            ) as temporary_directory:
+                repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
+                codex_config = repo_root / ".codex/config.toml"
+                codex_config.parent.mkdir()
+                codex_config.write_bytes(original)
+
+                completed = self.run_fixture_bootstrap(repo_root, environment)
+
+                self.assertNotEqual(0, completed.returncode)
+                self.assertIn("no configuration changes were made", completed.stderr)
+                self.assertEqual(original, codex_config.read_bytes())
+                self.assert_no_config_temporaries(codex_config)
 
     def test_config_conflicts_fail_closed_without_rewriting_bytes(self) -> None:
         cases = {
@@ -245,27 +355,56 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
                 self.assertEqual(original, codex_config.read_bytes())
                 self.assert_no_config_temporaries(codex_config)
 
-    def test_invalid_or_repeated_managed_config_fails_closed(self) -> None:
-        cases = {
-            "invalid_toml": b"[broken\n",
-            "unclosed_marker": b"# BEGIN STARBRIDGE QUICKSTART\n[existing]\nkeep = true\n",
-            "repeated_marker": (
-                b"# BEGIN STARBRIDGE QUICKSTART\n# END STARBRIDGE QUICKSTART\n"
-                b"# BEGIN STARBRIDGE QUICKSTART\n# END STARBRIDGE QUICKSTART\n"
-            ),
+    def test_invalid_toml_fails_closed(self) -> None:
+        original = b"[broken\n"
+        with tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
+            repo_root, environment = self.make_config_fixture(Path(temporary_directory), "invalid_toml")
+            codex_config = repo_root / ".codex/config.toml"
+            codex_config.parent.mkdir()
+            codex_config.write_bytes(original)
+
+            completed = self.run_fixture_bootstrap(repo_root, environment)
+
+            self.assertNotEqual(0, completed.returncode)
+            self.assertIn("no configuration changes were made", completed.stderr)
+            self.assertEqual(original, codex_config.read_bytes())
+            self.assert_no_config_temporaries(codex_config)
+
+    def test_nonregular_config_paths_fail_before_temporary_file_creation(self) -> None:
+        cases: dict[str, tuple[str, bytes | None]] = {
+            "directory": ("directory", None),
+            "symlink": ("symlink", b"[existing]\nkeep = true\n"),
         }
-        for name, original in cases.items():
-            with self.subTest(name=name), tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
+        if hasattr(os, "mkfifo"):
+            cases["fifo"] = ("fifo", None)
+
+        for name, (kind, original) in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory(
+                prefix="cre nexus bootstrap "
+            ) as temporary_directory:
                 repo_root, environment = self.make_config_fixture(Path(temporary_directory), name)
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
-                codex_config.write_bytes(original)
+                if kind == "directory":
+                    codex_config.mkdir()
+                elif kind == "symlink":
+                    target = repo_root / "user-managed.toml"
+                    target.write_bytes(original or b"")
+                    codex_config.symlink_to(target)
+                else:
+                    os.mkfifo(codex_config)
 
                 completed = self.run_fixture_bootstrap(repo_root, environment)
 
                 self.assertNotEqual(0, completed.returncode)
-                self.assertIn("no configuration changes were made", completed.stderr)
-                self.assertEqual(original, codex_config.read_bytes())
+                self.assertIn("regular non-symlink file", completed.stderr)
+                if kind == "directory":
+                    self.assertTrue(codex_config.is_dir())
+                elif kind == "symlink":
+                    self.assertTrue(codex_config.is_symlink())
+                    self.assertEqual(original, (repo_root / "user-managed.toml").read_bytes())
+                else:
+                    self.assertTrue(stat.S_ISFIFO(codex_config.lstat().st_mode))
                 self.assert_no_config_temporaries(codex_config)
 
     def test_control_character_repository_paths_fail_before_config_writes(self) -> None:

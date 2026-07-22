@@ -264,24 +264,167 @@ with Path(sys.argv[1]).open("rb") as source:
 PY
 }
 
-managed_markers_are_valid() {
+prepare_config_base() {
     local file_path="$1"
-    awk '
-        BEGIN { markers = 0; inside = 0 }
-        /^# BEGIN STARBRIDGE QUICKSTART/ {
-            if (inside || markers >= 1) { exit 1 }
-            inside = 1
-            markers++
-            next
-        }
-        /^# END STARBRIDGE QUICKSTART/ {
-            if (!inside) { exit 1 }
-            inside = 0
-            next
-        }
-        { next }
-        END { if (inside) { exit 1 } }
-    ' "$file_path" >/dev/null
+    "$venv_python" - "$file_path" "$venv_python" "$repo_root" \
+        "$repo_root/plugins/starbridge-version-coordinator/scripts/version_coordinator_mcp.py" <<'PY'
+import copy
+import io
+import sys
+from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
+
+source_path, python_path, repo_root, coordinator_path = sys.argv[1:]
+data = Path(source_path).read_bytes()
+
+try:
+    document = tomllib.load(io.BytesIO(data))
+    text = data.decode("utf-8")
+except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
+    raise SystemExit(1)
+
+begin_markers = {
+    "# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh)": 1,
+    "# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=0)": 0,
+    "# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=1)": 1,
+}
+end_marker = "# END STARBRIDGE QUICKSTART"
+
+
+def advance_toml_lexical_state(line: str, state: str | None) -> str | None:
+    index = 0
+    while index < len(line):
+        if state == "multiline_basic":
+            if line.startswith('"""', index):
+                backslashes = 0
+                cursor = index - 1
+                while cursor >= 0 and line[cursor] == "\\":
+                    backslashes += 1
+                    cursor -= 1
+                if backslashes % 2 == 0:
+                    state = None
+                    index += 3
+                    continue
+            index += 1
+            continue
+        if state == "multiline_literal":
+            if line.startswith("'''", index):
+                state = None
+                index += 3
+                continue
+            index += 1
+            continue
+
+        character = line[index]
+        if character == "#":
+            break
+        if line.startswith('"""', index):
+            state = "multiline_basic"
+            index += 3
+            continue
+        if line.startswith("'''", index):
+            state = "multiline_literal"
+            index += 3
+            continue
+        if character == '"':
+            index += 1
+            while index < len(line):
+                if line[index] == "\\":
+                    index += 2
+                elif line[index] == '"':
+                    index += 1
+                    break
+                else:
+                    index += 1
+            continue
+        if character == "'":
+            end = line.find("'", index + 1)
+            index = len(line) if end == -1 else end + 1
+            continue
+        index += 1
+    return state
+
+
+starts: list[tuple[int, int, int]] = []
+ends: list[tuple[int, int]] = []
+offset = 0
+state: str | None = None
+for line in text.splitlines(keepends=True):
+    body = line.rstrip("\r\n")
+    if state is None:
+        if body in begin_markers:
+            starts.append((offset, offset + len(line), begin_markers[body]))
+        elif body == end_marker:
+            ends.append((offset, offset + len(line)))
+    state = advance_toml_lexical_state(line, state)
+    offset += len(line)
+
+if state is not None:
+    raise SystemExit(1)
+
+if not starts and not ends:
+    sys.stdout.buffer.write(data)
+    raise SystemExit(0)
+if len(starts) != 1 or len(ends) != 1:
+    raise SystemExit(1)
+
+start_offset, _, prefix_lf = starts[0]
+end_offset, end_after = ends[0]
+if end_offset <= start_offset:
+    raise SystemExit(1)
+if not prefix_lf and start_offset != 0:
+    raise SystemExit(1)
+remove_start = start_offset
+if prefix_lf:
+    if remove_start == 0 or text[remove_start - 1] != "\n":
+        raise SystemExit(1)
+    remove_start -= 1
+
+base_text = text[:remove_start] + text[end_after:]
+base_data = base_text.encode("utf-8")
+try:
+    base_document = tomllib.load(io.BytesIO(base_data))
+except tomllib.TOMLDecodeError:
+    raise SystemExit(1)
+
+expected_starbridge = {
+    "command": python_path,
+    "args": ["-m", "starbridge_mcp.mcp_server"],
+    "cwd": repo_root,
+    "env": {
+        "STARBRIDGE_PHOTOSHOP_SAFE_ONLY": "1",
+        "STARBRIDGE_PHOTOSHOP_DEFAULT_DRY_RUN": "1",
+        "STARBRIDGE_PHOTOSHOP_ALLOW_DESTRUCTIVE": "0",
+    },
+}
+expected_coordinator = {
+    "command": python_path,
+    "args": [coordinator_path],
+    "cwd": repo_root,
+}
+servers = document.get("mcp_servers")
+if not isinstance(servers, dict):
+    raise SystemExit(1)
+if servers.get("starbridge") != expected_starbridge:
+    raise SystemExit(1)
+if servers.get("starbridge-version-coordinator") != expected_coordinator:
+    raise SystemExit(1)
+
+normalized = copy.deepcopy(document)
+normalized_servers = normalized["mcp_servers"]
+del normalized_servers["starbridge"]
+del normalized_servers["starbridge-version-coordinator"]
+if not normalized_servers and "mcp_servers" not in base_document:
+    del normalized["mcp_servers"]
+if normalized != base_document:
+    raise SystemExit(1)
+
+sys.stdout.buffer.write(base_data)
+PY
 }
 
 external_mcp_config_is_unclaimed() {
@@ -317,12 +460,9 @@ write_codex_config() {
         return
     fi
 
-    if [[ -f "$config_path" ]]; then
-        if ! toml_file_is_valid "$config_path"; then
-            die "Existing .codex/config.toml is not valid TOML; no configuration changes were made."
-        fi
-        if ! managed_markers_are_valid "$config_path"; then
-            die "Existing .codex/config.toml has an unclosed or repeated STARBRIDGE QUICKSTART block; no configuration changes were made."
+    if [[ -e "$config_path" || -L "$config_path" ]]; then
+        if [[ -L "$config_path" || ! -f "$config_path" ]]; then
+            die ".codex/config.toml must be a regular non-symlink file; no configuration changes were made."
         fi
     fi
 
@@ -330,13 +470,9 @@ write_codex_config() {
     local temporary_config
     temporary_config="$(mktemp "$config_dir/.config.toml.XXXXXX")"
     if [[ -f "$config_path" ]]; then
-        if ! awk '
-            /^# BEGIN STARBRIDGE QUICKSTART/ { inside = 1; next }
-            /^# END STARBRIDGE QUICKSTART/ { inside = 0; next }
-            !inside { print }
-        ' "$config_path" > "$temporary_config"; then
+        if ! prepare_config_base "$config_path" > "$temporary_config"; then
             rm -f -- "$temporary_config"
-            die "Could not prepare .codex/config.toml for a safe update; no configuration changes were made."
+            die "Existing .codex/config.toml has invalid TOML or an ambiguous managed block; no configuration changes were made."
         fi
     else
         : > "$temporary_config"
@@ -351,13 +487,21 @@ write_codex_config() {
         die "Existing .codex/config.toml already defines a Starbridge MCP server or a conflicting mcp_servers structure; refusing to overwrite it."
     fi
 
-    local python_toml root_toml coordinator_toml
+    local python_toml root_toml coordinator_toml prefix_lf begin_marker
     python_toml="$(toml_escape "$venv_python")"
     root_toml="$(toml_escape "$repo_root")"
     coordinator_toml="$(toml_escape "$repo_root/plugins/starbridge-version-coordinator/scripts/version_coordinator_mcp.py")"
-    if ! cat >> "$temporary_config" <<EOF
-
-# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh)
+    prefix_lf=0
+    if [[ -s "$temporary_config" ]]; then
+        prefix_lf=1
+    fi
+    begin_marker="# BEGIN STARBRIDGE QUICKSTART (managed by bootstrap.sh; prefix-lf=$prefix_lf)"
+    if ! {
+        if (( prefix_lf )); then
+            printf '\n'
+        fi
+        cat <<EOF
+$begin_marker
 [mcp_servers.starbridge]
 command = "$python_toml"
 args = ["-m", "starbridge_mcp.mcp_server"]
@@ -374,7 +518,7 @@ args = ["$coordinator_toml"]
 cwd = "$root_toml"
 # END STARBRIDGE QUICKSTART
 EOF
-    then
+    } >> "$temporary_config"; then
         rm -f -- "$temporary_config"
         die "Could not generate .codex/config.toml; no configuration changes were made."
     fi
@@ -382,7 +526,25 @@ EOF
         rm -f -- "$temporary_config"
         die "Generated .codex/config.toml is not valid TOML; no configuration changes were made."
     fi
-    if ! mv -- "$temporary_config" "$config_path"; then
+    if ! "$venv_python" - "$temporary_config" "$config_path" >/dev/null 2>&1 <<'PY'
+import os
+import stat
+import sys
+
+source, destination = sys.argv[1:]
+try:
+    target = os.lstat(destination)
+except FileNotFoundError:
+    target = None
+
+if target is not None and (stat.S_ISLNK(target.st_mode) or not stat.S_ISREG(target.st_mode)):
+    raise SystemExit(1)
+os.replace(source, destination)
+target = os.lstat(destination)
+if stat.S_ISLNK(target.st_mode) or not stat.S_ISREG(target.st_mode):
+    raise SystemExit(1)
+PY
+    then
         rm -f -- "$temporary_config"
         die "Could not atomically replace .codex/config.toml; no configuration changes were made."
     fi
