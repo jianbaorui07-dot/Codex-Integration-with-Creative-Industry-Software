@@ -1,11 +1,11 @@
 ---
 name: starbridge-macos-adapter
-description: Audit a CreNexus checkout on macOS, run its safe cross-platform checks, and distinguish supported repository routes from unverified or Windows-only desktop paths. Use when adapting Windows-oriented CreNexus instructions for a Mac without changing system security settings or claiming unverified Adobe support.
+description: Audit a KORYAO checkout on macOS, run its safe cross-platform checks, and distinguish supported repository routes from unverified or Windows-only desktop paths. Use when adapting Windows-oriented KORYAO instructions for a Mac without changing system security settings or claiming unverified Adobe support.
 ---
 
-# CreNexus macOS 适配审计
+# KORYAO macOS 适配审计
 
-本 Skill 只覆盖 macOS 环境审计、公开仓库的安全核心检查和能力边界说明；它**不**使 CreNexus 的桌面链路自动获得 macOS 支持。桌面软件、Apple Events、Tauri、sidecar、CI 或安装脚本的适配，必须作为独立阶段并以实际验证为准。
+本 Skill 只覆盖 macOS 环境审计、公开仓库的安全核心检查和能力边界说明；它**不**使 KORYAO 的桌面链路自动获得 macOS 支持。桌面软件、Apple Events、Tauri、sidecar、CI 或安装脚本的适配，必须作为独立阶段并以实际验证为准。
 
 ## 先做安全预检
 

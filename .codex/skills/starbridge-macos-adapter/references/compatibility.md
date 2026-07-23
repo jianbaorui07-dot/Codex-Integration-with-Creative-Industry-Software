@@ -1,4 +1,4 @@
-# CreNexus macOS 能力边界
+# KORYAO macOS 能力边界
 
 本表记录阶段 1 导入时可由仓库内容确认的边界，不代替 macOS 实机或桌面软件验收。
 

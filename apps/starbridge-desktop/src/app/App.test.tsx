@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import type { CreNexusClient } from "../services/client";
+import type { KORYAOClient } from "../services/client";
 import { UserFacingError } from "../services/client";
 import type { ConnectionOverview, RuntimeStatus } from "../types/api";
 import { App } from "./App";
@@ -27,7 +27,7 @@ const PAIRED_CONNECTIONS: ConnectionOverview = {
   },
 };
 
-function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): CreNexusClient {
+function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): KORYAOClient {
   return {
     getRuntimeStatus: vi.fn().mockImplementation(() => Promise.resolve(status)),
     getHealth: vi.fn().mockResolvedValue({ ok: true }),
@@ -37,10 +37,10 @@ function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): CreNexusCli
       message: "本地服务已恢复。",
       recoveryAttempts: 1,
     }),
-    openLogsDirectory: vi.fn().mockResolvedValue("<LOCAL_APP_DATA>/CreNexus/logs"),
+    openLogsDirectory: vi.fn().mockResolvedValue("<LOCAL_APP_DATA>/KORYAO/logs"),
     openProjectArtifacts: vi
       .fn()
-      .mockResolvedValue("<LOCAL_APP_DATA>/CreNexus/artifacts/project-test"),
+      .mockResolvedValue("<LOCAL_APP_DATA>/KORYAO/artifacts/project-test"),
     exportAdobeFile: vi.fn().mockResolvedValue(null),
     listAdobeExports: vi.fn().mockResolvedValue([]),
     getConnections: vi.fn().mockResolvedValue(PAIRED_CONNECTIONS),
@@ -86,8 +86,8 @@ function makeClient(status: RuntimeStatus | Promise<RuntimeStatus>): CreNexusCli
     }),
     createLicenseRequest: vi.fn().mockResolvedValue({
       requestId: "request-test",
-      fileName: "CreNexus-license-request-request-test.json",
-      location: "<LOCAL_APP_DATA>/CreNexus/license/requests",
+      fileName: "KORYAO-license-request-request-test.json",
+      location: "<LOCAL_APP_DATA>/KORYAO/license/requests",
       folderOpened: true,
     }),
     importLicenseFile: vi.fn().mockResolvedValue({
@@ -161,7 +161,7 @@ describe("desktop runtime status", () => {
       message: "安全本地服务已经就绪。",
       recoveryAttempts: 0,
     });
-    const projectsRequest = deferred<Awaited<ReturnType<CreNexusClient["getProjects"]>>>();
+    const projectsRequest = deferred<Awaited<ReturnType<KORYAOClient["getProjects"]>>>();
     client.getProjects = vi.fn().mockReturnValue(projectsRequest.promise);
 
     render(<App client={client} />);
@@ -211,7 +211,7 @@ describe("desktop runtime status", () => {
       createdAt: "2026-07-22T08:00:00Z",
       updatedAt: "2026-07-22T08:00:00Z",
     } as const;
-    const deliveryRequest = deferred<Awaited<ReturnType<CreNexusClient["getProjectDelivery"]>>>();
+    const deliveryRequest = deferred<Awaited<ReturnType<KORYAOClient["getProjectDelivery"]>>>();
     client.getProjects = vi.fn().mockResolvedValue([project]);
     client.getProjectDelivery = vi.fn().mockReturnValue(deliveryRequest.promise);
     client.listAdobeExports = vi.fn().mockResolvedValue([]);
@@ -283,16 +283,16 @@ describe("desktop runtime status", () => {
         state: "connector_required",
         connector_configured: false,
         session_paired: false,
-        message: "已找到 Codex；需要安装 CreNexus 本地连接器。",
+        message: "已找到 Codex；需要安装 KORYAO 本地连接器。",
       },
     });
     client.installCodexConnector = vi.fn().mockResolvedValue({
       installed: true,
       connector: "starbridge-desktop",
-      message: "旧版 Codex 连接器已备份并迁移到 CreNexus 托管配置。",
+      message: "旧版 Codex 连接器已备份并迁移到 KORYAO 托管配置。",
       migrated_existing_connector: true,
       backup_created: true,
-      backup_file: "config.crenexus-backup-example.toml",
+      backup_file: "config.koryao-backup-example.toml",
       restart_required: true,
       next_steps: [],
     });
@@ -323,7 +323,7 @@ describe("desktop runtime status", () => {
       running: true,
       bridge_available: false,
       managed: false,
-      message: "软件正在运行，等待与当前 CreNexus 会话配对。",
+      message: "软件正在运行，等待与当前 KORYAO 会话配对。",
       pairing_state: "ready_to_pair" as const,
       paired: false,
       adapter_kind: "process" as const,

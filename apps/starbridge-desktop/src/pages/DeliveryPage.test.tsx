@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import type { CreNexusClient } from "../services/client";
+import type { KORYAOClient } from "../services/client";
 import type { Project, ProjectDelivery } from "../types/api";
 import { DeliveryPage } from "./DeliveryPage";
 
@@ -76,7 +76,7 @@ describe("Adobe delivery export", () => {
       openProjectArtifacts: vi.fn(),
       exportAdobeFile,
       listAdobeExports,
-    } as unknown as CreNexusClient;
+    } as unknown as KORYAOClient;
 
     render(<DeliveryPage client={client} initialProjectId="project-test" />);
     await screen.findByRole("option", { name: /vector\.svg/ });

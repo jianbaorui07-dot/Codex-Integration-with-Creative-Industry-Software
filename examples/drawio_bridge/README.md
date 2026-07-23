@@ -1,6 +1,6 @@
 # DiagramForge safe bridge
 
-DiagramForge 是 CreNexus 的结构化绘图板块，和自由批注型 Canvas 分开。它用确定性 Python 编译器生成原生 `.drawio`、内嵌可编辑 XML 的 SVG 预览和结构 manifest；不要求浏览器、Draw.io Desktop 或外部 MCP 才能完成基础生成与验证。
+DiagramForge 是 KORYAO 的结构化绘图板块，和自由批注型 Canvas 分开。它用确定性 Python 编译器生成原生 `.drawio`、内嵌可编辑 XML 的 SVG 预览和结构 manifest；不要求浏览器、Draw.io Desktop 或外部 MCP 才能完成基础生成与验证。
 
 只读入口：
 

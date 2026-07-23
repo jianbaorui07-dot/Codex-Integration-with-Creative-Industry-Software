@@ -1,10 +1,10 @@
 {
   "name": "starbridge-creative-software-mcp",
-  "display_name": "CreNexus Creative Software MCP",
+  "display_name": "KORYAO Creative Software MCP",
   "description": "Windows-first, local-first MCP stdio bridge for safe probes, workflow validation, DXF dry-run planning, and guarded creative software automation.",
   "version": "0.1.0-alpha.2",
-  "homepage": "https://github.com/jianbaorui07-dot/CreNexus",
-  "license": "LicenseRef-CreNexus-Proprietary",
+  "homepage": "https://github.com/jianbaorui07-dot/KORYAO-basic",
+  "license": "LicenseRef-KORYAO-Proprietary",
   "transport": {
     "type": "stdio",
     "command": "python",

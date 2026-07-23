@@ -137,7 +137,7 @@ def to_drawio_xml(document: DiagramDocument) -> str:
     mxfile = ET.Element(
         "mxfile",
         {
-            "host": "CreNexus",
+            "host": "KORYAO",
             "agent": "DiagramForge",
             "version": "1.0",
             "type": "device",

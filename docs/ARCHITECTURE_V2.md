@@ -1,4 +1,4 @@
-# CreNexus 工作流架构 v2
+# KORYAO 工作流架构 v2
 
 状态：已确认，按小步兼容迁移实施。现有 CLI、MCP、backend、四种矢量化引擎、Tauri/React、Python sidecar 和全部软件桥继续保留。
 
@@ -32,7 +32,7 @@ running → completed/failed
 ## 应用数据
 
 ```text
-%LOCALAPPDATA%/CreNexus/
+%LOCALAPPDATA%/KORYAO/
 ├─ projects/<projectId>/project.json
 ├─ jobs/<jobId>/job.json + events.jsonl
 ├─ artifacts/<projectId>/<jobId>/

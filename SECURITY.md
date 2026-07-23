@@ -1,6 +1,6 @@
 # Security Policy
 
-CreNexus is designed as a local-first bridge between AI coding agents and desktop creative software. The public repository must not contain private assets, credentials, installation paths, customer files, or generated production output.
+KORYAO is designed as a local-first bridge between AI coding agents and desktop creative software. The public repository must not contain private assets, credentials, installation paths, customer files, or generated production output.
 
 ## Reporting a Security Issue
 

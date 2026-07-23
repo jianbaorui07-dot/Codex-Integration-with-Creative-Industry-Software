@@ -1,14 +1,14 @@
 {
   "name": "starbridge-version-coordinator",
   "version": "0.1.0+codex.20260717090725",
-  "description": "Plan safe CreNexus configurations for different creative-software and project generations.",
+  "description": "Plan safe KORYAO configurations for different creative-software and project generations.",
   "author": {
     "name": "菅宝瑞",
-    "url": "https://github.com/jianbaorui07-dot/CreNexus"
+    "url": "https://github.com/jianbaorui07-dot/KORYAO-basic"
   },
-  "homepage": "https://github.com/jianbaorui07-dot/CreNexus/blob/main/docs/codex-version-coordination-service.md",
-  "repository": "https://github.com/jianbaorui07-dot/CreNexus",
-  "license": "LicenseRef-CreNexus-Proprietary",
+  "homepage": "https://github.com/jianbaorui07-dot/KORYAO-basic/blob/main/docs/codex-version-coordination-service.md",
+  "repository": "https://github.com/jianbaorui07-dot/KORYAO-basic",
+  "license": "LicenseRef-KORYAO-Proprietary",
   "keywords": [
     "codex",
     "mcp",
@@ -18,9 +18,9 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "CreNexus Version Coordinator",
-    "shortDescription": "Match software versions to safe CreNexus routes.",
-    "longDescription": "Create a conservative Codex plan for Photoshop, Illustrator, AutoCAD, Blender, ComfyUI, and CapCut/Jianying, and migrate CreNexus v5-v8 workflows to v9.",
+    "displayName": "KORYAO Version Coordinator",
+    "shortDescription": "Match software versions to safe KORYAO routes.",
+    "longDescription": "Create a conservative Codex plan for Photoshop, Illustrator, AutoCAD, Blender, ComfyUI, and CapCut/Jianying, and migrate KORYAO v5-v8 workflows to v9.",
     "developerName": "菅宝瑞",
     "category": "Productivity",
     "capabilities": [
@@ -28,8 +28,8 @@
       "Planning"
     ],
     "defaultPrompt": [
-      "\u6309\u672c\u673a\u8f6f\u4ef6\u7248\u672c\u751f\u6210\u5b89\u5168\u7684 CreNexus \u914d\u7f6e\u3002",
-      "\u628a\u73b0\u6709 CreNexus v5-v8 \u5de5\u4f5c\u6d41\u8fc1\u79fb\u5230 v9\u3002",
+      "\u6309\u672c\u673a\u8f6f\u4ef6\u7248\u672c\u751f\u6210\u5b89\u5168\u7684 KORYAO \u914d\u7f6e\u3002",
+      "\u628a\u73b0\u6709 KORYAO v5-v8 \u5de5\u4f5c\u6d41\u8fc1\u79fb\u5230 v9\u3002",
       "\u4e3a Photoshop \u548c Illustrator \u9009\u62e9\u517c\u5bb9\u6865\u63a5\u65b9\u5f0f\u3002"
     ]
   },

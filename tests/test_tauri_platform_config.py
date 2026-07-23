@@ -60,7 +60,7 @@ class TauriPlatformConfigTest(unittest.TestCase):
 
     @unittest.skipIf(os.name == "nt", "POSIX hook execution is covered on macOS and Ubuntu")
     def test_posix_hook_preserves_space_path_and_argument_boundaries(self) -> None:
-        with tempfile.TemporaryDirectory(prefix="CreNexus Tauri hook ") as temporary:
+        with tempfile.TemporaryDirectory(prefix="KORYAO Tauri hook ") as temporary:
             root = Path(temporary)
             bin_dir = root / "fake npm bin"
             frontend_dir = root / "frontend with spaces"

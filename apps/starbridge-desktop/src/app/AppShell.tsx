@@ -71,7 +71,7 @@ export function AppShell({ currentPage, onNavigate, status, connections, license
               className="github-project-button"
               aria-label="GitHub 项目"
               onClick={() => void onOpenGitHub()}
-              title="打开 CreNexus GitHub 项目"
+              title="打开构曜纪基础版｜KORYAO基础版 GitHub 项目"
             >
               <IconBrandGithub aria-hidden="true" />
               <span>GitHub</span>

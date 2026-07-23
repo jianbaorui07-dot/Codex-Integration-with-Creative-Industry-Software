@@ -7,7 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from starbridge_mcp.backend import SESSION_HEADER, CreNexusBackend
+from starbridge_mcp.backend import SESSION_HEADER, KORYAOBackend
 from starbridge_mcp.core.app_data import APP_DATA_ENV, resolve_app_data_paths
 from starbridge_mcp.core.desktop_connections import (
     CONNECTOR_BEGIN,
@@ -132,7 +132,7 @@ command = \"other-tool\"
             repeated = manager.install_codex_connector(confirm_install=True)
 
         contents = config.read_text(encoding="utf-8")
-        backups = list(codex_home.glob("config.crenexus-backup-*.toml"))
+        backups = list(codex_home.glob("config.koryao-backup-*.toml"))
         self.assertTrue(migrated["installed"])
         self.assertTrue(migrated["migrated_existing_connector"])
         self.assertTrue(migrated["backup_created"])
@@ -209,7 +209,7 @@ command = \"other-tool\"
 
     def test_desktop_api_enforces_pairing_before_vectorization(self) -> None:
         credential = "desktop-test-credential-0000000000000000000000000001"
-        backend = CreNexusBackend(
+        backend = KORYAOBackend(
             app_data_dir=self.root / "backend-data",
             session_credential=credential,
             mode="desktop",
@@ -297,7 +297,7 @@ command = \"other-tool\"
 
     def test_application_pairing_api_lifecycle_uses_fixed_ids_and_confirmations(self) -> None:
         credential = "desktop-test-credential-0000000000000000000000000002"
-        backend = CreNexusBackend(
+        backend = KORYAOBackend(
             app_data_dir=self.root / "backend-pair-data",
             session_credential=credential,
             mode="desktop",

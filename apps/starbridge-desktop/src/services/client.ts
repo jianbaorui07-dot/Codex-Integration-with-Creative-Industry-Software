@@ -26,7 +26,7 @@ import type {
   WorkflowSummary,
 } from "../types/api";
 import { createTransport } from "./runtime";
-import { TransportError, type CreNexusTransport } from "./transport";
+import { TransportError, type KORYAOTransport } from "./transport";
 
 export class UserFacingError extends Error {
   constructor(
@@ -41,7 +41,7 @@ export class UserFacingError extends Error {
   }
 }
 
-export interface CreNexusClient {
+export interface KORYAOClient {
   getRuntimeStatus(): Promise<RuntimeStatus>;
   getHealth(): Promise<ApiEnvelope<unknown>>;
   getBootstrap(): Promise<ApiEnvelope<unknown>>;
@@ -117,8 +117,8 @@ function errorFromEnvelope(
   );
 }
 
-export class CreNexusApiClient implements CreNexusClient {
-  constructor(private readonly transport: CreNexusTransport = createTransport()) {}
+export class KORYAOApiClient implements KORYAOClient {
+  constructor(private readonly transport: KORYAOTransport = createTransport()) {}
 
   private async execute<T>(operation: () => Promise<T>): Promise<T> {
     try {
@@ -140,7 +140,7 @@ export class CreNexusApiClient implements CreNexusClient {
       }
       throw new UserFacingError(
         "unexpected_client_error",
-        "CreNexus 暂时无法完成该操作。",
+        "KORYAO 暂时无法完成该操作。",
         error instanceof Error ? error.message : String(error),
       );
     }

@@ -21,11 +21,11 @@ import type {
   VectorSelection,
   VectorizationStart,
 } from "../types/api";
-import { TransportError, type CreNexusTransport } from "./transport";
+import { TransportError, type KORYAOTransport } from "./transport";
 
 export type InvokeLike = <T>(command: string, args?: Record<string, unknown>) => Promise<T>;
 
-export class DesktopTransport implements CreNexusTransport {
+export class DesktopTransport implements KORYAOTransport {
   readonly kind = "desktop" as const;
 
   constructor(private readonly invoke: InvokeLike = tauriInvoke) {}
@@ -36,7 +36,7 @@ export class DesktopTransport implements CreNexusTransport {
     } catch (error) {
       throw new TransportError(
         "desktop_invoke_failed",
-        "CreNexus Desktop 暂时无法完成该操作。",
+        "KORYAO Desktop 暂时无法完成该操作。",
         error instanceof Error ? error.message : String(error),
       );
     }

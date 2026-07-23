@@ -58,14 +58,14 @@ def _default_root() -> Path:
     if os.name == "nt":
         local_app_data = os.environ.get("LOCALAPPDATA")
         if local_app_data:
-            return Path(local_app_data) / "CreNexus"
-        return Path.home() / "AppData" / "Local" / "CreNexus"
+            return Path(local_app_data) / "KORYAO"
+        return Path.home() / "AppData" / "Local" / "KORYAO"
     if sys.platform == "darwin":
-        return Path.home() / "Library" / "Application Support" / "CreNexus"
+        return Path.home() / "Library" / "Application Support" / "KORYAO"
     xdg_data_home = os.environ.get("XDG_DATA_HOME")
     if xdg_data_home:
-        return Path(xdg_data_home) / "CreNexus"
-    return Path.home() / ".local" / "share" / "CreNexus"
+        return Path(xdg_data_home) / "KORYAO"
+    return Path.home() / ".local" / "share" / "KORYAO"
 
 
 def resolve_app_data_paths(

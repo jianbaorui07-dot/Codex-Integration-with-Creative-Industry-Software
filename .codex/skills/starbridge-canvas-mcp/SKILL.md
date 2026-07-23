@@ -1,9 +1,9 @@
 ---
 name: starbridge-canvas-mcp
-description: Use CreNexus Canvas from Codex. Use when the task involves opening the local realtime canvas, reading selected tldraw shapes, inserting generated images back into the canvas, debugging canvas realtime sync, or connecting visual ideation to CreNexus creative software workflows.
+description: Use KORYAO Canvas from Codex. Use when the task involves opening the local realtime canvas, reading selected tldraw shapes, inserting generated images back into the canvas, debugging canvas realtime sync, or connecting visual ideation to KORYAO creative software workflows.
 ---
 
-# CreNexus Canvas MCP
+# KORYAO Canvas MCP
 
 ## Core Rule
 

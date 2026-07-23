@@ -69,7 +69,7 @@
     },
     {
       "id": "canvas",
-      "label": "CreNexus Canvas",
+      "label": "KORYAO Canvas",
       "description": "安装 Web Canvas 子项目的 Node 依赖。",
       "python_extras": [],
       "node_projects": ["examples/starbridge_canvas"],

@@ -63,7 +63,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
         )
 
     def make_config_fixture(
-        self, temporary_root: Path, directory_name: str = "CreNexus config with spaces"
+        self, temporary_root: Path, directory_name: str = "KORYAO config with spaces"
     ) -> tuple[Path, dict[str, str]]:
         repo_root = temporary_root / directory_name
         fake_bin = temporary_root / "bin"
@@ -135,7 +135,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
     def windows_managed_config(
         self,
         base: str = "[existing]\r\nkeep = true",
-        root: str = r"C:\CreNexus",
+        root: str = r"C:\KORYAO",
         pythonpath: str | None = None,
     ) -> bytes:
         python = ntpath.join(root, ".venv", "Scripts", "python.exe")
@@ -363,7 +363,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
 
     def test_dry_run_resolves_a_repository_path_with_spaces(self) -> None:
         with tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory:
-            linked_repo = Path(temporary_directory) / "CreNexus checkout with spaces"
+            linked_repo = Path(temporary_directory) / "KORYAO checkout with spaces"
             linked_repo.symlink_to(REPO_ROOT, target_is_directory=True)
             completed = self.run_bootstrap(
                 linked_repo,
@@ -396,7 +396,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
                 tempfile.TemporaryDirectory(prefix="cre nexus bootstrap ") as temporary_directory,
             ):
                 repo_root, environment = self.make_config_fixture(
-                    Path(temporary_directory), f'CreNexus {name} with spaces "and quote" \\ path'
+                    Path(temporary_directory), f'KORYAO {name} with spaces "and quote" \\ path'
                 )
                 codex_config = repo_root / ".codex/config.toml"
                 codex_config.parent.mkdir()
@@ -505,10 +505,10 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
 
     def test_windows_managed_root_accepts_only_canonical_resolve_path_forms(self) -> None:
         accepted = (
-            r"C:\CreNexus",
-            r"C:\Creative Work\CreNexus",
+            r"C:\KORYAO",
+            r"C:\Creative Work\KORYAO",
             "C:\\",
-            r"\\server\share\CreNexus",
+            r"\\server\share\KORYAO",
             r"\\server\share",
         )
         for index, root in enumerate(accepted):
@@ -535,14 +535,14 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             r"relative\repo",
             "/tmp/fake-win-repo",
             r"C:repo",
-            r"C:\CreNexus\..\Other",
-            r"C:\CreNexus\.",
-            r"c:\CreNexus",
-            "C:\\CreNexus\\",
+            r"C:\KORYAO\..\Other",
+            r"C:\KORYAO\.",
+            r"c:\KORYAO",
+            "C:\\KORYAO\\",
             'C:\\Cre"Nexus',
             r"\\server",
-            r"\\server\share\CreNexus\..\Other",
-            r"C:\CreNexus\\Nested",
+            r"\\server\share\KORYAO\..\Other",
+            r"C:\KORYAO\\Nested",
             r"C:\Work\file:stream",
             "C:\\Work\\trailing ",
             r"C:\Work\trailing.",
@@ -647,7 +647,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             )
             codex_config = repo_root / ".codex/config.toml"
             codex_config.parent.mkdir()
-            original = self.windows_managed_config(root=r"C:\CreNexus", pythonpath=r"C:\CreNexus")
+            original = self.windows_managed_config(root=r"C:\KORYAO", pythonpath=r"C:\KORYAO")
             codex_config.write_bytes(original)
 
             completed = self.run_fixture_bootstrap(repo_root, environment)
@@ -657,7 +657,7 @@ class PosixBootstrapEntrypointTests(unittest.TestCase):
             self.assert_no_config_temporaries(codex_config)
 
     def test_windows_managed_args_and_cwd_must_derive_from_the_same_root(self) -> None:
-        root = r"C:\CreNexus"
+        root = r"C:\KORYAO"
         other = r"D:\Other"
         valid_text = self.windows_managed_config(root=root).decode("utf-8")
         coordinator = ntpath.join(

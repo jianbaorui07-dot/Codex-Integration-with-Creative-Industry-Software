@@ -1,7 +1,7 @@
 # Third-party notices
 
-CreNexus Vector60 uses the following unmodified upstream packages through their public package
-interfaces. No complete third-party repository is vendored into CreNexus.
+KORYAO Vector60 uses the following unmodified upstream packages through their public package
+interfaces. No complete third-party repository is vendored into KORYAO.
 
 ## VTracer
 
@@ -33,7 +33,7 @@ interfaces. No complete third-party repository is vendored into CreNexus.
 - License: MIT
 - Version: `4.0.2`
 - Source commit: `b2309cf541aee11634eb653157b0ff86ab326e98`
-- Purpose: final SVG cleanup and compression before CreNexus safety validation.
+- Purpose: final SVG cleanup and compression before KORYAO safety validation.
 
 The optional Vector60 dependency group pins the Python packages above. SVGO is pinned in the root
 Node development dependencies. diffvg and LIVE remain research references and are not production

@@ -1,4 +1,4 @@
-# CreNexus Vector60 基准报告
+# KORYAO Vector60 基准报告
 
 总状态：`unverified`
 

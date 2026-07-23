@@ -122,7 +122,7 @@ def _translate_path_data(
 
 
 def normalize_vtracer_svg(raw_svg: Path, output_svg: Path, *, precision: int = 5) -> None:
-    """Reduce VTracer output to CreNexus's verified path-only SVG dialect."""
+    """Reduce VTracer output to KORYAO's verified path-only SVG dialect."""
 
     try:
         root = ET.parse(raw_svg).getroot()
@@ -221,7 +221,7 @@ def _geometry_passthrough(source_svg: Path, output_svg: Path) -> tuple[str, ...]
 
 
 def optimize_with_svgo(source_svg: Path, output_svg: Path) -> None:
-    """Run pinned SVGO without allowing it to widen CreNexus's SVG dialect."""
+    """Run pinned SVGO without allowing it to widen KORYAO's SVG dialect."""
 
     node = shutil.which("node")
     repository_root = Path(__file__).resolve().parents[3]

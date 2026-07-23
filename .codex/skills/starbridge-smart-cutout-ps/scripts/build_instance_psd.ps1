@@ -212,7 +212,7 @@ var doc = app.documents.add(
     CONFIG.width,
     CONFIG.height,
     CONFIG.resolution,
-    "CreNexus_Smart_Cutout",
+    "KORYAO_Smart_Cutout",
     NewDocumentMode.RGB,
     DocumentFill.TRANSPARENT
 );

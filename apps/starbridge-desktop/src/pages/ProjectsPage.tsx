@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { EmptyState } from "../components/EmptyState/EmptyState";
-import type { CreNexusClient } from "../services/client";
+import type { KORYAOClient } from "../services/client";
 import type { Project } from "../types/api";
 
 interface ProjectsPageProps {
-  client: CreNexusClient;
+  client: KORYAOClient;
   runtimeReady: boolean;
   onOpenWorkflow: (projectId: string, workflowId: string) => void;
 }
@@ -88,7 +88,7 @@ export function ProjectsPage({ client, runtimeReady, onOpenWorkflow }: ProjectsP
         <div>
           <span className="page-kicker">项目是任务与交付的边界</span>
           <h2>先建立项目，再导入明确选择的素材</h2>
-          <p>CreNexus 只复制你在文件选择器里明确选择的单个图片，不扫描文件夹，也不在界面或记录里展示原始路径。</p>
+          <p>KORYAO 只复制你在文件选择器里明确选择的单个图片，不扫描文件夹，也不在界面或记录里展示原始路径。</p>
         </div>
         <span className="local-badge">仅本机保存</span>
       </header>
@@ -106,7 +106,7 @@ export function ProjectsPage({ client, runtimeReady, onOpenWorkflow }: ProjectsP
       </section>
 
       {loading ? (
-        <EmptyState title="正在读取本机项目" description="CreNexus 正在加载仅保存在这台电脑上的项目和素材记录。" />
+        <EmptyState title="正在读取本机项目" description="KORYAO 正在加载仅保存在这台电脑上的项目和素材记录。" />
       ) : error && projects.length === 0 ? (
         <EmptyState title="项目列表没有载入" description="本机项目数据仍保留；请先恢复本地服务，再重新打开项目页。" />
       ) : projects.length === 0 ? (
@@ -126,7 +126,7 @@ export function ProjectsPage({ client, runtimeReady, onOpenWorkflow }: ProjectsP
               ) : usesImportedAsset(project.workflowId) ? <p className="truth-note">尚未导入素材。原始路径不会被保存到项目记录。</p> : <p className="truth-note">提示词与模型名只在建立任务后进入进程内临时保险库，不保存到项目。</p>}
               {usesImportedAsset(project.workflowId) ? <label className="confirmation">
                 <input type="checkbox" checked={importConfirmations[project.projectId] ?? false} onChange={(event) => setImportConfirmations((current) => ({ ...current, [project.projectId]: event.target.checked }))} />
-                我确认把接下来明确选择的一张图片复制到 CreNexus 的项目安全目录。
+                我确认把接下来明确选择的一张图片复制到 KORYAO 的项目安全目录。
               </label> : null}
               <div className="button-row">
                 {usesImportedAsset(project.workflowId) ? <button type="button" className="secondary" disabled={busy || !importConfirmations[project.projectId]} onClick={() => void importAsset(project.projectId)}>选择并导入图片</button> : null}

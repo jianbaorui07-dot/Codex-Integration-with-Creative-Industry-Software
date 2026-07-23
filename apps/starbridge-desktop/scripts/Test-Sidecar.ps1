@@ -42,7 +42,7 @@ if ($vector60Runtime.versions.vtracer -ne "0.6.15" -or
 }
 
 $temporaryRoot = [IO.Path]::GetFullPath(
-    (Join-Path ([IO.Path]::GetTempPath()) ("CreNexus Sidecar Test " + [Guid]::NewGuid().ToString("N")))
+    (Join-Path ([IO.Path]::GetTempPath()) ("KORYAO Sidecar Test " + [Guid]::NewGuid().ToString("N")))
 )
 $tempPrefix = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd("\") + "\"
 if (-not $temporaryRoot.StartsWith($tempPrefix, [StringComparison]::OrdinalIgnoreCase)) {
@@ -100,7 +100,7 @@ try {
     if (-not $health.ok) {
         throw "The sidecar health check failed."
     }
-    $wrongHeaders = @{ "X-CreNexus-Session" = ([Guid]::NewGuid().ToString("N") + [Guid]::NewGuid().ToString("N")) }
+    $wrongHeaders = @{ "X-KORYAO-Session" = ([Guid]::NewGuid().ToString("N") + [Guid]::NewGuid().ToString("N")) }
     $wrongCredentialStatus = 0
     try {
         Invoke-WebRequest `
@@ -121,7 +121,7 @@ try {
         throw "The sidecar returned $wrongCredentialStatus instead of 403 for an incorrect credential."
     }
 
-    $headers = @{ "X-CreNexus-Session" = $sessionCredential }
+    $headers = @{ "X-KORYAO-Session" = $sessionCredential }
     $bootstrap = Invoke-RestMethod `
         -Uri "http://127.0.0.1:$($ready.port)/api/bootstrap" `
         -Headers $headers `
@@ -191,7 +191,7 @@ command = "other-tool"
         -not $codexTestConfigText.Contains("mcp_servers.other-tool")) {
         throw "The managed connector migration did not replace only the legacy connector tables."
     }
-    $configBackups = @(Get-ChildItem -LiteralPath $codexTestHome -File -Filter "config.crenexus-backup-*.toml")
+    $configBackups = @(Get-ChildItem -LiteralPath $codexTestHome -File -Filter "config.koryao-backup-*.toml")
     if ($configBackups.Count -ne 1 -or
         -not ([IO.File]::ReadAllText($configBackups[0].FullName)).Contains("legacy-sidecar")) {
         throw "The legacy Codex connector backup was not created correctly."
@@ -205,7 +205,7 @@ command = "other-tool"
         -Body '{"confirm_install":true}' `
         -TimeoutSec 10
     if ($repeatInstall.data.migrated_existing_connector -or
-        @(Get-ChildItem -LiteralPath $codexTestHome -File -Filter "config.crenexus-backup-*.toml").Count -ne 1) {
+        @(Get-ChildItem -LiteralPath $codexTestHome -File -Filter "config.koryao-backup-*.toml").Count -ne 1) {
         throw "The managed connector reinstall was not idempotent."
     }
 

@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { EmptyState } from "../components/EmptyState/EmptyState";
-import type { CreNexusClient } from "../services/client";
+import type { KORYAOClient } from "../services/client";
 import type { AdobeExportFormat, AdobeExportReceipt, Project, ProjectDelivery } from "../types/api";
 
 interface DeliveryPageProps {
-  client: CreNexusClient;
+  client: KORYAOClient;
   initialProjectId?: string;
 }
 
@@ -130,7 +130,7 @@ export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
           setExportHistory((current) => [receipt, ...current.filter((item) => item.receiptId !== receipt.receiptId)].slice(0, 100));
           setOpenMessage(`已生成 ${receipt.fileName}（${Math.ceil(receipt.sizeBytes / 1024)} KB），并通过 Adobe 原生重开验证；源产物未覆盖。`);
         } else {
-          setOpenMessage(`已生成并验证 ${receipt.fileName}，但本次审计记录未能保存。交付文件仍然有效，CreNexus 未记录其绝对路径。`);
+          setOpenMessage(`已生成并验证 ${receipt.fileName}，但本次审计记录未能保存。交付文件仍然有效，KORYAO 未记录其绝对路径。`);
         }
       } else {
         setOpenMessage("已取消导出，没有创建或覆盖文件。");
@@ -170,7 +170,7 @@ export function DeliveryPage({ client, initialProjectId }: DeliveryPageProps) {
           <div className="form-grid">
             <label>转换来源<select aria-label="转换来源" value={exportSource} onChange={(event) => { setExportSource(event.target.value); setConfirmExport(false); }}><option value="">请选择兼容产物</option>{compatibleArtifacts.map((artifact) => <option key={artifact.artifactId} value={artifact.relativePath}>{artifact.basename} · {artifact.kind} · {Math.ceil(artifact.sizeBytes / 1024)} KB</option>)}</select></label>
           </div>
-          <label className="confirmation-check"><input type="checkbox" checked={confirmExport} onChange={(event) => setConfirmExport(event.target.checked)} /><span>我确认调用本机 {exportFormat === "ai" ? "Illustrator" : "Photoshop"}，随后在系统窗口选择一个新的保存路径；CreNexus 不覆盖已有文件。</span></label>
+          <label className="confirmation-check"><input type="checkbox" checked={confirmExport} onChange={(event) => setConfirmExport(event.target.checked)} /><span>我确认调用本机 {exportFormat === "ai" ? "Illustrator" : "Photoshop"}，随后在系统窗口选择一个新的保存路径；KORYAO 不覆盖已有文件。</span></label>
           <div className="button-row"><button type="button" className="primary" disabled={exportBusy || !exportSource || !confirmExport} onClick={() => void exportAdobeFile()}>{exportBusy ? "Adobe 正在保存并重开验证…" : `选择路径并导出 .${exportFormat}`}</button></div>
           {!compatibleArtifacts.length ? <p className="truth-note">当前项目没有可用于 .{exportFormat} 的真实来源产物。先完成矢量工作流，再回到这里导出。</p> : null}
         </section>

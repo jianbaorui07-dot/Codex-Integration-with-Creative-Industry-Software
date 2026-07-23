@@ -21,7 +21,7 @@ class PhotoshopRecipeDslTests(unittest.TestCase):
     @unittest.skipUnless(os.name == "nt", "Windows 8.3 path aliases are Windows-only")
     def test_context_normalizes_windows_short_repo_alias(self) -> None:
         with TemporaryDirectory() as directory:
-            long_root = Path(directory) / "CreNexus Long Repository Name"
+            long_root = Path(directory) / "KORYAO Long Repository Name"
             (long_root / "sandbox").mkdir(parents=True)
             buffer = ctypes.create_unicode_buffer(32768)
             length = ctypes.windll.kernel32.GetShortPathNameW(str(long_root), buffer, len(buffer))

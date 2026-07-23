@@ -1,1 +1,1 @@
-"""Adapter packages for CreNexus MCP."""
+"""Adapter packages for KORYAO MCP."""

@@ -38,7 +38,7 @@
 
     if (!isDemo) {
         return fail(
-            "Refusing to export because the active document is not the CreNexus sandbox demo.",
+            "Refusing to export because the active document is not the KORYAO sandbox demo.",
             ["Activate starbridge_ai_demo.ai or create the sandbox demo document again."]
         );
     }

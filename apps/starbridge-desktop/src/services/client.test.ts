@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import type { CreNexusTransport } from "./transport";
-import { CreNexusApiClient, UserFacingError } from "./client";
+import type { KORYAOTransport } from "./transport";
+import { KORYAOApiClient, UserFacingError } from "./client";
 
-function transportReturning(status: number, body: Record<string, unknown>): CreNexusTransport {
+function transportReturning(status: number, body: Record<string, unknown>): KORYAOTransport {
   return {
     kind: "desktop",
     request: async () => ({ status, body }),
@@ -78,7 +78,7 @@ function transportReturning(status: number, body: Record<string, unknown>): CreN
     openProjectArtifacts: async () => "artifacts",
     exportAdobeFile: async () => null,
     listAdobeExports: async () => [],
-  } as CreNexusTransport;
+  } as KORYAOTransport;
 }
 
 describe("API error translation", () => {
@@ -86,7 +86,7 @@ describe("API error translation", () => {
     [401, "authentication_required", "重新授权"],
     [403, "authentication_failed", "会话已失效"],
   ])("translates HTTP %s without hiding technical details", async (status, code, phrase) => {
-    const client = new CreNexusApiClient(
+    const client = new KORYAOApiClient(
       transportReturning(status, {
         ok: false,
         error: { code, message: "raw backend message" },

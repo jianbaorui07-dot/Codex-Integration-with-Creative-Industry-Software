@@ -46,7 +46,7 @@ const clone = (value) => JSON.parse(JSON.stringify(value));
 
 const temporaryDirectory = () => {
   const directory = fs.mkdtempSync(
-    path.join(os.tmpdir(), "CreNexus Tauri config with spaces "),
+    path.join(os.tmpdir(), "KORYAO Tauri config with spaces "),
   );
   temporaryDirectories.push(directory);
   return directory;

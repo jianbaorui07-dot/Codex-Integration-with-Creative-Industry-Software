@@ -257,7 +257,7 @@ $result = [ordered]@{
 if ($Json) {
     $result | ConvertTo-Json -Depth 8
 } else {
-    Write-Host "CreNexus quickstart completed ($effectiveProfile)."
+    Write-Host "KORYAO quickstart completed ($effectiveProfile)."
     Write-Host "Python: $($python.version)"
     Write-Host "Virtual environment: $venvPath"
     Write-Host "Codex config: $(if ($SkipCodexConfig) { 'skipped' } else { Join-Path $repoRoot '.codex\config.toml' })"

@@ -5,8 +5,8 @@
 ### 2026-07-23 — Author and license metadata correction
 
 * Corrected the author and copyright name to 菅宝瑞 across project, desktop, plugin, registry, and documentation metadata.
-* Changed current-version project metadata from MIT to `LicenseRef-CreNexus-Proprietary`, while preserving the license terms already distributed with earlier revisions.
-* Added the CreNexus proprietary license notice, third-party rights boundary, and the statement that final interpretation of the CreNexus licensing terms belongs to 菅宝瑞 to the extent permitted by applicable law.
+* Changed current-version project metadata from MIT to `LicenseRef-KORYAO-Proprietary`, while preserving the license terms already distributed with earlier revisions.
+* Added the KORYAO proprietary license notice, third-party rights boundary, and the statement that final interpretation of the KORYAO licensing terms belongs to 菅宝瑞 to the extent permitted by applicable law.
 
 ### 2026-07-23 — Pixel Reconstruction first customer route
 
@@ -21,7 +21,7 @@
 * Kept read failures distinct from genuinely empty customer data so a slow or unavailable local bridge is not presented as data loss.
 * Added desktop regression coverage for delayed project and delivery responses.
 
-### 2026-07-22 — CreNexus 0.1.0-alpha.2 integrated Windows preview
+### 2026-07-22 — KORYAO 0.1.0-alpha.2 integrated Windows preview
 
 * Exposed the existing exact RGBA-to-SVG engine as the customer-facing Pixel Vector mode while retaining the stable internal `exact` identifier and previous task compatibility.
 * Integrated the visible Codex conversation workspace, bounded 64/128/256 MB SVG controls, and explicit native PSD/AI save-path delivery from the merged Windows validation line.
@@ -36,7 +36,7 @@
 * Fixed the Photoshop Node Proxy so each confirmed UXP operation is forwarded exactly once.
 * Added pinned upstream and license research, integration tests, truth-state documentation, and guarded package commands for both modules.
 
-### 2026-07-18 — CreNexus 0.1.0-alpha.1 Windows app
+### 2026-07-18 — KORYAO 0.1.0-alpha.1 Windows app
 
 * Replaced the legacy desktop UI with the editorial StarBridge control-console design while retaining existing local workflows and software probes.
 * Added an in-place Codex connector migration that backs up `config.toml`, replaces only the legacy `starbridge-desktop` tables, and preserves every unrelated Codex and MCP setting.
@@ -114,7 +114,7 @@
   `safe_write_protocol`. Each template bakes in the validate-first / dry-run /
   explicit-confirmation / sandbox-only protocol. Implemented in
   `starbridge_mcp/core/prompts.py`, covered by `tests/test_mcp_prompts.py`.
-* CreNexus now exposes the full MCP surface: Tools (what the client can do),
+* KORYAO now exposes the full MCP surface: Tools (what the client can do),
   Resources (what the client should know), and Prompts (how to do it safely).
 
 ### 2026-06-27 — MCP Resources, regression fix, lint gate
@@ -173,7 +173,7 @@
 
 ### Added
 
-* CreNexus MCP stdio server
+* KORYAO MCP stdio server
 * Safe local bridge status and probes
 * ComfyUI workflow validation
 * AutoCAD DXF dry-run bridge
