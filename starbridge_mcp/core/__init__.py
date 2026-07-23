@@ -1,4 +1,4 @@
-"""Core helpers for CreNexus MCP.
+"""Core helpers for KORYAO MCP.
 
 Exposes the safety layer: evidence manifests, job status, security redaction,
 safe roots, tool registry, result schemas, and computer-use adapters.
@@ -58,7 +58,7 @@ __all__ = [
     "make_result",
     "validate_result",
     # Config
-    "CreNexusConfig",
+    "KORYAOConfig",
     "StarBridgeConfig",
     "env_summary",
     # Computer use
@@ -74,7 +74,7 @@ from starbridge_mcp.core.computer_use import (
     CodexComputerUseAdapter,
     evaluate_safety,
 )
-from starbridge_mcp.core.config import CreNexusConfig, StarBridgeConfig, env_summary
+from starbridge_mcp.core.config import KORYAOConfig, StarBridgeConfig, env_summary
 from starbridge_mcp.core.evidence import (
     DEFAULT_EVIDENCE_ROOT,
     DEFAULT_MANIFEST_FILENAME,

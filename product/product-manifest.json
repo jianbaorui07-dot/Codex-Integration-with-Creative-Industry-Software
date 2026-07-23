@@ -28,10 +28,10 @@
     "stableDesktopWriteRequiresReviewedLocalAppEvidence": true
   },
   "product": {
-    "name": "CreNexus",
+    "name": "KORYAO",
     "descriptionZhCn": "AI 创意软件协同平台",
     "version": "0.1.0-alpha.2",
-    "positioning": "Windows AI 创意软件协同平台：Codex 负责理解与调度，CreNexus MCP 负责受控执行、安全验证和脱敏证据，创意软件负责实际生产。",
+    "positioning": "Windows AI 创意软件协同平台：Codex 负责理解与调度，KORYAO MCP 负责受控执行、安全验证和脱敏证据，创意软件负责实际生产。",
     "serverRequired": false,
     "desktopValidation": "experimental",
     "installerValidation": "experimental",
@@ -44,10 +44,10 @@
     "placeholderLetterIconReplaced": true
   },
   "sourceBoundary": {
-    "communityRepository": "jianbaorui07-dot/CreNexus",
+    "communityRepository": "jianbaorui07-dot/KORYAO",
     "communitySource": "public-mit",
     "commercialSource": "private-planned",
-    "suggestedCommercialRepository": "CreNexus-Pro",
+    "suggestedCommercialRepository": "KORYAO-Pro",
     "commercialRepositoryCreated": false,
     "premiumImplementationsAllowedInCommunityRepository": false,
     "communityBuildContainsPrivateProSource": false
@@ -376,8 +376,8 @@
     "officialSignedInstallerAvailable": false,
     "distribution": "github-prerelease",
     "releaseTag": "starbridge-preview-v0.1.0-unsigned.1",
-    "releaseUrl": "https://github.com/jianbaorui07-dot/CreNexus/releases/tag/starbridge-preview-v0.1.0-unsigned.1",
-    "assetUrl": "https://github.com/jianbaorui07-dot/CreNexus/releases/download/starbridge-preview-v0.1.0-unsigned.1/StarBridge-Desktop_0.1.0_x64-setup-UNSIGNED-PREVIEW.exe",
+    "releaseUrl": "https://github.com/jianbaorui07-dot/KORYAO-basic/releases/tag/starbridge-preview-v0.1.0-unsigned.1",
+    "assetUrl": "https://github.com/jianbaorui07-dot/KORYAO-basic/releases/download/starbridge-preview-v0.1.0-unsigned.1/StarBridge-Desktop_0.1.0_x64-setup-UNSIGNED-PREVIEW.exe",
     "assetName": "StarBridge-Desktop_0.1.0_x64-setup-UNSIGNED-PREVIEW.exe",
     "legacyBrandAsset": true,
     "assetBytes": 49341709,

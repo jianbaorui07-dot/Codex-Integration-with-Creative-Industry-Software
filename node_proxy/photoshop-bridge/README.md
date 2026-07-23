@@ -1,6 +1,6 @@
-# CreNexus Photoshop Node Proxy
+# KORYAO Photoshop Node Proxy
 
-Starts a local HTTP JSON-RPC bridge between the CreNexus MCP server and the Photoshop UXP plugin.
+Starts a local HTTP JSON-RPC bridge between the KORYAO MCP server and the Photoshop UXP plugin.
 
 ## Start
 

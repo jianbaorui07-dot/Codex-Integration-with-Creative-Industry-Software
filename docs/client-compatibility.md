@@ -1,6 +1,6 @@
 # Client Compatibility
 
-This page records the current MCP client compatibility status for CreNexus v0.1.0-alpha. It is intentionally conservative: passing mock stdio tests proves protocol shape, not real desktop software automation.
+This page records the current MCP client compatibility status for KORYAO v0.1.0-alpha. It is intentionally conservative: passing mock stdio tests proves protocol shape, not real desktop software automation.
 
 | Client | Status | Evidence | Notes |
 | --- | --- | --- | --- |

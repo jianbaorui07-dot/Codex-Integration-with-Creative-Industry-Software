@@ -1,4 +1,4 @@
-# CreNexus desktop design QA
+# KORYAO desktop design QA
 
 ## Visual truth and test state
 
@@ -60,7 +60,7 @@ The source establishes a two-column processing-mode grid, square editorial panel
 
 ### Required fidelity surfaces
 
-- Fonts and typography: existing CreNexus display and monospace system retained; final same-state capture pending.
+- Fonts and typography: existing KORYAO display and monospace system retained; final same-state capture pending.
 - Spacing and layout rhythm: existing two-column `.mode-grid` and square record-panel system retained; final same-state capture pending.
 - Colors and visual tokens: existing `--primary`, border, surface, and selected-state tokens reused.
 - Image quality and asset fidelity: no handcrafted SVG added; the new icon comes from the installed Tabler library.

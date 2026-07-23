@@ -9,7 +9,7 @@
     "Adobe Photoshop desktop",
     "PowerShell",
     "Photoshop.Application COM",
-    "Node.js proxy and the CreNexus UXP plugin",
+    "Node.js proxy and the KORYAO UXP plugin",
     "Python 3.10+ with .[image-to-psd] for offline decomposition"
   ],
   "required_env": [

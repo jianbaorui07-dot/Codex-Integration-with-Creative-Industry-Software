@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import type { CreNexusClient } from "../services/client";
+import type { KORYAOClient } from "../services/client";
 import type { ConnectionOverview, Project } from "../types/api";
 import { CodexConversationPage } from "./CodexConversationPage";
 
@@ -48,7 +48,7 @@ describe("Codex conversation handoff", () => {
     const client = {
       getProjects: vi.fn().mockResolvedValue([PROJECT]),
       openCodexTask,
-    } as unknown as CreNexusClient;
+    } as unknown as KORYAOClient;
 
     render(<CodexConversationPage client={client} connections={CONNECTIONS} runtimeReady onOpenConnections={vi.fn()} />);
     await screen.findByRole("option", { name: "客户项目" });
@@ -66,7 +66,7 @@ describe("Codex conversation handoff", () => {
 
   it("routes an unpaired customer to the connection center", () => {
     const onOpenConnections = vi.fn();
-    render(<CodexConversationPage client={{ getProjects: vi.fn() } as unknown as CreNexusClient} connections={{ ...CONNECTIONS, drawing_enabled: false, codex: { ...CONNECTIONS.codex, state: "awaiting_pairing", session_paired: false } }} runtimeReady={false} onOpenConnections={onOpenConnections} />);
+    render(<CodexConversationPage client={{ getProjects: vi.fn() } as unknown as KORYAOClient} connections={{ ...CONNECTIONS, drawing_enabled: false, codex: { ...CONNECTIONS.codex, state: "awaiting_pairing", session_paired: false } }} runtimeReady={false} onOpenConnections={onOpenConnections} />);
     fireEvent.click(screen.getByRole("button", { name: "前往连接中心" }));
     expect(onOpenConnections).toHaveBeenCalledTimes(1);
   });

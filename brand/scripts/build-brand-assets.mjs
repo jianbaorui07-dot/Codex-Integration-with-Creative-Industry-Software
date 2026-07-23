@@ -25,7 +25,7 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..", "..");
 const brandDir = path.join(repoRoot, "brand");
 const symbolPath = path.join(brandDir, "starbridge-symbol.svg");
-const softwareBrandPath = path.join(brandDir, "assets", "crenexus-software-icon.png");
+const softwareBrandPath = path.join(brandDir, "assets", "koryao-software-icon.png");
 const webBrandPath = path.join(brandDir, "assets", "creative-codex-web-brand.png");
 const exportDir = path.join(brandDir, "exports");
 const iconDir = path.join(exportDir, "icons");
@@ -53,32 +53,32 @@ const xml = (viewBox, title, body) => `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 const escapedWordmark = `
-  <text x="4" y="34" fill="#101828" font-family="Segoe UI Variable, Segoe UI, Arial, sans-serif" font-size="31" font-weight="720" letter-spacing="-0.7">CreNexus</text>
+  <text x="4" y="34" fill="#101828" font-family="Segoe UI Variable, Segoe UI, Arial, sans-serif" font-size="31" font-weight="720" letter-spacing="-0.7">KORYAO</text>
   <text x="5" y="51" fill="#667085" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="10.5" font-weight="600" letter-spacing="1.4">AI 创意软件协同平台</text>`;
 
 const embedSymbol = (x, y, scale = 1) =>
   `<g transform="translate(${x} ${y}) scale(${scale})">${symbolBody}</g>`;
 
-const wordmark = xml("0 0 220 58", "CreNexus AI 创意软件协同平台", escapedWordmark);
+const wordmark = xml("0 0 220 58", "KORYAO AI 创意软件协同平台", escapedWordmark);
 const horizontal = xml(
   "0 0 360 80",
-  "CreNexus AI 创意软件协同平台",
+  "KORYAO AI 创意软件协同平台",
   `${embedSymbol(4, 8, 1)}
-  <text x="84" y="39" fill="#101828" font-family="Segoe UI Variable, Segoe UI, Arial, sans-serif" font-size="31" font-weight="720" letter-spacing="-0.7">CreNexus</text>
+  <text x="84" y="39" fill="#101828" font-family="Segoe UI Variable, Segoe UI, Arial, sans-serif" font-size="31" font-weight="720" letter-spacing="-0.7">KORYAO</text>
   <text x="85" y="58" fill="#667085" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="11" font-weight="600" letter-spacing="1.5">AI 创意软件协同平台</text>`,
 );
 const compact = xml(
   "0 0 120 108",
-  "CreNexus",
+  "KORYAO",
   `${embedSymbol(28, 0, 1)}
-  <text x="60" y="88" text-anchor="middle" fill="#101828" font-family="Segoe UI Variable, Segoe UI, Arial, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">CreNexus</text>
+  <text x="60" y="88" text-anchor="middle" fill="#101828" font-family="Segoe UI Variable, Segoe UI, Arial, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">KORYAO</text>
   <text x="60" y="103" text-anchor="middle" fill="#667085" font-family="Microsoft YaHei UI, PingFang SC, sans-serif" font-size="8.5" font-weight="600">AI 创意软件协同平台</text>`,
 );
 const grid = xml(
   "0 0 640 320",
-  "CreNexus icon grid",
+  "KORYAO icon grid",
   `<rect width="640" height="320" fill="#F6F8FC"/>
-  <text x="32" y="38" fill="#101828" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">CreNexus icon grid</text>
+  <text x="32" y="38" fill="#101828" font-family="Segoe UI, sans-serif" font-size="20" font-weight="700">KORYAO icon grid</text>
   <text x="32" y="62" fill="#667085" font-family="Segoe UI, sans-serif" font-size="12">single source: starbridge-symbol.svg</text>
   <rect x="32" y="88" width="248" height="184" rx="14" fill="#FFFFFF" stroke="#DDE3EC"/>
   <rect x="304" y="88" width="304" height="184" rx="14" fill="#0B1220"/>
@@ -113,9 +113,9 @@ const webFavicon = await sharp(webSymbol)
   .png({ compressionLevel: 9, adaptiveFiltering: true, palette: false })
   .toBuffer();
 
-await fs.writeFile(path.join(exportDir, "crenexus-software-icon.png"), softwareSymbol);
-await fs.writeFile(path.join(exportDir, "crenexus-web-symbol.png"), webSymbol);
-await fs.writeFile(path.join(desktopAssetDir, "crenexus-software-icon.png"), softwareSymbol);
+await fs.writeFile(path.join(exportDir, "koryao-software-icon.png"), softwareSymbol);
+await fs.writeFile(path.join(exportDir, "koryao-web-symbol.png"), webSymbol);
+await fs.writeFile(path.join(desktopAssetDir, "koryao-software-icon.png"), softwareSymbol);
 
 const pngs = new Map();
 for (const size of sizes) {

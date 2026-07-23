@@ -21,7 +21,7 @@ mod updater;
 const READY_PREFIX: &str = "STARBRIDGE_READY ";
 const APP_DATA_ENV: &str = "STARBRIDGE_APP_DATA_DIR";
 const SESSION_ENV: &str = "STARBRIDGE_SESSION_TOKEN";
-const SESSION_HEADER: &str = "X-CreNexus-Session";
+const SESSION_HEADER: &str = "X-KORYAO-Session";
 const MAX_RECOVERY_ATTEMPTS: u8 = 1;
 const STARTUP_TIMEOUT: Duration = Duration::from_secs(15);
 const MAX_READY_BUFFER_BYTES: usize = 64 * 1024;
@@ -687,7 +687,7 @@ fn open_codex_pairing(pairing_code: String) -> Result<(), String> {
         return Err("配对码无效；请在连接中心重新生成。".into());
     }
     let prompt = format!(
-        "请调用 CreNexus MCP 工具 starbridge.desktop_pair，参数 pairing_code=\"{pairing_code}\"、dry_run=false、confirm_pairing=true、confirm_write=true。完成后告诉我关联结果；不要读取或输出任何 Codex 登录凭据。"
+        "请调用 KORYAO MCP 工具 starbridge.desktop_pair，参数 pairing_code=\"{pairing_code}\"、dry_run=false、confirm_pairing=true、confirm_write=true。完成后告诉我关联结果；不要读取或输出任何 Codex 登录凭据。"
     );
     let mut link = url::Url::parse("codex://new").map_err(|_| "无法创建 Codex 深链接。")?;
     link.query_pairs_mut().append_pair("prompt", &prompt);
@@ -719,14 +719,14 @@ fn open_codex_task(prompt: String, confirm_open: bool) -> Result<(), String> {
     })
 }
 
-const GITHUB_PROJECT_URL: &str = "https://github.com/jianbaorui07-dot/CreNexus";
+const GITHUB_PROJECT_URL: &str = "https://github.com/jianbaorui07-dot/KORYAO-basic";
 
 #[tauri::command]
 fn open_github_project() -> Result<(), String> {
     let target = url::Url::parse(GITHUB_PROJECT_URL)
-        .map_err(|_| "CreNexus GitHub 项目地址无效。".to_string())?;
+        .map_err(|_| "KORYAO GitHub 项目地址无效。".to_string())?;
     if target.scheme() != "https" || target.host_str() != Some("github.com") {
-        return Err("CreNexus GitHub 项目地址未通过安全检查。".into());
+        return Err("KORYAO GitHub 项目地址未通过安全检查。".into());
     }
     open::that(target.as_str()).map_err(|_| "无法打开浏览器；请稍后重试。".to_string())
 }
@@ -766,7 +766,7 @@ async fn import_project_asset(
         return Err("项目编号无效；请返回项目页后重试。".into());
     }
     if !confirm_import {
-        return Err("复制素材到 CreNexus 项目目录前需要明确确认。".into());
+        return Err("复制素材到 KORYAO 项目目录前需要明确确认。".into());
     }
     let selected = tauri::async_runtime::spawn_blocking(|| {
         rfd::FileDialog::new()
@@ -886,11 +886,11 @@ fn open_project_artifacts(app: AppHandle, project_id: String) -> Result<String, 
         .canonicalize()
         .map_err(|_| "无法验证项目交付目录。".to_string())?;
     if resolved_directory == resolved_root || !resolved_directory.starts_with(&resolved_root) {
-        return Err("项目交付目录超出 CreNexus 安全范围。".into());
+        return Err("项目交付目录超出 KORYAO 安全范围。".into());
     }
     open::that(resolved_directory)
         .map_err(|_| "无法打开项目交付目录，请从交付记录重试。".to_string())?;
-    Ok(format!("<LOCAL_APP_DATA>/CreNexus/artifacts/{project_id}"))
+    Ok(format!("<LOCAL_APP_DATA>/KORYAO/artifacts/{project_id}"))
 }
 
 async fn request_graceful_stop(manager: &BackendManager) {
@@ -939,15 +939,15 @@ fn starbridge_data_root(app: &AppHandle) -> Result<PathBuf, String> {
         } else {
             std::env::current_dir()
                 .map(|current| current.join(configured))
-                .map_err(|_| "无法确定 CreNexus 应用数据目录。".to_string())
+                .map_err(|_| "无法确定 KORYAO 应用数据目录。".to_string())
         };
     }
     if let Some(local_app_data) = std::env::var_os("LOCALAPPDATA") {
-        return Ok(PathBuf::from(local_app_data).join("CreNexus"));
+        return Ok(PathBuf::from(local_app_data).join("KORYAO"));
     }
     app.path()
         .app_local_data_dir()
-        .map_err(|_| "无法确定 CreNexus 应用数据目录。".to_string())
+        .map_err(|_| "无法确定 KORYAO 应用数据目录。".to_string())
 }
 
 fn record_runtime_diagnostic(app: &AppHandle, code: &str) {
@@ -961,7 +961,7 @@ fn record_runtime_diagnostic(app: &AppHandle, code: &str) {
     let payload = serde_json::json!({
         "event": "sidecar_exit",
         "code": code,
-        "summary": "CreNexus local service exited unexpectedly.",
+        "summary": "KORYAO local service exited unexpectedly.",
         "contains_traceback": false,
         "contains_session_credential": false
     });
@@ -977,7 +977,7 @@ fn open_logs_directory(app: AppHandle) -> Result<String, String> {
     let logs = starbridge_data_root(&app)?.join("logs");
     std::fs::create_dir_all(&logs).map_err(|_| "无法准备日志目录。".to_string())?;
     open::that(logs).map_err(|_| "无法打开日志目录。".to_string())?;
-    Ok("<LOCAL_APP_DATA>/CreNexus/logs".into())
+    Ok("<LOCAL_APP_DATA>/KORYAO/logs".into())
 }
 
 #[tauri::command]
@@ -1065,7 +1065,7 @@ pub fn run() {
             }
         })
         .build(tauri::generate_context!())
-        .expect("CreNexus Desktop could not initialize");
+        .expect("KORYAO Desktop could not initialize");
 
     app.run(move |app_handle, event| {
         if let RunEvent::ExitRequested { api, code, .. } = event {
@@ -1167,7 +1167,7 @@ mod tests {
         let target = url::Url::parse(GITHUB_PROJECT_URL).expect("valid project URL");
         assert_eq!(target.scheme(), "https");
         assert_eq!(target.host_str(), Some("github.com"));
-        assert_eq!(target.path(), "/jianbaorui07-dot/CreNexus");
+        assert_eq!(target.path(), "/jianbaorui07-dot/KORYAO-basic");
         assert!(target.query().is_none());
         assert!(target.fragment().is_none());
     }

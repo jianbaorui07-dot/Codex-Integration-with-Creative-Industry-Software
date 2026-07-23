@@ -18,7 +18,7 @@ def request(message_id: int, method: str, params: dict | None = None) -> dict:
     return response
 
 
-class CreNexusRecipeTests(unittest.TestCase):
+class KORYAORecipeTests(unittest.TestCase):
     def assert_no_private_paths(self, payload: object) -> None:
         text = json.dumps(payload, ensure_ascii=False)
         for fragment in BANNED_OUTPUT_FRAGMENTS:

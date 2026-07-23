@@ -1,9 +1,9 @@
 ---
 name: starbridge-blender-mcp
-description: Use CreNexus Blender MCP safely from Codex. Use when the user mentions Blender, .blend, scene plans, 3D objects, materials, render, viewport, Blender MCP, blender.environment_probe, blender.scene_plan, or asks Codex to inspect or extend Blender-related CreNexus MCP tools.
+description: Use KORYAO Blender MCP safely from Codex. Use when the user mentions Blender, .blend, scene plans, 3D objects, materials, render, viewport, Blender MCP, blender.environment_probe, blender.scene_plan, or asks Codex to inspect or extend Blender-related KORYAO MCP tools.
 ---
 
-# CreNexus Blender MCP
+# KORYAO Blender MCP
 
 ## Core Rule
 

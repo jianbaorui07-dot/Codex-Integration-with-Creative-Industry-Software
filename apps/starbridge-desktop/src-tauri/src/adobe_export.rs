@@ -180,7 +180,7 @@ fn normalized_target(mut target: PathBuf, format: &str) -> Result<PathBuf, Strin
         Some(_) => return Err(format!("目标文件扩展名必须是 .{format}。")),
     }
     if target.exists() {
-        return Err("目标文件已经存在。CreNexus 不会覆盖它，请选择新文件名。".into());
+        return Err("目标文件已经存在。KORYAO 不会覆盖它，请选择新文件名。".into());
     }
     if !target.is_absolute() {
         return Err("请选择一个完整的本机保存路径。".into());
@@ -190,8 +190,8 @@ fn normalized_target(mut target: PathBuf, format: &str) -> Result<PathBuf, Strin
 
 const PHOTOSHOP_SCRIPT: &str = r#"
 $ErrorActionPreference = 'Stop'
-$source = $env:CRENEXUS_ADOBE_SOURCE
-$target = $env:CRENEXUS_ADOBE_TARGET
+$source = $env:KORYAO_ADOBE_SOURCE
+$target = $env:KORYAO_ADOBE_TARGET
 if (-not $source -or -not $target) { throw 'missing export environment' }
 $sourceJs = $source.Replace('\', '/') | ConvertTo-Json -Compress
 $targetJs = $target.Replace('\', '/') | ConvertTo-Json -Compress
@@ -204,7 +204,7 @@ try {
     app.displayDialogs = DialogModes.NO;
     if (!sourceFile.exists || outputFile.exists) throw new Error('invalid source or existing target');
     var document = app.open(sourceFile);
-    document.activeLayer.name = 'CreNexus Artwork';
+    document.activeLayer.name = 'KORYAO Artwork';
     var options = new PhotoshopSaveOptions();
     options.layers = true;
     options.alphaChannels = true;
@@ -214,7 +214,7 @@ try {
     var valid = persisted.width.as('px') > 0 && persisted.height.as('px') > 0 && persisted.layers.length > 0;
     persisted.close(SaveOptions.DONOTSAVECHANGES);
     if (!valid) throw new Error('native reopen validation failed');
-    bridgeResult = 'CRENEXUS_EXPORT_OK';
+    bridgeResult = 'KORYAO_EXPORT_OK';
 } catch (error) {
     try { if (outputFile.exists) outputFile.remove(); } catch (cleanupError) {}
     throw error;
@@ -225,14 +225,14 @@ bridgeResult;
 "@
 $application = New-Object -ComObject Photoshop.Application
 $result = $application.DoJavaScript($jsx)
-if ($result -ne 'CRENEXUS_EXPORT_OK') { throw 'photoshop export validation failed' }
-Write-Output 'CRENEXUS_EXPORT_OK'
+if ($result -ne 'KORYAO_EXPORT_OK') { throw 'photoshop export validation failed' }
+Write-Output 'KORYAO_EXPORT_OK'
 "#;
 
 const ILLUSTRATOR_SCRIPT: &str = r#"
 $ErrorActionPreference = 'Stop'
-$source = $env:CRENEXUS_ADOBE_SOURCE
-$target = $env:CRENEXUS_ADOBE_TARGET
+$source = $env:KORYAO_ADOBE_SOURCE
+$target = $env:KORYAO_ADOBE_TARGET
 if (-not $source -or -not $target) { throw 'missing export environment' }
 $sourceJs = $source.Replace('\', '/') | ConvertTo-Json -Compress
 $targetJs = $target.Replace('\', '/') | ConvertTo-Json -Compress
@@ -254,7 +254,7 @@ try {
     var valid = persisted.artboards.length > 0 && persisted.pageItems.length > 0;
     persisted.close(SaveOptions.DONOTSAVECHANGES);
     if (!valid) throw new Error('native reopen validation failed');
-    bridgeResult = 'CRENEXUS_EXPORT_OK';
+    bridgeResult = 'KORYAO_EXPORT_OK';
 } catch (error) {
     try { if (outputFile.exists) outputFile.remove(); } catch (cleanupError) {}
     throw error;
@@ -265,8 +265,8 @@ bridgeResult;
 "@
 $application = New-Object -ComObject Illustrator.Application
 $result = $application.DoJavaScript($jsx)
-if ($result -ne 'CRENEXUS_EXPORT_OK') { throw 'illustrator export validation failed' }
-Write-Output 'CRENEXUS_EXPORT_OK'
+if ($result -ne 'KORYAO_EXPORT_OK') { throw 'illustrator export validation failed' }
+Write-Output 'KORYAO_EXPORT_OK'
 "#;
 
 #[cfg(windows)]
@@ -288,8 +288,8 @@ fn execute_adobe_export(source: &Path, target: &Path, format: &str) -> Result<()
             "-Command",
             script,
         ])
-        .env("CRENEXUS_ADOBE_SOURCE", source)
-        .env("CRENEXUS_ADOBE_TARGET", target)
+        .env("KORYAO_ADOBE_SOURCE", source)
+        .env("KORYAO_ADOBE_TARGET", target)
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -305,7 +305,7 @@ fn execute_adobe_export(source: &Path, target: &Path, format: &str) -> Result<()
                     .wait_with_output()
                     .map_err(|_| "无法读取 Adobe 导出结果。".to_string())?;
                 if !status.success()
-                    || !String::from_utf8_lossy(&output.stdout).contains("CRENEXUS_EXPORT_OK")
+                    || !String::from_utf8_lossy(&output.stdout).contains("KORYAO_EXPORT_OK")
                 {
                     let _ = fs::remove_file(target);
                     return Err(match format {
@@ -372,7 +372,7 @@ fn publish_without_overwrite(staged: &Path, target: &Path) -> Result<u64, String
         .open(target)
         .map_err(|error| {
             if error.kind() == io::ErrorKind::AlreadyExists {
-                "目标文件已经存在。CreNexus 不会覆盖它，请选择新文件名。".to_string()
+                "目标文件已经存在。KORYAO 不会覆盖它，请选择新文件名。".to_string()
             } else {
                 "无法在所选路径创建交付文件，请检查文件夹写入权限。".to_string()
             }
@@ -414,7 +414,7 @@ pub async fn export_adobe_file(
         source
             .file_stem()
             .and_then(|value| value.to_str())
-            .unwrap_or("CreNexus-delivery")
+            .unwrap_or("KORYAO-delivery")
     );
     let picker_format = format.clone();
     let target = tauri::async_runtime::spawn_blocking(move || {
@@ -426,7 +426,7 @@ pub async fn export_adobe_file(
         rfd::FileDialog::new()
             .add_filter(label, &[picker_format.as_str()])
             .set_file_name(&suggested_name)
-            .set_title("选择 CreNexus 交付文件的保存路径")
+            .set_title("选择 KORYAO 交付文件的保存路径")
             .save_file()
     })
     .await
@@ -515,7 +515,7 @@ mod tests {
 
     #[test]
     fn target_extension_and_overwrite_policy_are_strict() {
-        let base = std::env::temp_dir().join(format!("crenexus-adobe-{}", uuid::Uuid::new_v4()));
+        let base = std::env::temp_dir().join(format!("koryao-adobe-{}", uuid::Uuid::new_v4()));
         fs::create_dir_all(&base).expect("temp export directory");
         let without_extension = normalized_target(base.join("delivery"), "ai").expect("target");
         assert_eq!(
@@ -534,7 +534,7 @@ mod tests {
     #[test]
     fn native_signature_validation_rejects_disguised_files() {
         let base =
-            std::env::temp_dir().join(format!("crenexus-signature-{}", uuid::Uuid::new_v4()));
+            std::env::temp_dir().join(format!("koryao-signature-{}", uuid::Uuid::new_v4()));
         fs::create_dir_all(&base).expect("temp signature directory");
         let valid_psd = base.join("valid.psd");
         fs::write(&valid_psd, [b"8BPS".as_slice(), &[0_u8; 80]].concat()).expect("psd");
@@ -549,7 +549,7 @@ mod tests {
 
     #[test]
     fn verified_staging_publish_never_overwrites_a_customer_file() {
-        let base = std::env::temp_dir().join(format!("crenexus-publish-{}", uuid::Uuid::new_v4()));
+        let base = std::env::temp_dir().join(format!("koryao-publish-{}", uuid::Uuid::new_v4()));
         fs::create_dir_all(&base).expect("temp publish directory");
         let staged = base.join("staged.ai");
         fs::write(&staged, [b"%PDF-1.7\n".as_slice(), &[0_u8; 80]].concat()).expect("stage");
@@ -573,7 +573,7 @@ mod tests {
 
     #[test]
     fn receipts_persist_without_a_customer_destination_path() {
-        let base = std::env::temp_dir().join(format!("crenexus-receipt-{}", uuid::Uuid::new_v4()));
+        let base = std::env::temp_dir().join(format!("koryao-receipt-{}", uuid::Uuid::new_v4()));
         let project_id = "project-receipt-test";
         let receipt = AdobeExportReceipt {
             receipt_id: "newer".into(),

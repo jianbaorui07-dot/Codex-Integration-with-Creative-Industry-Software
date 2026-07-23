@@ -1,6 +1,6 @@
-# CreNexus Recipe Quick Start
+# KORYAO Recipe Quick Start
 
-This page is the shortest safe path for using CreNexus after the cross-project
+This page is the shortest safe path for using KORYAO after the cross-project
 research updates. It keeps the public repo in planning, validation, and evidence
 mode until a bridge-specific tool receives explicit confirmation.
 

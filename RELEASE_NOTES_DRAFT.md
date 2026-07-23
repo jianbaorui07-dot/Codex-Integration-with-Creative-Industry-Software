@@ -1,8 +1,8 @@
-# CreNexus v0.1.0-alpha.2 integrated preview release notes
+# KORYAO v0.1.0-alpha.2 integrated preview release notes
 
 ## Summary
 
-CreNexus v0.1.0-alpha.2 is the integrated Windows preview for the customer-facing Codex creative workflow. It retains local data compatibility with alpha.1 and adds a visible pixel-vector route, higher bounded SVG limits, in-app Codex conversation, and confirmed PSD/AI save-path delivery. It is still an unsigned internal preview package, not a signed public desktop release.
+KORYAO v0.1.0-alpha.2 is the integrated Windows preview for the customer-facing Codex creative workflow. It retains local data compatibility with alpha.1 and adds a visible pixel-vector route, higher bounded SVG limits, in-app Codex conversation, and confirmed PSD/AI save-path delivery. It is still an unsigned internal preview package, not a signed public desktop release.
 
 ## Highlights
 

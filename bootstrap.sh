@@ -20,7 +20,7 @@ usage() {
 Usage: bash ./bootstrap.sh [options]
 
 Create a repository-local Python environment, install the selected public
-CreNexus extras, write the safe local Codex MCP configuration, and run the
+KORYAO extras, write the safe local Codex MCP configuration, and run the
 safe Python checks.
 
 Options:
@@ -39,7 +39,7 @@ EOF
 }
 
 die() {
-    printf 'CreNexus bootstrap failed: %s\n' "$*" >&2
+    printf 'KORYAO bootstrap failed: %s\n' "$*" >&2
     exit 1
 }
 
@@ -222,7 +222,7 @@ emit_result() {
         return
     fi
 
-    printf 'CreNexus bootstrap completed (%s).\n' "$effective_profile"
+    printf 'KORYAO bootstrap completed (%s).\n' "$effective_profile"
     printf 'Python: %s\n' "$python_version"
     printf 'Virtual environment: %s\n' "$venv_path"
     if (( skip_codex_config )); then
@@ -943,7 +943,7 @@ esac
 script_dir="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 repo_root="$script_dir"
 [[ -f "$repo_root/pyproject.toml" && -f "$repo_root/package.json" && -d "$repo_root/starbridge_mcp" ]] \
-    || die "bootstrap.sh must run from a CreNexus repository checkout."
+    || die "bootstrap.sh must run from a KORYAO repository checkout."
 
 venv_path="$repo_root/.venv"
 venv_python="$venv_path/bin/python"

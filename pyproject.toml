@@ -7,7 +7,7 @@ name = "starbridge-creative-software-mcp"
 version = "0.1.0a2"
 description = "Windows-first, local-first MCP stdio server and safety bridge for connecting AI agents (Codex, Cursor, Claude) to creative desktop software."
 readme = "README.md"
-license = "LicenseRef-CreNexus-Proprietary"
+license = "LicenseRef-KORYAO-Proprietary"
 license-files = ["LICENSE"]
 authors = [{ name = "菅宝瑞" }]
 keywords = ["mcp", "model-context-protocol", "codex", "comfyui", "autocad", "dxf", "drawio", "diagram", "photoshop", "illustrator", "blender", "ai-agent", "local-first", "safety"]
@@ -28,10 +28,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/jianbaorui07-dot/CreNexus"
-Repository = "https://github.com/jianbaorui07-dot/CreNexus"
-Issues = "https://github.com/jianbaorui07-dot/CreNexus/issues"
-Documentation = "https://github.com/jianbaorui07-dot/CreNexus/tree/main/docs"
+Homepage = "https://github.com/jianbaorui07-dot/KORYAO-basic"
+Repository = "https://github.com/jianbaorui07-dot/KORYAO-basic"
+Issues = "https://github.com/jianbaorui07-dot/KORYAO-basic/issues"
+Documentation = "https://github.com/jianbaorui07-dot/KORYAO-basic/tree/main/docs"
 
 [project.optional-dependencies]
 dev = [

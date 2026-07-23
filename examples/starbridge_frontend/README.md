@@ -1,7 +1,7 @@
-# CreNexus Creative Workbench
+# KORYAO Creative Workbench
 
-This is the local frontend for the CreNexus software prototype. It connects to
-the CreNexus backend, reads real capability and recipe data, and presents it as
+This is the local frontend for the KORYAO software prototype. It connects to
+the KORYAO backend, reads real capability and recipe data, and presents it as
 an artistic control surface with a Three.js generative background.
 
 The main flow is:

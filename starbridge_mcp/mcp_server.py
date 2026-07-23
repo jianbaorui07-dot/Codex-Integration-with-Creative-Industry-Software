@@ -206,7 +206,7 @@ def _standard_tool(
 TOOL_DEFINITIONS: list[JsonObject] = [
     _standard_tool(
         name="starbridge.status",
-        title="CreNexus Status",
+        title="KORYAO Status",
         description="返回全部或单个本地创意软件 bridge 的统一状态。只读，不打开用户文件。",
         input_schema=_object_schema(
             {
@@ -231,7 +231,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     ),
     _standard_tool(
         name="starbridge.probe",
-        title="CreNexus Probe",
+        title="KORYAO Probe",
         description="对单个 bridge 做只读探针检查。等价于 status + bridge filter。",
         input_schema=_object_schema(
             {
@@ -248,9 +248,9 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     ),
     _standard_tool(
         name="starbridge.desktop_pair",
-        title="Pair CreNexus Session",
+        title="Pair KORYAO Session",
         description=(
-            "使用连接中心当前显示的一次性配对码关联正在运行的 CreNexus 桌面会话。"
+            "使用连接中心当前显示的一次性配对码关联正在运行的 KORYAO 桌面会话。"
             "只写入可撤销的本地配对回执，不读取 Codex 凭据、用户文件或创意软件文档。"
         ),
         input_schema=_object_schema(
@@ -258,7 +258,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
                 "pairing_code": {
                     "type": "string",
                     "pattern": "^[A-Z2-9]{8}$",
-                    "description": "CreNexus 连接中心当前显示的 8 位配对码。",
+                    "description": "KORYAO 连接中心当前显示的 8 位配对码。",
                 },
                 "confirm_pairing": {
                     "type": "boolean",
@@ -281,8 +281,8 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     ),
     {
         "name": "starbridge.tools",
-        "title": "CreNexus Tool Registry",
-        "description": "列出 CreNexus 当前已实现、实验中和规划中的工具能力。",
+        "title": "KORYAO Tool Registry",
+        "description": "列出 KORYAO 当前已实现、实验中和规划中的工具能力。",
         "inputSchema": _object_schema(
             {
                 "bridge": {"type": "string", "enum": BRIDGE_ENUM, "default": "all"},
@@ -297,7 +297,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.control_plan",
-        "title": "CreNexus Codex Control Plan",
+        "title": "KORYAO Codex Control Plan",
         "description": "根据自然语言目标选择创意软件桥，返回只读控制计划、质量门和确认边界。不会启动软件或读取文件。",
         "inputSchema": _object_schema(
             {
@@ -325,7 +325,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.safe_roots",
-        "title": "CreNexus Safe Roots",
+        "title": "KORYAO Safe Roots",
         "description": "返回仓库相对安全根目录、可写输出边界和 MCP roots 对齐建议。",
         "inputSchema": _object_schema(
             {
@@ -336,7 +336,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.evidence_init",
-        "title": "CreNexus Evidence Init",
+        "title": "KORYAO Evidence Init",
         "description": "Return a sanitized EvidenceManifest preview and default manifest path without launching desktop software.",
         "inputSchema": _object_schema(
             {
@@ -348,7 +348,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.evidence_validate",
-        "title": "CreNexus Evidence Validate",
+        "title": "KORYAO Evidence Validate",
         "description": "Validate the current redacted EvidenceManifest shape and path boundary.",
         "inputSchema": _object_schema(
             {
@@ -362,7 +362,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.job_status",
-        "title": "CreNexus Job Status",
+        "title": "KORYAO Job Status",
         "description": "Return a unified queued/running/completed-style job summary from the current evidence manifest.",
         "inputSchema": _object_schema(
             {
@@ -375,7 +375,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.operation_context",
-        "title": "CreNexus Operation Context",
+        "title": "KORYAO Operation Context",
         "description": (
             "Build a sanitized, chainable before/after state envelope from caller-supplied "
             "safe metrics. This tool does not inspect local software, files, or networks."
@@ -386,8 +386,8 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.recipe_list",
-        "title": "CreNexus Recipe List",
-        "description": "List safe cross-bridge CreNexus recipes. This is plan-only and does not launch desktop software.",
+        "title": "KORYAO Recipe List",
+        "description": "List safe cross-bridge KORYAO recipes. This is plan-only and does not launch desktop software.",
         "inputSchema": _object_schema(
             {
                 "bridge": {"type": "string", "enum": BRIDGE_ENUM, "default": "all"},
@@ -397,7 +397,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.recipe_plan",
-        "title": "CreNexus Recipe Plan",
+        "title": "KORYAO Recipe Plan",
         "description": "Return a dry-run action plan, quality gates, and evidence requirements for one cross-bridge recipe.",
         "inputSchema": _object_schema(
             {
@@ -410,7 +410,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
     },
     {
         "name": "starbridge.recipe_evidence",
-        "title": "CreNexus Recipe Evidence",
+        "title": "KORYAO Recipe Evidence",
         "description": "Preview a standardized EvidenceManifest for one recipe, including quality gates and asset manifest entries.",
         "inputSchema": _object_schema(
             {
@@ -662,7 +662,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
         name="comfyui.asset_list",
         title="ComfyUI Asset List",
         description=(
-            "List bounded current-session CreNexus asset IDs newest-first. Returns only "
+            "List bounded current-session KORYAO asset IDs newest-first. Returns only "
             "regeneration eligibility, remaining TTL, and workflow hashes; never returns "
             "workflow, prompt, model, filename, image, or path data."
         ),
@@ -681,7 +681,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
         name="comfyui.asset_metadata",
         title="ComfyUI Asset Metadata",
         description=(
-            "Check whether one stable CreNexus asset ID still has usable current-session "
+            "Check whether one stable KORYAO asset ID still has usable current-session "
             "in-memory provenance. Returns only availability, remaining TTL, workflow hash, and "
             "supported regeneration override names; never returns workflow, prompt, model, file, or path data."
         ),
@@ -699,7 +699,7 @@ TOOL_DEFINITIONS: list[JsonObject] = [
         name="comfyui.regenerate",
         title="ComfyUI Regenerate",
         description=(
-            "Replay current-session in-memory provenance for one CreNexus asset ID with bounded "
+            "Replay current-session in-memory provenance for one KORYAO asset ID with bounded "
             "txt2img overrides. Defaults to dry-run; confirm_run=true is required to submit a new "
             "loopback ComfyUI job. Stored workflow and prompt data are never returned or persisted."
         ),

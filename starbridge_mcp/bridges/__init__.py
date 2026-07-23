@@ -1,1 +1,1 @@
-"""CreNexus bridge prototypes."""
+"""KORYAO bridge prototypes."""

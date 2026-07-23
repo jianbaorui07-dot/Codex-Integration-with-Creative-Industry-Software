@@ -1,6 +1,6 @@
-# CreNexus Photoshop UXP Bridge
+# KORYAO Photoshop UXP Bridge
 
-This is the local UXP plugin side of the CreNexus Photoshop bridge.
+This is the local UXP plugin side of the KORYAO Photoshop bridge.
 
 ## Current State
 

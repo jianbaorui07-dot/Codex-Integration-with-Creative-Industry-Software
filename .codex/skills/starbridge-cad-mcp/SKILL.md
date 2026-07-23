@@ -1,9 +1,9 @@
 ---
 name: starbridge-cad-mcp
-description: Use CreNexus CAD and AutoCAD MCP safely from Codex. Use when the user mentions CAD, AutoCAD, DXF, DWG, CAD plan JSON, engineering drawing, layer validation, AutoCAD COM, cad-mcp-autocad, or asks Codex to inspect, validate, generate, or extend CAD-related CreNexus MCP tools.
+description: Use KORYAO CAD and AutoCAD MCP safely from Codex. Use when the user mentions CAD, AutoCAD, DXF, DWG, CAD plan JSON, engineering drawing, layer validation, AutoCAD COM, cad-mcp-autocad, or asks Codex to inspect, validate, generate, or extend CAD-related KORYAO MCP tools.
 ---
 
-# CreNexus CAD MCP
+# KORYAO CAD MCP
 
 ## Core Rule
 

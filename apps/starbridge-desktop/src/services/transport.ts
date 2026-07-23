@@ -31,7 +31,7 @@ export class TransportError extends Error {
   }
 }
 
-export interface CreNexusTransport {
+export interface KORYAOTransport {
   readonly kind: "http" | "desktop";
   request<T>(request: TransportRequest): Promise<TransportResponse<T>>;
   getRuntimeStatus(): Promise<RuntimeStatus>;

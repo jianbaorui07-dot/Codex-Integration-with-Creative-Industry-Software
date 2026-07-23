@@ -14,13 +14,13 @@ __pycache__/
 !.env.example
 .codex/config.toml
 *.starbridge-license
-CreNexus-license-request-*.json
+KORYAO-license-request-*.json
 starbridge-license-private*
 .venv/
 .venv-build/
 venv/
 
-# CreNexus Desktop 本地产物
+# KORYAO Desktop 本地产物
 apps/starbridge-desktop/node_modules/
 apps/starbridge-desktop/dist/
 apps/starbridge-desktop/build/

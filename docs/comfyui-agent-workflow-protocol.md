@@ -154,7 +154,7 @@ history 中出现任务记录本身不能作为成功证据；只有规范化终
 
 如果提交后的 history 查询断线或缺少可验证终态，必须保留 `prompt_id` 和 `submitted=true`，并返回 `status_unavailable`。调用方应先用同一个 `prompt_id` 恢复查询，确认本机 queue/history 后再决定是否重试，避免重复生成。
 
-实现依据：ComfyUI 官方执行器把 `execution_success`、`execution_error` 与 `execution_interrupted` 写入 history 状态消息；官方 jobs 归一化逻辑先读取 `status_str`，再在 error 状态下用 `execution_interrupted` 区分 `cancelled` 与 `failed`。CreNexus 对缺少可验证终态的旧 payload 有意采用更保守的 `status_unavailable`，避免仅凭 history 存在就宣称成功。
+实现依据：ComfyUI 官方执行器把 `execution_success`、`execution_error` 与 `execution_interrupted` 写入 history 状态消息；官方 jobs 归一化逻辑先读取 `status_str`，再在 error 状态下用 `execution_interrupted` 区分 `cancelled` 与 `failed`。KORYAO 对缺少可验证终态的旧 payload 有意采用更保守的 `status_unavailable`，避免仅凭 history 存在就宣称成功。
 
 - [ComfyUI `execution.py` 终态事件](https://github.com/Comfy-Org/ComfyUI/blob/0aecac867d7840b56ad790aa76c5e76e33c74c3d/execution.py#L674-L820)
 - [ComfyUI `comfy_execution/jobs.py` 状态归一化](https://github.com/Comfy-Org/ComfyUI/blob/0aecac867d7840b56ad790aa76c5e76e33c74c3d/comfy_execution/jobs.py#L191-L243)
@@ -163,7 +163,7 @@ history 中出现任务记录本身不能作为成功证据；只有规范化终
 
 `comfyui.generation_cancel` 只接受一个有界、URL-safe 的 `prompt_id` 和 loopback ComfyUI URL。默认 `confirm_cancel=false` 只返回脱敏取消计划，不访问 ComfyUI；只有 `confirm_cancel=true` 才会发送 `POST /api/jobs/{prompt_id}/cancel`。
 
-官方接口会原子化地中断匹配 ID 的运行任务，或从队列移除匹配 ID 的待执行任务。已完成或未知 ID 是幂等 no-op，返回 `cancelled=false`。CreNexus 把这两种结果分别规范化为 `cancelled` 与 `not_cancelled`，只返回 prompt ID 的哈希逻辑标识、取消状态和通用下一步，不回显原始 ID、URL、queue、workflow、prompt、模型、异常正文或路径。
+官方接口会原子化地中断匹配 ID 的运行任务，或从队列移除匹配 ID 的待执行任务。已完成或未知 ID 是幂等 no-op，返回 `cancelled=false`。KORYAO 把这两种结果分别规范化为 `cancelled` 与 `not_cancelled`，只返回 prompt ID 的哈希逻辑标识、取消状态和通用下一步，不回显原始 ID、URL、queue、workflow、prompt、模型、异常正文或路径。
 
 为避免误伤，工具不得回退到全局 `/interrupt`，不得自动重试取消，也不得把 `cancelled=true` 当作已经生成成功。取消后应使用同一 `prompt_id` 调用 `comfyui.generation_result` 读取最终 history；如果接口不可用，返回结构化 `cancel_unavailable`，由用户在本机确认 ComfyUI 版本和任务状态。
 

@@ -1048,12 +1048,12 @@ export default function App() {
         try {
           setLastLiveEvent(JSON.parse(event.data))
         } catch (error) {
-          console.warn('CreNexus Canvas live event could not be parsed.', error)
+          console.warn('KORYAO Canvas live event could not be parsed.', error)
         }
       })
       canvasEvents.onerror = (error) => {
         setLiveConnectionState('reconnecting')
-        console.warn('CreNexus Canvas live refresh disconnected.', error)
+        console.warn('KORYAO Canvas live refresh disconnected.', error)
       }
     } else {
       setLiveConnectionState('unavailable')
@@ -1166,7 +1166,7 @@ export default function App() {
   }
 
   return (
-    <main className="cowart-canvas" aria-label="CreNexus infinite canvas">
+    <main className="cowart-canvas" aria-label="KORYAO infinite canvas">
       <div className="starbridge-live-status" role="status" aria-live="polite">
         <span className={`starbridge-live-dot starbridge-live-dot--${liveConnectionState}`} />
         <span>{liveConnectionLabel(liveConnectionState)}</span>

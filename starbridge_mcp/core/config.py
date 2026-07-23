@@ -19,7 +19,7 @@ BRIDGE_ENV_VARS = {
 
 
 @dataclass(frozen=True)
-class CreNexusConfig:
+class KORYAOConfig:
     repo_root: Path = REPO_ROOT
     comfy_url: str = (
         os.environ.get("STARBRIDGE_COMFYUI_URL")
@@ -30,7 +30,7 @@ class CreNexusConfig:
 
 
 # Backward-compatible public name for existing integrations.
-StarBridgeConfig = CreNexusConfig
+StarBridgeConfig = KORYAOConfig
 
 
 def env_summary() -> dict[str, dict[str, bool]]:

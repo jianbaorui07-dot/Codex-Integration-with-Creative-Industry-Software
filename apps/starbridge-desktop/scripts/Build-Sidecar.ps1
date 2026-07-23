@@ -81,7 +81,7 @@ if (-not $SkipDependencyInstall) {
     }
     & $buildPython -m pip install --disable-pip-version-check --no-deps -e $repoRoot
     if ($LASTEXITCODE -ne 0) {
-        throw "Could not install CreNexus into .venv-build."
+        throw "Could not install KORYAO into .venv-build."
     }
 }
 
@@ -105,7 +105,7 @@ New-Item -ItemType Directory -Path $workRoot -Force | Out-Null
     --workpath $workRoot `
     $specFile
 if ($LASTEXITCODE -ne 0) {
-    throw "PyInstaller did not produce the CreNexus sidecar. Review the build output above."
+    throw "PyInstaller did not produce the KORYAO sidecar. Review the build output above."
 }
 
 if (-not (Test-Path -LiteralPath $sourceExecutable -PathType Leaf)) {

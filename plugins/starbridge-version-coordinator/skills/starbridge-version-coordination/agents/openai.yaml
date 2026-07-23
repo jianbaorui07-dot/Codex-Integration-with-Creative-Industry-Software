@@ -1,4 +1,4 @@
 interface:
-  display_name: "CreNexus 版本协同"
-  short_description: "按创意软件版本选择安全的 CreNexus 桥接配置"
-  default_prompt: "Use $starbridge-version-coordination to generate a safe CreNexus plan for my installed creative-software versions."
+  display_name: "KORYAO 版本协同"
+  short_description: "按创意软件版本选择安全的 KORYAO 桥接配置"
+  default_prompt: "Use $starbridge-version-coordination to generate a safe KORYAO plan for my installed creative-software versions."

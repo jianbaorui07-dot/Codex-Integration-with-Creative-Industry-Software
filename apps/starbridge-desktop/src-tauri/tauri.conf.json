@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "CreNexus Desktop",
+  "productName": "构曜纪基础版｜KORYAO基础版",
   "version": "0.1.0-alpha.2",
   "identifier": "io.starbridge.desktop",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "创枢 CreNexus",
+        "title": "构曜纪基础版｜KORYAO基础版",
         "width": 1120,
         "height": 760,
         "minWidth": 780,

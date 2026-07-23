@@ -1,4 +1,4 @@
-"""Raster-to-vector engines used by the CreNexus product workflow."""
+"""Raster-to-vector engines used by the KORYAO product workflow."""
 
 from .engine import RunConfig, VectorizationError, run_vectorization
 from .presets import DEFAULT_MODE, PRESETS, VectorPreset

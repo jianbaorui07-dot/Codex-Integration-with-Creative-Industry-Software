@@ -431,7 +431,7 @@ def aggregate_summary(document: Any) -> dict[str, Any]:
 
     return {
         "schema_version": SCHEMA_VERSION,
-        "benchmark": "CreNexus Vector60",
+        "benchmark": "KORYAO Vector60",
         "overall_status": overall_status,
         "case_counts": status_counts,
         "gate_counts": gate_counts,
@@ -461,7 +461,7 @@ def render_markdown(result: Mapping[str, Any]) -> str:
     """Render an aggregate result without embedding input paths or artifact content."""
 
     lines = [
-        "# CreNexus Vector60 基准报告",
+        "# KORYAO Vector60 基准报告",
         "",
         f"总状态：`{result['overall_status']}`",
         "",

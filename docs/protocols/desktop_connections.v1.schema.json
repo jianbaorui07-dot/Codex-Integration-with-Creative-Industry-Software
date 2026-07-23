@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://starbridge.local/schemas/desktop_connections.v1.schema.json",
-  "title": "CreNexus Desktop Connections v1",
+  "title": "KORYAO Desktop Connections v1",
   "type": "object",
   "additionalProperties": false,
   "required": [

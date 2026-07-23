@@ -7,7 +7,7 @@ description: Use DiagramForge from Codex for native editable Draw.io diagrams, s
 
 ## Core Rule
 
-Treat DiagramForge as the structured-diagram system and CreNexus Canvas as the freeform ideation surface. Prefer the deterministic headless compiler for native `.drawio`, editable SVG previews, stable IDs, validation, and tests. Use an external live Draw.io MCP only when the user explicitly needs a live editor session.
+Treat DiagramForge as the structured-diagram system and KORYAO Canvas as the freeform ideation surface. Prefer the deterministic headless compiler for native `.drawio`, editable SVG previews, stable IDs, validation, and tests. Use an external live Draw.io MCP only when the user explicitly needs a live editor session.
 
 Never scan private folders for diagram inputs. Read only explicit text/spec content or one explicit safe-root `.drawio` path. All materialization, patching, SVG export, and PDF export require `confirm_write=true` and stay inside `sandbox/`, `output/`, or `examples/output/diagramforge/`.
 

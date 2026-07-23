@@ -10,7 +10,7 @@
 
 本阶段只读取仓库规则、交接说明、权威配置与现有 workflow；安装本机缺失工具和被忽略的项目依赖；运行基线；新增本报告。未导入、修改、暂存或删除以下既有未跟踪工作：
 
-- `CreNexus_Mac交接与CI执行说明书.docx`
+- `KORYAO_Mac交接与CI执行说明书.docx`
 - `SKILL.md`
 - `starbridge-macos-adapter/`（4 个文件）
 
@@ -84,9 +84,9 @@ PYTHONDONTWRITEBYTECODE=1 "$PROJECT_VENV/bin/python" -m unittest discover -s tes
 ## Git 与 GitHub Actions 基线
 
 - 起始 tracked worktree 与 index 均 clean；`main` 与本地 `origin/main` 同为基点 `2eecfe3e...`。
-- remotes：`origin` 指向 `Rabbitgenius-rgb/CreNexus`，`upstream` 指向 `jianbaorui07-dot/CreNexus`。
+- remotes：`origin` 指向 `Rabbitgenius-rgb/KORYAO`，`upstream` 指向 `jianbaorui07-dot/KORYAO`。
 - `origin` 的 `main` 查询不到现有 Actions run；需在本分支首次 push 后确认该仓库是否启用 Actions。
-- `upstream` 同一基点的 CI、CodeQL、Dependency Graph 最近结果均为 success；CI run：<https://github.com/jianbaorui07-dot/CreNexus/actions/runs/29646424226>。该成功只代表现有 Ubuntu/Windows 矩阵，不代表 macOS 通过。
+- `upstream` 同一基点的 CI、CodeQL、Dependency Graph 最近结果均为 success；CI run：<https://github.com/jianbaorui07-dot/KORYAO-basic/actions/runs/29646424226>。该成功只代表现有 Ubuntu/Windows 矩阵，不代表 macOS 通过。
 - 本报告提交前分支尚未 push；push 后状态由阶段 0 最终汇报补充，不能预写为绿色。
 
 ## 回滚点

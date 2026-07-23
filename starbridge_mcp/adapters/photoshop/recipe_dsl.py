@@ -254,7 +254,7 @@ def compile_recipe(recipe_id: str, parameters: dict[str, Any] | None = None) -> 
         "bridge": "photoshop",
         "action": "recipe_compile",
         "details": {
-            "schema_version": "crenexus.photoshop.recipe.v1",
+            "schema_version": "koryao.photoshop.recipe.v1",
             "recipe_id": recipe_id,
             "plan_id": plan_id,
             "title": definition["title"],
@@ -320,7 +320,7 @@ def build_batch_plan(
         "bridge": "photoshop",
         "action": "batch_plan",
         "details": {
-            "schema_version": "crenexus.photoshop.batch.v1",
+            "schema_version": "koryao.photoshop.batch.v1",
             "items": rows,
             "errors": errors,
             "concurrency_limit": 1,

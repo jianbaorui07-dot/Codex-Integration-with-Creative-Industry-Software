@@ -1,9 +1,9 @@
 ---
 name: starbridge-illustrator-mcp
-description: Use CreNexus Illustrator MCP safely from Codex. Use when the user mentions Adobe Illustrator, AI vector files, .ai, artboards, vector trace, Image Trace, SVG/PDF/PNG export, Illustrator COM, JSX, preflight, document_info, or asks Codex to inspect or extend Illustrator-related CreNexus MCP tools.
+description: Use KORYAO Illustrator MCP safely from Codex. Use when the user mentions Adobe Illustrator, AI vector files, .ai, artboards, vector trace, Image Trace, SVG/PDF/PNG export, Illustrator COM, JSX, preflight, document_info, or asks Codex to inspect or extend Illustrator-related KORYAO MCP tools.
 ---
 
-# CreNexus Illustrator MCP
+# KORYAO Illustrator MCP
 
 ## Core Rule
 

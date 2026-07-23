@@ -1,7 +1,7 @@
 [package]
 name = "starbridge-desktop"
 version = "0.1.0-alpha.2"
-description = "Windows-first local CreNexus desktop runtime"
+description = "Windows-first local KORYAO desktop runtime"
 authors = ["菅宝瑞"]
 license-file = "../../../LICENSE"
 edition = "2021"

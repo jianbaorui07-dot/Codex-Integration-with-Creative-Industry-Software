@@ -2,13 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { IconGridDots } from "@tabler/icons-react";
 
 import { EmptyState } from "../components/EmptyState/EmptyState";
-import type { CreNexusClient } from "../services/client";
+import type { KORYAOClient } from "../services/client";
 import type { Project, WorkflowSummary } from "../types/api";
 
 type DrawingMode = "artisan" | "smart" | "lightweight" | "exact";
 
 interface WorkflowsPageProps {
-  client: CreNexusClient;
+  client: KORYAOClient;
   runtimeReady: boolean;
   initialProjectId?: string;
   onOpenProjects: () => void;

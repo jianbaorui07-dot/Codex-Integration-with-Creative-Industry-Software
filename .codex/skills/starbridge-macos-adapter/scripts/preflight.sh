@@ -47,7 +47,7 @@ pass "architecture=$(uname -m)"
 if [[ -f "$repo_root/pyproject.toml" && -f "$repo_root/package.json" && -d "$repo_root/starbridge_mcp" ]]; then
   pass "repository=$(basename "$repo_root")"
 else
-  fail "repository=invalid use --repo with the CreNexus checkout"
+  fail "repository=invalid use --repo with the KORYAO checkout"
 fi
 
 for command_name in python3 node npm git; do

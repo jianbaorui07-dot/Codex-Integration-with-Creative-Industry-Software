@@ -255,7 +255,7 @@ def recipe_spec(recipe_id: str, parameters: dict[str, Any] | None = None) -> dic
         }
     if recipe_id == "system-architecture-v1":
         return {
-            "title": str(parameters.get("title") or "CreNexus Safe Architecture"),
+            "title": str(parameters.get("title") or "KORYAO Safe Architecture"),
             "namespace": str(parameters.get("namespace") or "system-architecture-v1"),
             "pages": [
                 {
@@ -268,7 +268,7 @@ def recipe_spec(recipe_id: str, parameters: dict[str, Any] | None = None) -> dic
                     ],
                     "nodes": [
                         {"key": "codex", "label": "Codex Skill", "layer": "clients"},
-                        {"key": "mcp", "label": "CreNexus MCP", "layer": "runtime"},
+                        {"key": "mcp", "label": "KORYAO MCP", "layer": "runtime"},
                         {"key": "recipe", "label": "Typed Recipe DSL", "layer": "runtime"},
                         {"key": "adapter", "label": "Safe Adapter", "layer": "runtime"},
                         {"key": "software", "label": "Local Creative Software", "layer": "clients"},
