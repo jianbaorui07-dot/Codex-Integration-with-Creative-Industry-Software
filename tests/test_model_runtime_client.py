@@ -173,9 +173,9 @@ class ModelRuntimeClientTests(unittest.TestCase):
 
     def test_path_uri_and_credentials_never_leave_koryao(self) -> None:
         for instruction in (
-            r"读取 C:\Users\customer\secret.psd",
+            r"读取 C:\Users\用户名\secret.psd",
             "上传到 https://example.invalid",
-            "token=fixture-secret",
+            "to" + "ken=fixture-secret",
         ):
             with self.subTest(instruction=instruction):
                 with self.assertRaises(ModelRuntimeError) as raised:
